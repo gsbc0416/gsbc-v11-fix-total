@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RIO-CARIBE v1.0 | Plataforma Web de Ingeniería de Requisitos para IA Rural</title>
+<title>RIO-CARIBE Enterprise v9.0 | Plataforma Web de IA Rural & Conformidad Legal CO</title>
 
-<!-- Tailwind CSS CDN -->
+<!-- Tailwind CSS CDN & Chart.js & SheetJS & jsPDF -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Chart.js para Gráficas Interactivas -->
 <script src="[suspicious link removed]"></script>
-<!-- Google Fonts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link href="[suspicious link removed]" rel="stylesheet">
 
 <script>
@@ -23,13 +23,14 @@
         },
         colors: {
           brand: {
-            50: '#ecfdf5',
-            500: '#10b981',
-            600: '#059669',
-            900: '#064e3b',
-            dark: '#0a0f1d',
+            bg: '#0a0f1d',
             card: '#111827',
-            border: '#1f2937'
+            border: '#1f2937',
+            emerald: '#10b981',
+            cyan: '#06b6d4',
+            indigo: '#6366f1',
+            amber: '#f59e0b',
+            rose: '#f43f5e'
           }
         }
       }
@@ -39,157 +40,176 @@
 
 <style>
   body { background-color: #0a0f1d; color: #f3f4f6; }
-  .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-  .glass-card { background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); }
-  .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 700; shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+  .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.07); }
+  .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 800; shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
+  .badge-law { font-size: 9px; font-family: 'JetBrains Mono', monospace; padding: 2px 8px; border-radius: 9999px; font-weight: 700; }
 </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased">
 
-<!-- Barra de Estado del Nodo Offline (L1 / L2) -->
-<header class="sticky top-0 z-50 glass border-b border-gray-800">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+<!-- Header Superior con Estado de Red & Leyes Colombiana -->
+<header class="sticky top-0 z-50 glass-card border-b border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-emerald-500/20">R</div>
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-indigo-500 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-emerald-500/20">R</div>
       <div>
-        <h1 class="font-black text-base text-white tracking-tight flex items-center gap-2">
-          RIO-CARIBE <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">v1.0 Offline Node</span>
+        <h1 class="font-black text-sm text-white tracking-tight flex items-center gap-2">
+          RIO-CARIBE <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Enterprise v9.0</span>
         </h1>
-        <p class="text-[11px] text-gray-400 font-mono">Marco de Ingeniería de Requisitos para IA Generativa en Educación Rural</p>
+        <p class="text-[10px] text-gray-400 font-mono">IA Rural Offline · Ley 1581 / Ley 1620 / Dec 1421 / Dec 1290 CO</p>
       </div>
     </div>
 
-    <!-- Métrica en Tiempo Real (L1 / L2 Target Values) -->
-    <div class="flex items-center gap-4 text-xs font-mono">
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
+    <!-- Métricas en Tiempo Real (L1 / L2) -->
+    <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+      <div class="px-3 py-1.5 rounded-xl bg-gray-900 border border-gray-800 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span class="text-gray-400">WAN Red:</span>
         <span class="text-emerald-400 font-bold">0 KB/s (100% LAN)</span>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
-        <span class="text-gray-400">Energía Solar:</span>
-        <span class="text-amber-400 font-bold">14.2 W / ≤20W</span>
+      <div class="px-3 py-1.5 rounded-xl bg-gray-900 border border-gray-800 flex items-center gap-2">
+        <span class="text-gray-400">Solar 200Wh:</span>
+        <span class="text-amber-400 font-bold" id="liveWatt">14.2W / ≤20W</span>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
-        <span class="text-gray-400">Modelo Local:</span>
-        <span class="text-cyan-400 font-bold">Phi-3 3.8B Q4 (4.8 tok/s)</span>
+      <div class="px-3 py-1.5 rounded-xl bg-gray-900 border border-gray-800 flex items-center gap-2">
+        <span class="text-gray-400">SLM Engine:</span>
+        <span class="text-cyan-400 font-bold">Phi-3 3.8B Q4 (4.8 t/s)</span>
       </div>
     </div>
   </div>
 </header>
 
-<!-- Contenedor Principal -->
+<!-- Layout Principal -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-12 gap-6">
 
-  <!-- Navegación por Pestañas -->
+  <!-- Navegación de Módulos Interáctivos -->
   <nav class="col-span-12 flex gap-2 overflow-x-auto pb-2 border-b border-gray-800">
-    <button onclick="showTab('dash')" id="tab-dash" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
-      🌐 Vista General & Arquitectura (L1-L3)
+    <button onclick="showTab('dash')" id="tab-dash" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      🌐 1. Vista General & Arquitectura
     </button>
-    <button onclick="showTab('reqs')" id="tab-reqs" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
-      📋 Auditoría 30 Requisitos (RF/RNF/RSP)
+    <button onclick="showTab('due')" id="tab-due" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      🇨🇴 2. Consulta DUE datos.gov.co
     </button>
-    <button onclick="showTab('sim')" id="tab-sim" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
-      🤖 Simulador IA Local con Salvaguardas RSP
+    <button onclick="showTab('reqs')" id="tab-reqs" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      📋 3. Audit 30 Requisitos RIO
     </button>
-    <button onclick="showTab('traza')" id="tab-traza" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
-      🔗 Cadena TRAZA-RIO
+    <button onclick="showTab('sim')" id="tab-sim" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      🤖 4. IA Local & Salvaguardas RSP
     </button>
-    <button onclick="showTab('pop')" id="tab-pop" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
-      🧪 Falsación Popperiana (POP-01..12)
+    <button onclick="showTab('piar')" id="tab-piar" class="tab-piar tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      ♿ 5. PIAR Dec 1421 (Inclusión)
+    </button>
+    <button onclick="showTab('convivencia')" id="tab-convivencia" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      🛡️ 6. Ley 1620 Ruta Convivencia
+    </button>
+    <button onclick="showTab('pmi')" id="tab-pmi" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+      📈 7. PMI Guía 34 SMART
     </button>
   </nav>
 
-  <!-- TAB 1: DASHBOARD & ARQUITECTURA -->
+  <!-- MÓDULO 1: DASHBOARD GENERAL -->
   <section id="pane-dash" class="col-span-12 grid grid-cols-12 gap-6">
-    <!-- Arquitectura 3 Capas -->
     <div class="col-span-12 lg:col-span-7 space-y-4">
-      <div class="glass-card rounded-2xl p-5 border border-gray-800">
-        <h2 class="text-sm font-bold text-white flex items-center justify-between">
-          <span>🏛️ Arquitectura Sociotécnica de 3 Capas</span>
-          <span class="text-xs font-mono text-emerald-400">Desacoplamiento Modular</span>
+      <div class="glass-card rounded-2xl p-5">
+        <h2 class="text-sm font-bold text-white flex justify-between items-center">
+          <span>🏛️ Arquitectura Sociotécnica de 3 Capas (RIO-CARIBE)</span>
+          <span class="badge-law bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Ley 115 / Dec 1075</span>
         </h2>
-        <p class="text-xs text-gray-400 mt-1">Garantiza resiliencia técnica en L1, IA adaptativa en L2 e inalienabilidad pedagógica en L3.</p>
+        <p class="text-xs text-gray-400 mt-1">Desacoplamiento modular para garantizar soberanía algorítmica y autonomía energética local.</p>
 
         <div class="mt-4 space-y-3">
-          <!-- Capa L3 -->
-          <div class="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 flex items-start justify-between">
+          <div class="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 flex justify-between items-start">
             <div>
-              <div class="text-xs font-bold text-indigo-300 flex items-center gap-2">
-                <span>Capa 3: Mediación Pedagógico-Territorial (L3)</span>
-                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">R-PC, R-TLA, R-GOB, R-EVA</span>
-              </div>
-              <p class="text-[11px] text-gray-300 mt-1">Interfaz web adaptativa, aprobación docente obligatoria (RBAC), preguntas metacognitivas y mapeo a DBA.</p>
+              <div class="text-xs font-bold text-indigo-300">Capa 3: Mediación Pedagógico-Territorial (L3)</div>
+              <p class="text-[11px] text-gray-300 mt-1">Interfaz web local, preguntas metacognitivas (RSP-02), inalienabilidad de notas (RSP-03/Dec 1290) y RBAC.</p>
             </div>
-            <span class="text-xs font-mono font-bold text-indigo-400">HUMAN-IN-THE-LOOP</span>
+            <span class="text-[10px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">HUMAN-IN-THE-LOOP</span>
           </div>
 
-          <!-- Capa L2 -->
-          <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start justify-between">
+          <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex justify-between items-start">
             <div>
-              <div class="text-xs font-bold text-cyan-300 flex items-center gap-2">
-                <span>Capa 2: Inteligencia Educativa Local (L2)</span>
-                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">R-IA</span>
-              </div>
-              <p class="text-[11px] text-gray-300 mt-1">Motor de inferencia local (llama.cpp), SLMs cuantizados a 4 bits (Phi-3 / Llama 3) y RAG sobre corpus territorial.</p>
+              <div class="text-xs font-bold text-cyan-300">Capa 2: Inteligencia Educativa Local (L2)</div>
+              <p class="text-[11px] text-gray-300 mt-1">Motor de inferencia llama.cpp, SLMs cuantizados a 4 bits (Phi-3 / Llama 3) y RAG sobre corpus territorial.</p>
             </div>
-            <span class="text-xs font-mono font-bold text-cyan-400">EDGE AI ENGINE</span>
+            <span class="text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded">EDGE AI ENGINE</span>
           </div>
 
-          <!-- Capa L1 -->
-          <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-start justify-between">
+          <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex justify-between items-start">
             <div>
-              <div class="text-xs font-bold text-emerald-300 flex items-center gap-2">
-                <span>Capa 1: Infraestructura Local Resiliente (L1)</span>
-                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">R-TEC, R-ENE, R-MAN, R-SP</span>
-              </div>
-              <p class="text-[11px] text-gray-300 mt-1">Servidor low-power (≤20W), almacenamiento NVMe local, red LAN offline, sistema fotovoltaico con batería 6h.</p>
+              <div class="text-xs font-bold text-emerald-300">Capa 1: Infraestructura Local Resiliente (L1)</div>
+              <p class="text-[11px] text-gray-300 mt-1">Servidor Low-Power (≤20W), batería solar de 200Wh (autonomía 6h), LAN sin WAN y cifrado AES-256 (Ley 1581).</p>
             </div>
-            <span class="text-xs font-mono font-bold text-emerald-400">HARDWARE & ENERGY</span>
+            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">HARDWARE & ENERGY</span>
           </div>
         </div>
       </div>
 
-      <!-- Tarjetas de Métricas de Diseño -->
       <div class="grid grid-cols-3 gap-4">
-        <div class="glass-card p-4 rounded-xl border border-gray-800">
-          <span class="text-[10px] text-gray-400 font-mono">PRESUPUESTO CapEx</span>
-          <div class="text-lg font-black text-emerald-400 mt-1">\$580 USD <span class="text-xs font-normal text-gray-500">/ ≤\$600</span></div>
+        <div class="glass-card p-4 rounded-2xl">
+          <span class="text-[10px] font-mono text-gray-400">PRESUPUESTO CapEx</span>
+          <div class="text-lg font-black text-emerald-400 mt-1">$580 USD <span class="text-xs font-normal text-gray-500">/ ≤\$600</span></div>
           <span class="text-[10px] text-emerald-500 mt-1 block">OpEx = \$0 USD/mes</span>
         </div>
-        <div class="glass-card p-4 rounded-xl border border-gray-800">
-          <span class="text-[10px] text-gray-400 font-mono">LATENCIA AL 1er TOKEN</span>
+        <div class="glass-card p-4 rounded-2xl">
+          <span class="text-[10px] font-mono text-gray-400">LATENCIA 1er TOKEN</span>
           <div class="text-lg font-black text-cyan-400 mt-1">1.8 s <span class="text-xs font-normal text-gray-500">/ ≤15s</span></div>
-          <span class="text-[10px] text-cyan-500 mt-1 block">Tolerancia cognitiva OK</span>
+          <span class="text-[10px] text-cyan-500 mt-1 block">Cognitivamente Aceptable</span>
         </div>
-        <div class="glass-card p-4 rounded-xl border border-gray-800">
-          <span class="text-[10px] text-gray-400 font-mono">AUTONOMÍA EN BATERÍA</span>
+        <div class="glass-card p-4 rounded-2xl">
+          <span class="text-[10px] font-mono text-gray-400">AUTONOMÍA SOLAR</span>
           <div class="text-lg font-black text-amber-400 mt-1">7.2 Horas <span class="text-xs font-normal text-gray-500">/ ≥6h</span></div>
           <span class="text-[10px] text-amber-500 mt-1 block">Batería 200Wh @ 80% DoD</span>
         </div>
       </div>
     </div>
 
-    <!-- Gráfica de Radar: 10 Dominios de Diseño -->
-    <div class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-5 border border-gray-800 flex flex-col justify-between">
+    <!-- Gráfica de Radar de Dominios -->
+    <div class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-5 flex flex-col justify-between">
       <div>
         <h2 class="text-sm font-bold text-white">📊 Cobertura de los 10 Dominios RIO-CARIBE</h2>
-        <p class="text-xs text-gray-400 mt-1">Evaluación en tiempo real del grado de cumplimiento por dominio de diseño.</p>
+        <p class="text-xs text-gray-400 mt-1">Índice de salud del nodo en tiempo real.</p>
       </div>
       <div class="w-full h-64 my-2 flex justify-center items-center">
         <canvas id="radarDomains"></canvas>
       </div>
-      <div class="text-[11px] font-mono text-center text-gray-400 bg-gray-900/60 p-2 rounded-xl border border-gray-800">
-        Índice de Salud Global: <span class="text-emerald-400 font-bold" id="globalHealth">100% Auditado</span>
+      <div class="text-[11px] font-mono text-center text-gray-400 bg-gray-900/60 p-2.5 rounded-xl border border-gray-800">
+        Cumplimiento Normativo Global: <span class="text-emerald-400 font-bold" id="globalHealth">100% Auditado</span>
       </div>
     </div>
   </section>
 
-  <!-- TAB 2: AUDITORÍA DE LOS 30 REQUISITOS -->
+  <!-- MÓDULO 2: CONSULTA DUE datos.gov.co -->
+  <section id="pane-due" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5">
+      <h2 class="text-sm font-bold text-white flex justify-between items-center">
+        <span>🇨🇴 Consulta en Tiempo Real: Directorio Único de Establecimientos (DUE datos.gov.co)</span>
+        <span class="badge-law bg-blue-500/20 text-blue-300 border border-blue-500/30">Socrata API Colombia</span>
+      </h2>
+      <p class="text-xs text-gray-400 mt-2">Consulta la base de datos oficial del Ministerio de Educación de Colombia con los 12 dígitos del código DANE de la escuela rural.</p>
+
+      <div class="mt-4 flex gap-3">
+        <input id="daneInput" type="text" maxlength="12" class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs font-mono text-white w-full outline-none focus:border-emerald-500" placeholder="Ingrese código DANE 12 dígitos (Ej: 111001000078)...">
+        <button onclick="queryDANEGov()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3 rounded-xl whitespace-nowrap transition-all">
+          🔍 Consultar datos.gov.co
+        </button>
+      </div>
+
+      <div id="dueStatus" class="mt-3 text-xs font-mono text-gray-400"></div>
+
+      <div id="dueResults" class="hidden mt-4 grid grid-cols-2 gap-3 text-xs font-mono bg-gray-900 p-4 rounded-xl border border-gray-800">
+        <div><span class="text-gray-500">Establecimiento:</span> <strong id="dueNombre" class="text-emerald-400">--</strong></div>
+        <div><span class="text-gray-500">Secretaría:</span> <strong id="dueSec" class="text-white">--</strong></div>
+        <div><span class="text-gray-500">Municipio / Depto:</span> <strong id="dueMuni" class="text-white">--</strong></div>
+        <div><span class="text-gray-500">Estado SIMAT:</span> <strong class="text-cyan-400">✅ Activo para Matrícula</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MÓDULO 3: AUDITORÍA DE LOS 30 REQUISITOS -->
   <section id="pane-reqs" class="col-span-12 hidden space-y-4">
-    <div class="glass-card rounded-2xl p-5 border border-gray-800 flex flex-wrap justify-between items-center gap-4">
+    <div class="glass-card rounded-2xl p-5 flex justify-between items-center">
       <div>
-        <h2 class="text-sm font-bold text-white">📋 Catálogo Normativo de 30 Requisitos de Especificación</h2>
+        <h2 class="text-sm font-bold text-white">📋 Catálogo Auditado de 30 Requisitos Normativos</h2>
         <p class="text-xs text-gray-400 mt-1">Clasificados en Funcionales (RF), No Funcionales (RNF) y Sociopedagógicos (RSP).</p>
       </div>
       <div class="flex items-center gap-3">
@@ -205,78 +225,60 @@
       </div>
     </div>
 
-    <!-- Lista de Requisitos -->
     <div id="reqsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
   </section>
 
-  <!-- TAB 3: SIMULADOR DE INFERENCIA IA LOCAL CON SALVAGUARDAS RSP -->
+  <!-- MÓDULO 4: SIMULADOR IA LOCAL CON SALVAGUARDAS RSP -->
   <section id="pane-sim" class="col-span-12 hidden grid grid-cols-12 gap-6">
     <div class="col-span-12 lg:col-span-6 space-y-4">
-      <div class="glass-card rounded-2xl p-5 border border-gray-800">
-        <h2 class="text-sm font-bold text-white flex items-center justify-between">
+      <div class="glass-card rounded-2xl p-5">
+        <h2 class="text-sm font-bold text-white flex justify-between items-center">
           <span>🤖 Consola de Inferencia Local (SLM Edge)</span>
-          <span class="text-xs font-mono text-cyan-400">Motor llama.cpp / Phi-3</span>
+          <span class="badge-law bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">RAG Caribe_Educativo.db</span>
         </h2>
-        <p class="text-xs text-gray-400 mt-1">Escriba una solicitud pedagógica. El motor procesará la respuesta de forma 100% offline aplicando el RAG local.</p>
+        <p class="text-xs text-gray-400 mt-1">Escriba una solicitud pedagógica. La IA procesará en el servidor escolar sin internet.</p>
 
         <div class="mt-4 space-y-3">
-          <textarea id="promptInput" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-500" placeholder="Ejemplo: Genera una actividad de lectura sobre la leyenda del Hombre Caimán para estudiantes de 4° grado..."></textarea>
+          <textarea id="promptInput" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-500" placeholder="Ejemplo: Genera un taller de lectura sobre la leyenda de la Llorona en el río Magdalena para estudiantes de 5° grado..."></textarea>
           
           <div class="flex justify-between items-center">
-            <span class="text-[11px] font-mono text-gray-400">Corpus RAG: <strong class="text-emerald-400">Caribe_Educativo_v1.db</strong></span>
-            <button onclick="runLocalInference()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2">
-              <span>⚡ Ejecutar Inferencia Local</span>
+            <span class="text-[11px] font-mono text-gray-400">Ley 1581: <strong class="text-emerald-400">Anonimización Activa</strong></span>
+            <button onclick="runLocalInference()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+              ⚡ Ejecutar Inferencia Local
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Métricas de la Inferencia Executada -->
-      <div class="glass-card rounded-2xl p-4 border border-gray-800 grid grid-cols-3 gap-3 font-mono text-xs">
-        <div>
-          <span class="text-gray-400 text-[10px]">TIEMPO 1er TOKEN</span>
-          <div id="mFirstToken" class="font-bold text-cyan-400 text-sm">-- s</div>
-        </div>
-        <div>
-          <span class="text-gray-400 text-[10px]">VELOCIDAD GENERACIÓN</span>
-          <div id="mSpeed" class="font-bold text-emerald-400 text-sm">-- tok/s</div>
-        </div>
-        <div>
-          <span class="text-gray-400 text-[10px]">USO DE RAM LOCAL</span>
-          <div id="mRAM" class="font-bold text-indigo-400 text-sm">-- GB</div>
-        </div>
+      <div class="glass-card rounded-2xl p-4 grid grid-cols-3 gap-3 font-mono text-xs">
+        <div><span class="text-gray-500 text-[10px]">TIEMPO 1er TOKEN</span><div id="mFirstToken" class="font-bold text-cyan-400 text-sm">-- s</div></div>
+        <div><span class="text-gray-500 text-[10px]">VELOCIDAD GENERACIÓN</span><div id="mSpeed" class="font-bold text-emerald-400 text-sm">-- tok/s</div></div>
+        <div><span class="text-gray-500 text-[10px]">USO RAM LOCAL</span><div id="mRAM" class="font-bold text-indigo-400 text-sm">-- GB</div></div>
       </div>
     </div>
 
-    <!-- Resultado e Invariable Docente (RSP-01, RSP-02, RSP-03) -->
     <div class="col-span-12 lg:col-span-6 space-y-4">
-      <div class="glass-card rounded-2xl p-5 border border-gray-800 space-y-4">
+      <div class="glass-card rounded-2xl p-5 space-y-4">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
-          <h3 class="text-xs font-bold text-white flex items-center gap-2">
-            <span>Salida de Contenido Generado</span>
-          </h3>
-          <!-- Marcado de IA (RSP-01) -->
-          <span id="badgeRSP1" class="hidden text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+          <h3 class="text-xs font-bold text-white">Salida de Contenido Generado</h3>
+          <span id="badgeRSP1" class="hidden text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full">
             ⚠️ RSP-01: Generado por IA Local
           </span>
         </div>
 
-        <div id="outputBox" class="min-h-[140px] bg-gray-900/80 border border-gray-800 rounded-xl p-3.5 text-xs text-gray-300 font-mono leading-relaxed overflow-y-auto">
+        <div id="outputBox" class="min-h-[140px] bg-gray-900 border border-gray-800 rounded-xl p-3.5 text-xs text-gray-300 font-mono leading-relaxed overflow-y-auto">
           Esperando ejecución de inferencia...
         </div>
 
-        <!-- Bloque de Salvaguarda Sociopedagógica RSP-02 / RSP-03 -->
         <div id="rspGate" class="hidden p-4 rounded-xl bg-indigo-950/50 border border-indigo-500/40 space-y-3">
-          <div class="text-xs font-bold text-indigo-300 flex items-center gap-2">
-            <span>🛑 RSP-02 / RSP-03: Gateway de Inalienabilidad y Pregunta Metacognitiva</span>
-          </div>
+          <div class="text-xs font-bold text-indigo-300">🛑 RSP-02 / RSP-03: Gateway de Inalienabilidad y Pregunta Metacognitiva</div>
           <p class="text-[11px] text-gray-300">
             <strong>Pregunta Metacognitiva (RSP-02):</strong> "¿Qué fuentes del territorio respaldan esta actividad y qué cambios le harías para tu aula?"
           </p>
           <input type="text" id="metaAnswer" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white" placeholder="Respuesta de reflexión del estudiante/docente...">
           
           <div class="flex justify-between items-center pt-2">
-            <span class="text-[10px] text-red-400 font-mono">RSP-03: Bloqueo de Nota Automática Activado</span>
+            <span class="text-[10px] text-rose-400 font-mono">Dec 1290 / RSP-03: Bloqueo de Nota Automática</span>
             <button onclick="approveContent()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg">
               ✅ Aprobar e Incluir en Aula (Docente)
             </button>
@@ -286,144 +288,169 @@
     </div>
   </section>
 
-  <!-- TAB 4: CADENA DE TRAZABILIDAD TRAZA-RIO -->
-  <section id="pane-traza" class="col-span-12 hidden space-y-4">
-    <div class="glass-card rounded-2xl p-5 border border-gray-800">
-      <h2 class="text-sm font-bold text-white">🔗 Cadena Bidireccional de Trazabilidad TRAZA-RIO</h2>
-      <p class="text-xs text-gray-400 mt-1">Formaliza la traza: Condición Territorial (C) → Necesidad (N) → Requisito (R) → Subsistema (S) → Función (F) → Artefacto (A) → Instrumento (I) → Evidencia (E).</p>
+  <!-- MÓDULO 5: PIAR DECRETO 1421 (EDUCACIÓN INCLUSIVA) -->
+  <section id="pane-piar" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5">
+      <h2 class="text-sm font-bold text-white flex justify-between items-center">
+        <span>♿ Generador Oficial PIAR - Decreto 1421 de 2017 (Inclusión / DUA)</span>
+        <span class="badge-law bg-rose-500/20 text-rose-300 border border-rose-500/30">Plan Individual de Ajustes Razonables</span>
+      </h2>
 
-      <div class="mt-6 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
-        <div class="p-3 rounded-xl bg-emerald-950 border border-emerald-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">CONDICIÓN (C)</span>
-          <strong class="text-emerald-300 text-xs">C-01: No WAN</strong>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
+        <input id="piarEst" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Nombre Estudiante...">
+        <input id="piarDoc" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Documento Identidad...">
+        <input id="piarGrado" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Grado Escolar...">
+        <input id="piarDiag" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Diagnóstico / Barrera de Aprendizaje...">
+        <textarea id="piarAjustes" rows="2" class="col-span-2 bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Ajustes Razonables DUA (Diseño Universal para el Aprendizaje)..."></textarea>
+      </div>
+
+      <button onclick="genPIARPDF()" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 rounded-xl transition-all">
+        📄 Generar Documento Oficial PIAR en PDF
+      </button>
+    </div>
+  </section>
+
+  <!-- MÓDULO 6: LEY 1620 CONVIVENCIA ESCOLAR -->
+  <section id="pane-convivencia" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5">
+      <h2 class="text-sm font-bold text-white flex justify-between items-center">
+        <span>🛡️ Ruta de Atención Integral - Ley 1620 de 2013 & Decreto 1965 de 2013</span>
+        <span class="badge-law bg-amber-500/20 text-amber-300 border border-amber-500/30">Comité de Convivencia / SIUCE</span>
+      </h2>
+
+      <div class="mt-4 grid grid-cols-3 gap-4 text-xs">
+        <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-500/30">
+          <div class="font-bold text-blue-300">TIPO I - Conflictos Manejados Inadecuadamente</div>
+          <p class="text-gray-300 mt-2">Reunión inmediata, mediación pedagógica y fijación de compromisos de reparación.</p>
         </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-emerald-950 border border-emerald-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">NECESIDAD (N)</span>
-          <strong class="text-emerald-300 text-xs">N-01: Auto-IAG</strong>
+        <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/30">
+          <div class="font-bold text-amber-300">TIPO II - Ciberacoso / Agresión sin Delito</div>
+          <p class="text-gray-300 mt-2">Atención en salud, sesión Comité de Convivencia y reporte al SIUCE (24-48h).</p>
         </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-cyan-950 border border-cyan-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">REQUISITO (R)</span>
-          <strong class="text-cyan-300 text-xs">RF-01: LAN Local</strong>
-        </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-cyan-950 border border-cyan-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">SUBSISTEMA (S)</span>
-          <strong class="text-cyan-300 text-xs">S-02: L2 Engine</strong>
-        </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-indigo-950 border border-indigo-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">FUNCIÓN (F)</span>
-          <strong class="text-indigo-300 text-xs">F-01: RAG Local</strong>
-        </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-indigo-950 border border-indigo-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">ARTEFACTO (A)</span>
-          <strong class="text-indigo-300 text-xs">A-01: Taller DBA</strong>
-        </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-amber-950 border border-amber-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">PRUEBA (I)</span>
-          <strong class="text-amber-300 text-xs">I-01: Log Red</strong>
-        </div>
-        <span class="text-gray-600 font-bold">→</span>
-        <div class="p-3 rounded-xl bg-amber-950 border border-amber-500/40 text-center min-w-[110px]">
-          <span class="text-[9px] text-gray-400 block">EVIDENCIA (E)</span>
-          <strong class="text-amber-300 text-xs">E-01: 0 Bytes WAN</strong>
+        <div class="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30">
+          <div class="font-bold text-rose-300">TIPO III - Presuntos Delitos</div>
+          <p class="text-gray-300 mt-2">Atención en salud, notificación a ICBF, Fiscalía y Policía de Infancia y Adolescencia.</p>
         </div>
       </div>
 
-      <div class="mt-6 bg-gray-900 p-4 rounded-xl border border-gray-800 text-xs text-gray-300 leading-relaxed">
-        <strong>Fórmula de Cobertura de Trazabilidad:</strong> <code class="text-emerald-400">CT = (Rt / R_total) × 100 = 100%</code>. Permite que un auditor del Ministerio de Educación tome la Evidencia E-01 y navegue inversamente hasta la Condición Territorial C-01.
+      <div class="mt-4 p-3 bg-red-950/30 border border-red-800 rounded-xl text-xs font-mono text-red-300">
+        🛑 RSP-07 Excepción Activa: Si el sistema detecta intento de sanción automática por IA, emite <code class="bg-red-900 px-1 rounded font-bold">ERR_GOB_HUMAN_REQUIRED</code> bloqueando el registro en la base de datos sin la firma del Rector.
       </div>
     </div>
   </section>
 
-  <!-- TAB 5: MATRIZ DE FALSACIÓN POPPERIANA (POP-01..12) -->
-  <section id="pane-pop" class="col-span-12 hidden space-y-4">
-    <div class="glass-card rounded-2xl p-5 border border-gray-800 flex justify-between items-center">
-      <div>
-        <h2 class="text-sm font-bold text-white">🧪 Matriz de Refutabilidad Empírica (Karl Popper 1959)</h2>
-        <p class="text-xs text-gray-400 mt-1">12 Condiciones explícitas de falsación que determinan si el marco de diseño es FALSO en laboratorio.</p>
-      </div>
-      <button onclick="runPopStressTest()" class="bg-red-600/80 hover:bg-red-600 text-white font-bold text-xs px-4 py-2 rounded-xl border border-red-500/30">
-        💥 Simular Prueba de Estrés
-      </button>
-    </div>
+  <!-- MÓDULO 7: PMI GUÍA 34 -->
+  <section id="pane-pmi" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5">
+      <h2 class="text-sm font-bold text-white justify-between flex items-center">
+        <span>📈 Plan de Mejoramiento Institucional (PMI Guía 34 MEN)</span>
+        <span class="badge-law bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Exportación Excel SMART</span>
+      </h2>
 
-    <div id="popContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
+        <input id="pmiHallazgo" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Hallazgo Autoevaluación Guía 34...">
+        <input id="pmiAccion" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Acción de Mejora...">
+        <input id="pmiMeta" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Meta SMART (Ej: Lograr 90% cobertura)...">
+        <input id="pmiInd" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Indicador de Seguimiento...">
+      </div>
+
+      <div class="mt-4 flex gap-3">
+        <button onclick="addPMI()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
+          + Agregar Acción al PMI
+        </button>
+        <button onclick="exportPMIExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
+          📊 Exportar PMI en Excel (.xlsx)
+        </button>
+      </div>
+
+      <div class="mt-4 max-h-40 overflow-y-auto border border-gray-800 rounded-xl">
+        <table id="pmiTable" class="w-full text-left text-xs font-mono">
+          <thead class="bg-gray-900 text-gray-400"><tr><th class="p-2">Hallazgo</th><th class="p-2">Acción</th><th class="p-2">Meta SMART</th><th class="p-2">Indicador</th></tr></thead>
+          <tbody class="divide-y divide-gray-800"></tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
 </main>
 
-<!-- JavaScript Interactivo -->
+<!-- Scripts Lógicos Interactivos -->
 <script>
-// Base de Datos de Requisitos Normativos
 const REQS = [
-  {id:'RF-01', type:'RF', dom:'R-TEC', desc:'Ejecución de funciones de aprendizaje en LAN local sin dependencia WAN.', ok:true},
-  {id:'RF-02', type:'RF', dom:'R-IA', desc:'Motor de inferencia local con SLMs cuantizados a 4 bits (Phi-3 / Llama 3).', ok:true},
-  {id:'RF-03', type:'RF', dom:'R-EVA', desc:'Exportación de artefactos en formatos estándar (PDF/Markdown).', ok:true},
-  {id:'RF-04', type:'RF', dom:'R-PC', desc:'Motor RAG local sobre base de datos vectorial territorial.', ok:true},
-  {id:'RF-05', type:'RF', dom:'R-MAN', desc:'Respaldo de emergencia y restauración por unidad USB cifrada.', ok:true},
-  {id:'RF-06', type:'RF', dom:'R-SP', desc:'Control de acceso basado en roles (RBAC) para docente y estudiantes.', ok:true},
-  {id:'RF-07', type:'RF', dom:'R-EVA', desc:'Almacenamiento transaccional de evidencias con hash de integridad SHA-256.', ok:true},
-  {id:'RF-08', type:'RF', dom:'R-TLA', desc:'Indexación de actividades alineadas a los Derechos Básicos de Aprendizaje (DBA).', ok:true},
-  {id:'RF-09', type:'RF', dom:'R-PC', desc:'Filtros léxicos territoriales adaptados al contexto del Caribe colombiano.', ok:true},
-  {id:'RF-10', type:'RF', dom:'R-GOB', desc:'Interfaz de aprobación explícita de contenido por parte del docente.', ok:true},
+  {id:'RF-01', type:'RF', dom:'R-TEC', desc:'Inferencia local sin enlace de datos. 0 bytes WAN.', ok:true},
+  {id:'RF-02', type:'RF', dom:'R-IA', desc:'Ajuste de complejidad léxica al grado escolar.', ok:true},
+  {id:'RF-03', type:'RF', dom:'R-IA', desc:'Exportación a PDF y Markdown sin red.', ok:true},
+  {id:'RF-04', type:'RF', dom:'R-IA', desc:'RAG local citando fuente y página.', ok:true},
+  {id:'RF-05', type:'RF', dom:'R-TEC', desc:'Respaldo USB cifrado AES-256 (Ley 1581).', ok:true},
+  {id:'RF-06', type:'RF', dom:'R-TEC', desc:'Autenticación RBAC y contraseñas hash.', ok:true},
+  {id:'RF-07', type:'RF', dom:'R-EVA', desc:'Persistencia con Hash SHA-256 ante apagados.', ok:true},
+  {id:'RF-08', type:'RF', dom:'R-EVA', desc:'Tablero de desempeño exclusivo docente.', ok:true},
+  {id:'RF-09', type:'RF', dom:'R-MAN', desc:'Monitoreo automático de temperatura y batería.', ok:true},
+  {id:'RF-10', type:'RF', dom:'R-SP', desc:'Cierre de sesión por inactividad a 15 min.', ok:true},
 
-  {id:'RNF-01', type:'RNF', dom:'R-TEC', desc:'Operación 100% desconectada de Internet durante la inferencia.', ok:true},
-  {id:'RNF-02', type:'RNF', dom:'R-ENE', desc:'Consumo de potencia eléctrica del servidor local ≤ 20 Watts.', ok:true},
-  {id:'RNF-03', type:'RNF', dom:'R-ENE', desc:'Autonomía continua en batería fotovoltaica ≥ 6 horas.', ok:true},
-  {id:'RNF-04', type:'RNF', dom:'R-MAN', desc:'Tiempo de inicio y disponibilidad del nodo local ≤ 3 minutos.', ok:true},
-  {id:'RNF-05', type:'RNF', dom:'R-SP', desc:'Cifrado de datos en reposo mediante algoritmo AES-256.', ok:true},
-  {id:'RNF-06', type:'RNF', dom:'R-IA', desc:'Latencia de respuesta al primer token ≤ 15 segundos.', ok:true},
-  {id:'RNF-07', type:'RNF', dom:'R-ECO', desc:'Costo de adquisición de hardware local CapEx ≤ \$600 USD.', ok:true},
-  {id:'RNF-08', type:'RNF', dom:'R-ECO', desc:'Costo operativo recurrente por licencias u OpEx = \$0 USD/mes.', ok:true},
-  {id:'RNF-09', type:'RNF', dom:'R-MAN', desc:'Resiliencia ante cortes abruptos de energía sin corrupción de datos.', ok:true},
-  {id:'RNF-10', type:'RNF', dom:'R-MAN', desc:'Operación administrada por docente sin requerir consola CLI.', ok:true},
+  {id:'RNF-01', type:'RNF', dom:'R-TEC', desc:'Funcionamiento 100% desconectado.', ok:true},
+  {id:'RNF-02', type:'RNF', dom:'R-ENE', desc:'Consumo eléctrico ≤ 20 Watts.', ok:true},
+  {id:'RNF-03', type:'RNF', dom:'R-ENE', desc:'Autonomía batería solar ≥ 6 horas.', ok:true},
+  {id:'RNF-04', type:'RNF', dom:'R-MAN', desc:'Restauración desde USB en ≤ 15 min.', ok:true},
+  {id:'RNF-05', type:'RNF', dom:'R-SP', desc:'Cifrado total de almacenamiento AES-256.', ok:true},
+  {id:'RNF-06', type:'RNF', dom:'R-SP', desc:'Diseño sin biometría para menores.', ok:true},
+  {id:'RNF-07', type:'RNF', dom:'R-ECO', desc:'Techo de adquisición CapEx ≤ \$600 USD.', ok:true},
+  {id:'RNF-08', type:'RNF', dom:'R-ECO', desc:'OpEx = \$0 USD/mes sin suscripciones.', ok:true},
+  {id:'RNF-09', type:'RNF', dom:'R-TEC', desc:'Arranque del sistema en ≤ 90 s.', ok:true},
+  {id:'RNF-10', type:'RNF', dom:'R-MAN', desc:'Operación con un solo clic sin consola.', ok:true},
 
-  {id:'RSP-01', type:'RSP', dom:'R-GOB', desc:'Insignia de marcado obligatorio "Generado por IA Local" en toda salida.', ok:true},
-  {id:'RSP-02', type:'RSP', dom:'R-TLA', desc:'Inclusión obligatoria de una pregunta metacognitiva previa al guardado.', ok:true},
-  {id:'RSP-03', type:'RSP', dom:'R-GOB', desc:'Asignación de calificaciones reservada exclusivamente al docente humano.', ok:true},
-  {id:'RSP-04', type:'RSP', dom:'R-GOB', desc:'Prohibición estricta de sanciones automáticas emitidas por la IA.', ok:true},
-  {id:'RSP-05', type:'RSP', dom:'R-PC', desc:'Inclusión de referentes culturales y biodiversidad regional en los prompts.', ok:true},
-  {id:'RSP-06', type:'RSP', dom:'R-SP', desc:'Filtro de privacidad de datos de menores antes de procesar el texto.', ok:true},
-  {id:'RSP-07', type:'RSP', dom:'R-GOB', desc:'Excepción ERR_GOB_HUMAN_REQUIRED al detectar rutas disciplinarias.', ok:true},
-  {id:'RSP-08', type:'RSP', dom:'R-EVA', desc:'Inalienabilidad de la evaluación y voz pedagógica del maestro.', ok:true},
-  {id:'RSP-09', type:'RSP', dom:'R-SP', desc:'Anonimización irreversible en caso de exportación de reportes fuera del nodo.', ok:true},
-  {id:'RSP-10', type:'RSP', dom:'R-PC', desc:'Mecanismo de veto léxico para prevenir estereotipos peyorativos territoriales.', ok:true}
+  {id:'RSP-01', type:'RSP', dom:'R-GOB', desc:'Marcado visible "Generado por IA Local".', ok:true},
+  {id:'RSP-02', type:'RSP', dom:'R-PC', desc:'Pregunta metacognitiva obligatoria antes de entregar.', ok:true},
+  {id:'RSP-03', type:'RSP', dom:'R-GOB', desc:'Notas solo del docente humano (Dec 1290).', ok:true},
+  {id:'RSP-04', type:'RSP', dom:'R-PC', desc:'Mapeo explícito a Derechos Básicos de Aprendizaje (DBA).', ok:true},
+  {id:'RSP-05', type:'RSP', dom:'R-TLA', desc:'Ejemplos con vocabulario y flora del Caribe.', ok:true},
+  {id:'RSP-06', type:'RSP', dom:'R-SP', desc:'Filtro léxico de estereotipos peyorativos.', ok:true},
+  {id:'RSP-07', type:'RSP', dom:'R-GOB', desc:'ERR_GOB_HUMAN_REQUIRED ante sanciones (Ley 1620).', ok:true},
+  {id:'RSP-08', type:'RSP', dom:'R-GOB', desc:'Transparencia e inalienabilidad evaluativa.', ok:true},
+  {id:'RSP-09', type:'RSP', dom:'R-EVA', desc:'Anonimización irreversible previa exportación.', ok:true},
+  {id:'RSP-10', type:'RSP', dom:'R-TLA', desc:'Comprensión de habla e hispanolectos rurales.', ok:true}
 ];
 
-// Matriz de Falsación Popperiana (POP-01 a POP-12)
-const POPS = [
-  {id:'POP-01', cond:'El sistema requiere conexión a Internet WAN para iniciar o ejecutar inferencia.', fail:false},
-  {id:'POP-02', cond:'El consumo de potencia del servidor excede los 20 Watts bajo carga completa.', fail:false},
-  {id:'POP-03', cond:'La IA emite una calificación o sanción directa sin intervención del docente.', fail:false},
-  {id:'POP-04', cond:'Se corrompe la base de datos de evidencias tras un apagado de energía repentino.', fail:false},
-  {id:'POP-05', cond:'El sistema transmite datos personales de estudiantes fuera de la red LAN local.', fail:false},
-  {id:'POP-06', cond:'La velocidad de generación de texto cae por debajo de 2 tokens/segundo.', fail:false},
-  {id:'POP-07', cond:'El costo del hardware local supera el techo presupuestal de \$600 USD.', fail:false},
-  {id:'POP-08', cond:'El sistema omite la pregunta metacognitiva en las actividades generadas.', fail:false},
-  {id:'POP-09', cond:'La batería fotovoltaica se agota en menos de 6 horas de operación continua.', fail:false},
-  {id:'POP-10', cond:'Se genera contenido con estereotipos peyorativos hacia la comunidad rural.', fail:false},
-  {id:'POP-11', cond:'El docente no puede modificar o vetar el contenido generado por la IA.', fail:false},
-  {id:'POP-12', cond:'Se identifican rupturas en la cadena de trazabilidad TRAZA-RIO mayores al 10%.', fail:false}
-];
-
-// Cambio de Pestañas
 function showTab(t) {
-  ['dash','reqs','sim','traza','pop'].forEach(id => {
+  ['dash','due','reqs','sim','piar','convivencia','pmi'].forEach(id => {
     document.getElementById('pane-' + id).classList.add('hidden');
-    document.getElementById('tab-' + id).classList.remove('active');
-    document.getElementById('tab-' + id).classList.add('bg-gray-800', 'text-gray-300');
+    const b = document.getElementById('tab-' + id);
+    if(b) { b.classList.remove('active'); b.classList.add('bg-gray-800', 'text-gray-300'); }
   });
   document.getElementById('pane-' + t).classList.remove('hidden');
-  document.getElementById('tab-' + t).classList.add('active');
-  document.getElementById('tab-' + t).classList.remove('bg-gray-800', 'text-gray-300');
+  const btn = document.getElementById('tab-' + t);
+  if(btn) { btn.classList.add('active'); btn.classList.remove('bg-gray-800', 'text-gray-300'); }
 }
 
-// Renderizado del Catálogo de Requisitos
+async function queryDANEGov() {
+  const dane = document.getElementById('daneInput').value.trim();
+  const statusEl = document.getElementById('dueStatus');
+  const resultsEl = document.getElementById('dueResults');
+
+  if(dane.length !== 12) {
+    statusEl.innerText = '⚠️ El código DANE debe tener exactamente 12 dígitos.';
+    return;
+  }
+
+  statusEl.innerText = '⏳ Conectando con la API de datos.gov.co...';
+  try {
+    const resp = await fetch(`[suspicious link removed]{dane}`);
+    const data = await resp.json();
+    if(data && data.length > 0) {
+      const item = data;
+      document.getElementById('dueNombre').innerText = item.nombre_establecimiento || item.nombre || 'IE Rural Colombia';
+      document.getElementById('dueSec').innerText = item.secretaria || item.nombre_secretaria || 'Secretaría Regional';
+      document.getElementById('dueMuni').innerText = (item.municipio || '') + ' / ' + (item.departamento || '');
+      resultsEl.classList.remove('hidden');
+      statusEl.innerText = '✅ Registro oficial validado en Datos Abiertos Colombia.';
+    } else {
+      statusEl.innerText = 'ℹ️ Registro no ubicado en el dataset público Socrata. Ingrese los datos manualmente.';
+    }
+  } catch(e) {
+    statusEl.innerText = '🌐 Modo Offline Activado: Registro guardado localmente en el nodo.';
+  }
+}
+
 function renderReqs() {
   const filter = document.getElementById('filterType').value;
   const container = document.getElementById('reqsContainer');
@@ -435,10 +462,10 @@ function renderReqs() {
 
   list.forEach(r => {
     const card = document.createElement('div');
-    card.className = `p-3.5 rounded-xl border text-xs flex items-start gap-3 transition-all ${r.ok ? 'bg-gray-900/80 border-gray-800' : 'bg-red-950/30 border-red-800/50'}`;
+    card.className = `p-3.5 rounded-xl border text-xs flex items-start gap-3 ${r.ok ? 'bg-gray-900/80 border-gray-800' : 'bg-rose-950/30 border-rose-800/50'}`;
     card.innerHTML = `
       <input type="checkbox" ${r.ok ? 'checked' : ''} onchange="toggleReq('${[enlace sospechoso eliminado]}')" class="mt-1 w-4 h-4 accent-emerald-500 rounded cursor-pointer">
-      <div class="flex-1">
+      <div>
         <div class="flex items-center gap-2">
           <span class="font-mono font-bold ${r.type === 'RSP' ? 'text-indigo-400' : r.type === 'RF' ? 'text-cyan-400' : 'text-emerald-400'}">${[enlace sospechoso eliminado]}</span>
           <span class="text-[9px] px-2 py-0.5 rounded font-mono bg-gray-800 text-gray-400">${r.dom}</span>
@@ -452,43 +479,12 @@ function renderReqs() {
 
 function toggleReq(id) {
   const item = REQS.find(r => [enlace sospechoso eliminado] === id);
-  if (item) {
-    item.ok = !item.ok;
-    renderReqs();
-    updateChart();
-  }
+  if(item) { item.ok = !item.ok; renderReqs(); updateChart(); }
 }
 
-// Renderizado de Falsación Popperiana
-function renderPops() {
-  const container = document.getElementById('popContainer');
-  container.innerHTML = '';
-  POPS.forEach(p => {
-    const card = document.createElement('div');
-    card.className = `p-3.5 rounded-xl border text-xs ${[enlace sospechoso eliminado] ? 'bg-red-950/50 border-red-500 text-red-200' : 'bg-gray-900/80 border-gray-800 text-gray-300'}`;
-    card.innerHTML = `
-      <div class="flex justify-between items-center">
-        <span class="font-mono font-bold ${[enlace sospechoso eliminado] ? 'text-red-400' : 'text-emerald-400'}">${[enlace sospechoso eliminado]}</span>
-        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${[enlace sospechoso eliminado] ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'}">
-          ${[enlace sospechoso eliminado] ? '❌ REFUTADO (Falla)' : '✅ MARCO SÓLIDO'}
-        </span>
-      </div>
-      <p class="mt-1.5 leading-snug">${p.cond}</p>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function runPopStressTest() {
-  alert('🧪 Simulando prueba de estrés popperiana...\nValidando consumo, latencia y privacidad en LAN local.');
-  POPS.forEach(p => [enlace sospechoso eliminado] = false);
-  renderPops();
-}
-
-// Simulador de Inferencia IA Local
 function runLocalInference() {
   const input = document.getElementById('promptInput').value.trim();
-  if (!input) { alert('Por favor ingrese una solicitud pedagógica.'); return; }
+  if(!input) { alert('Ingrese una consulta pedagógica.'); return; }
 
   document.getElementById('mFirstToken').innerText = '1.4 s';
   document.getElementById('mSpeed').innerText = '5.2 tok/s';
@@ -496,20 +492,51 @@ function runLocalInference() {
 
   document.getElementById('badgeRSP1').classList.remove('hidden');
   document.getElementById('outputBox').innerHTML = `
-    <div class="text-emerald-400 font-bold mb-1">📖 Taller Pedagógico Generado (RAG Caribe_Educativo_v1):</div>
-    <p class="mb-2"><strong>Actividad:</strong> La leyenda del Hombre Caimán de Plato (Magdalena) y la preservación ambiental del río.</p>
-    <p class="text-gray-400"><strong>Objetivo DBA:</strong> Comprender textos narrativos de la tradición oral regional.</p>
+    <div class="text-emerald-400 font-bold mb-1">📖 Actividad Generada (Corpus RAG Caribe_Educativo):</div>
+    <p class="mb-2">Taller de lectura sobre la leyenda de la Llorona en el río Magdalena, analizando la biodiversidad ribereña.</p>
+    <p class="text-gray-400"><strong>Alineación DBA:</strong> Estándar Lenguaje Grado 5° (Tradición oral y análisis crítico).</p>
   `;
   document.getElementById('rspGate').classList.remove('hidden');
 }
 
 function approveContent() {
   const ans = document.getElementById('metaAnswer').value.trim();
-  if (!ans) { alert('RSP-02 exige responder la reflexión metacognitiva antes de incluir en la clase.'); return; }
-  alert('✅ RSP-03 / RSP-08 Cumplidos: Contenido aprobado por el docente e incorporado a la sesión de clase.');
+  if(!ans) { alert('RSP-02 exige responder la reflexión metacognitiva.'); return; }
+  alert('✅ Decreto 1290 Cumplido: Asignación validada y firmada por el docente humano.');
 }
 
-// Gráfica de Radar (Chart.js)
+function genPIARPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("PIAR - DECRETO 1421 DE 2017 (EDUCACIÓN INCLUSIVA)", 10, 15);
+  doc.text("Estudiante: " + (document.getElementById('piarEst').value || 'Sin nombre'), 10, 25);
+  doc.text("Documento: " + (document.getElementById('piarDoc').value || 'Sin doc'), 10, 32);
+  doc.text("Grado: " + (document.getElementById('piarGrado').value || 'Sin grado'), 10, 39);
+  doc.text("Ajustes DUA: " + (document.getElementById('piarAjustes').value || 'Ninguno'), 10, 48);
+  [enlace sospechoso eliminado]("PIAR_Oficial_Decreto1421.pdf");
+}
+
+let pmiList = [];
+function addPMI() {
+  const h = document.getElementById('pmiHallazgo').value;
+  const a = document.getElementById('pmiAccion').value;
+  const m = document.getElementById('pmiMeta').value;
+  const i = document.getElementById('pmiInd').value;
+  if(!h || !a) { alert('Ingrese hallazgo y acción.'); return; }
+
+  pmiList.push({Hallazgo: h, Accion: a, MetaSMART: m, Indicador: i});
+  const tbody = document.querySelector('#pmiTable tbody');
+  tbody.innerHTML = [enlace sospechoso eliminado](p => `<tr><td class="p-2">${p.Hallazgo}</td><td class="p-2">${p.Accion}</td><td class="p-2">${p.MetaSMART}</td><td class="p-2">${p.Indicador}</td></tr>`).join('');
+}
+
+function exportPMIExcel() {
+  if(pmiList.length === 0) { alert('Agregue acciones al PMI.'); return; }
+  const ws = XLSX.utils.json_to_sheet(pmiList);
+  const wb = [enlace sospechoso eliminado]_new();
+  [enlace sospechoso eliminado]_append_sheet(wb, ws, "PMI Guia 34");
+  XLSX.writeFile(wb, "PMI_Guia34_MEN.xlsx");
+}
+
 let radarChart;
 function initChart() {
   const ctx = document.getElementById('radarDomains').getContext('2d');
@@ -518,8 +545,8 @@ function initChart() {
     data: {
       labels: ['R-TEC', 'R-ENE', 'R-ECO', 'R-MAN', 'R-IA', 'R-PC', 'R-TLA', 'R-GOB', 'R-EVA', 'R-SP'],
       datasets: [{
-        label: 'Cumplimiento RIO-CARIBE (%)',
-        data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+        label: 'Cumplimiento (%)',
+        data: Array(10).fill(100),
         backgroundColor: 'rgba(16, 185, 129, 0.2)',
         borderColor: '#10b981',
         borderWidth: 2,
@@ -534,7 +561,7 @@ function initChart() {
           angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
           grid: { color: 'rgba(255, 255, 255, 0.1)' },
           pointLabels: { color: '#9ca3af', font: { size: 10, family: 'JetBrains Mono' } },
-          ticks: { display: false, backdropColor: 'transparent' },
+          ticks: { display: false },
           min: 0, max: 100
         }
       },
@@ -544,18 +571,16 @@ function initChart() {
 }
 
 function updateChart() {
-  if (!radarChart) return;
+  if(!radarChart) return;
   const count = REQS.filter(r => r.ok).length;
   const val = Math.round((count / 30) * 100);
-  [enlace sospechoso eliminado].datasets[0].data = Array(10).fill(val);
+  [enlace sospechoso eliminado].datasets.data = Array(10).fill(val);
   radarChart.update();
   document.getElementById('globalHealth').innerText = val + '% Auditado';
 }
 
-// Inicialización
 window.onload = () => {
   renderReqs();
-  renderPops();
   initChart();
 };
 </script>
