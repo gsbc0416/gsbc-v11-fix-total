@@ -53,9 +53,7 @@
       width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
     }
-    .section {
-      padding: 54px 0;
-    }
+    .section { padding: 54px 0; }
     .section-title {
       font-size: clamp(1.8rem, 3vw, 2.8rem);
       margin: 0 0 12px;
@@ -361,454 +359,7 @@
     </div>
   </header>
 
-  <main>
-    <section id="inicio" class="hero">
-      <div class="container hero-grid">
-        <div>
-          <span class="badge">Educación rural · IA generativa · offline</span>
-          <h1>RIO-CARIBE</h1>
-          <p class="lead">
-            Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad.
-            Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de gobernanza en especificaciones verificables y auditables.
-          </p>
-          <div class="cta-row">
-            <a class="btn primary" href="#framework">Ver marco</a>
-            <a class="btn" href="#requisitos">Ver requisitos</a>
-          </div>
-          <div class="pill-row">
-            <span class="pill">Offline-first</span>
-            <span class="pill">Trazabilidad C→N→R→S→F→A→I→E</span>
-            <span class="pill">Educación rural</span>
-            <span class="pill">Gobernanza docente</span>
-          </div>
-        </div>
-
-        <aside class="hero-card" aria-label="Resumen de resultados">
-          <h3>Resumen del marco</h3>
-          <p class="muted">RIO-CARIBE articula infraestructura local, IA en el borde y mediación docente para diseñar sistemas educativos resilientes y sostenibles.</p>
-          <div class="metric-grid">
-            <div class="metric">
-              <strong>10</strong>
-              <span>Dominios de diseño</span>
-            </div>
-            <div class="metric">
-              <strong>30</strong>
-              <span>Requisitos</span>
-            </div>
-            <div class="metric">
-              <strong>3</strong>
-              <span>Capas de arquitectura</span>
-            </div>
-            <div class="metric">
-              <strong>12</strong>
-              <span>Condiciones de falsación</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section id="abstract" class="section">
-      <div class="container">
-        <h2 class="section-title">Resumen</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Resumen ejecutivo</h3>
-            <p>
-              La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. Los estándares internacionales de ingeniería de requisitos no detallan por sí solos cómo traducir esas restricciones en criterios verificables.
-            </p>
-            <p>
-              RIO-CARIBE propone un marco conceptual para transformar condiciones sociotécnicas y pedagógicas en especificaciones formales, auditables y operativas. La propuesta articula tres categorías de requisitos: funcionales, no funcionales y sociopedagógicos.
-            </p>
-          </div>
-          <div class="card">
-            <h3>Palabras clave</h3>
-            <div class="pill-row">
-              <span class="pill">computación en el borde</span>
-              <span class="pill">educación rural</span>
-              <span class="pill">IA generativa</span>
-              <span class="pill">ingeniería de requisitos</span>
-              <span class="pill">modelos de lenguaje pequeños</span>
-              <span class="pill">trazabilidad</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="objetivos" class="section">
-      <div class="container">
-        <h2 class="section-title">Objetivos</h2>
-        <div class="grid-3">
-          <div class="card">
-            <h3>Objetivo general</h3>
-            <p>Diseñar y fundamentar el marco conceptual RIO-CARIBE para transformar condiciones territoriales y educativas en especificaciones técnicas y pedagógicas verificables.</p>
-          </div>
-          <div class="card">
-            <h3>Objetivos específicos</h3>
-            <ul>
-              <li>Caracterizar contextos rurales del Caribe colombiano.</li>
-              <li>Definir dominios y requisitos.</li>
-              <li>Diseñar arquitectura offshore/local.</li>
-              <li>Formalizar trazabilidad TRAZA-RIO.</li>
-              <li>Establecer esquema de auditoría RIO-QA.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Pregunta guía</h3>
-            <p>¿Cómo puede un marco de ingeniería de requisitos transformar condiciones territoriales y educativas de contextos rurales en especificaciones funcionales, no funcionales y sociopedagógicas verificables?</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="framework" class="section">
-      <div class="container">
-        <h2 class="section-title">Marco conceptual RIO-CARIBE</h2>
-        <p class="section-subtitle">El marco se fundamenta en cuatro pilares: taxonomía de dominios, arquitectura de tres capas, principio offline-first y trazabilidad bidireccional.</p>
-
-        <div class="grid-2">
-          <div class="card">
-            <h3>1. Taxonomía de dominios</h3>
-            <table>
-              <thead>
-                <tr><th>Código</th><th>Dominio</th><th>Descripción</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>R-TEC</td><td>Infraestructura y tecnología</td><td>Operación offline-first, almacenamiento local, sincronización diferida.</td></tr>
-                <tr><td>R-IA</td><td>IA local</td><td>Selección de SLMs, adaptabilidad y verificación de salidas.</td></tr>
-                <tr><td>R-PC</td><td>Pedagogía y currículo</td><td>Agencia docente, andamiaje curricular y cuestionamiento crítico.</td></tr>
-                <tr><td>R-TLA</td><td>Territorio, lenguaje, accesibilidad</td><td>Contextualización sociocultural del Caribe y accesibilidad.</td></tr>
-                <tr><td>R-ENE</td><td>Energía y resiliencia</td><td>Gestión energética y continuidad operativa.</td></tr>
-                <tr><td>R-ECO</td><td>Economía y sostenibilidad</td><td>Coste total de propiedad y viabilidad financiera.</td></tr>
-                <tr><td>R-MAN</td><td>Mantenimiento</td><td>Autodiagnóstico y restauración local.</td></tr>
-                <tr><td>R-SP</td><td>Seguridad y privacidad</td><td>Minimización de datos, mínimo privilegio y aislamiento.</td></tr>
-                <tr><td>R-GOB</td><td>Gobernanza</td><td>Rendición de cuentas y prohibición de decisiones IA autónomas.</td></tr>
-                <tr><td>R-EVA</td><td>Evaluación y evidencia</td><td>Vínculo entre actividades y evidencia digital.</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="card">
-            <h3>2. Requisitos sociopedagógicos</h3>
-            <p>Los requisitos SP codifican principios pedagógicos, éticos y comunitarios directamente en la especificación del sistema para que puedan ser verificados técnicamente.</p>
-            <ul>
-              <li>Preservación de la mediación del docente.</li>
-              <li>Verificación crítica de salidas generadas por IA.</li>
-              <li>Protección de menores y minimización de datos.</li>
-              <li>Alineación curricular explícita.</li>
-              <li>Contextualización regional y cultural.</li>
-              <li>Responsabilidad institucional y trazabilidad.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="arquitectura" class="section">
-      <div class="container">
-        <h2 class="section-title">Arquitectura sociotécnica de tres capas</h2>
-        <div class="grid-3">
-          <div class="card">
-            <h3>L1. Infraestructura local resiliente</h3>
-            <ul>
-              <li>Servidor local de bajo consumo.</li>
-              <li>Almacenamiento local cifrado.</li>
-              <li>Red LAN y energía de respaldo.</li>
-              <li>Autodiagnóstico y restauración.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>L2. Inteligencia educativa local</h3>
-            <ul>
-              <li>SLMs cuantizados y adaptados.</li>
-              <li>Motor de inferencia local.</li>
-              <li>RAG local con contenido curricular.</li>
-              <li>Filtros de contenido y validación.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>L3. Mediación pedagógico-territorial</h3>
-            <ul>
-              <li>Interfaz adaptativa al contexto.</li>
-              <li>Aprobación docente RBAC.</li>
-              <li>Prompts contextualizados.</li>
-              <li>Cuaderno digital de evidencias.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="metodologia" class="section">
-      <div class="container">
-        <h2 class="section-title">Metodología</h2>
-        <div class="timeline">
-          <div class="step">
-            <div class="step-index">1</div>
-            <div>
-              <h3>Revisión documental</h3>
-              <p>Selección de fuentes sobre educación rural, IAG, SLMs, edge computing, ingeniería de requisitos y directrices éticas.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">2</div>
-            <div>
-              <h3>Marco normativo</h3>
-              <p>Base en ISO/IEC/IEEE 29148 y 15288, además de principios educativos y de gobernanza.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">3</div>
-            <div>
-              <h3>Modelado de requisitos</h3>
-              <p>Transformación de condiciones territoriales y pedagógicas en requisitos funcionales, no funcionales y sociopedagógicos.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-index">4</div>
-            <div>
-              <h3>Validación futura</h3>
-              <p>Diseño de protocolo Delphi, auditoría RIO-QA y condiciones de falsación empírica para prueba en aula.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="requisitos" class="section">
-      <div class="container">
-        <h2 class="section-title">Matriz de requisitos</h2>
-        <p class="section-subtitle">Se consolidan 30 requisitos en tres categorías: funcionales, no funcionales y sociopedagógicos.</p>
-
-        <div class="requirements-filters" aria-label="Filtros de requisitos">
-          <button class="filter-btn active" data-filter="all">Todos</button>
-          <button class="filter-btn" data-filter="F">Funcionales</button>
-          <button class="filter-btn" data-filter="NF">No funcionales</button>
-          <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
-        </div>
-
-        <div class="req-table-wrap req-card active" data-card="all">
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Descripción</th>
-                <th>Tipo</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>R-TEC-01</td><td>El sistema debe ejecutar todas las funciones esenciales de aprendizaje en la red LAN local sin depender de Internet.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TEC-02</td><td>El sistema no debe depender de APIs externas o SaaS para funcionar de forma básica.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-TEC-03</td><td>Debe proporcionar almacenamiento local temporal cifrado para datos autorizados.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TEC-04</td><td>Debe ejecutar sincronización diferida entre periodos de conectividad estable.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-IA-01</td><td>El modelo debe seleccionarse según cuantización, RAM y capacidad del hardware.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-IA-02</td><td>El módulo debe generar recursos alineados con objetivos curriculares predefinidos.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-IA-03</td><td>Las salidas deben pasar por filtro local antes de mostrarse.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-01</td><td>Debe diferenciar claramente el texto generado por el estudiante y el generado por IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-02</td><td>Debe incorporar preguntas obligatorias de verificación crítica.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-03</td><td>Se exige aprobación y firma explícita del docente para evaluaciones o cierres de unidad.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-04</td><td>Las actividades deben vincularse a competencias curriculares oficiales.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-05</td><td>El uso de IA debe justificarse por valor pedagógico y no como fin en sí mismo.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TLA-01</td><td>Los prompts base deben incluir elementos socioculturales del Caribe colombiano.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TLA-02</td><td>El docente debe poder personalizar contextos específicos de la comunidad rural.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TLA-03</td><td>La interfaz y el lenguaje deben adaptarse al nivel de lectoescritura y grado escolar.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TLA-04</td><td>Debe cumplir con pautas de accesibilidad visual y cognitiva.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-ENE-01</td><td>Debe monitorizar el consumo energético y ajustar potencia de cómputo.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-ENE-02</td><td>Ante caídas del sistema eléctrico debe priorizar funciones esenciales y guardar evidencia.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-ECO-01</td><td>La arquitectura debe mantener el TCO dentro de criterios sostenibles para escuelas rurales.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-ECO-02</td><td>Debe permitir comparar configuraciones de hardware/software con criterios económicos.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-MAN-01</td><td>Debe incluir manuales e interfaces de autodiagnóstico ejecutables por docentes.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-MAN-02</td><td>Debe incluir scripts de restauración rápida a partir de USB.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-SP-01</td><td>Debe implementar autenticación y autorización basada en roles RBAC.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-SP-02</td><td>Debe aplicar mínimo privilegio sobre carpetas y bases de datos locales.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-SP-03</td><td>Debe prohibir recolección o transmisión de datos personales identificables de menores.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-GOB-01</td><td>Debe bloquear funciones que deleguen decisiones disciplinarias o de reprobación a la IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-GOB-02</td><td>Debe mantener registros de auditoría inalterables sobre interacciones con la IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-EVA-01</td><td>Los instrumentos de evaluación deben alinearse directamente con indicadores de aprendizaje.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-EVA-02</td><td>Las evidencias digitales deben guardar trazabilidad completa con los requisitos.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TRA-01</td><td>Debe garantizar la integridad bidireccional de la cadena de trazabilidad TRAZA-RIO.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="req-table-wrap req-card" data-card="F">
-          <table>
-            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
-            <tbody>
-              <tr><td>R-TEC-01</td><td>Ejecutar funciones esenciales en LAN local sin Internet.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TEC-03</td><td>Almacenamiento local cifrado para sesión escolar.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TEC-04</td><td>Sincronización diferida asíncrona.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-IA-02</td><td>Generación de recursos educativos alineados al currículo.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TLA-02</td><td>Personalización por contexto y comunidad rural.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-TLA-03</td><td>Adaptación visual y textual.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-ECO-01</td><td>Viabilidad económica del proyecto.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-SP-01</td><td>Autenticación y autorización RBAC.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-              <tr><td>R-SP-02</td><td>Principio de mínimo privilegio.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="req-table-wrap req-card" data-card="NF">
-          <table>
-            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
-            <tbody>
-              <tr><td>R-TEC-02</td><td>Sin dependencias externas para funcionamiento básico.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-IA-01</td><td>Selección de SLM según capacidad de hardware.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-ENE-01</td><td>Monitoreo energético y ajuste de consumo.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-ENE-02</td><td>Prioridad de funciones ante caídas eléctricas.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-ECO-02</td><td>Comparación de configuraciones con criterios de sostenibilidad.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-MAN-01</td><td>Manuales y diagnósticos para docentes no expertos.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-MAN-02</td><td>Scripts de restauración rápida y mantenibilidad.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-              <tr><td>R-SP-03</td><td>Prohibición de datos personales fuera de la red local.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="req-table-wrap req-card" data-card="SP">
-          <table>
-            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
-            <tbody>
-              <tr><td>R-IA-03</td><td>Filtro local para verificación de contenido.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-01</td><td>Diferenciación entre respuesta del estudiante y respuesta de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-02</td><td>Verificación crítica del contenido de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-03</td><td>Aprobación del docente antes de evaluación y cierre.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-04</td><td>Relación de la actividad con competencias curriculares.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-PC-05</td><td>Justificación pedagógica del uso de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TLA-01</td><td>Contextualización territorial y cultural.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TLA-04</td><td>Accesibilidad visual y cognitiva.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-GOB-01</td><td>Bloqueo de decisiones disciplinarias o evaluativas delegadas.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-GOB-02</td><td>Registros de auditoría inalterables.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-EVA-01</td><td>Alineación de instrumentos con indicadores de aprendizaje.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-EVA-02</td><td>Evidencia digital con trazabilidad completa.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-              <tr><td>R-TRA-01</td><td>Integridad bidireccional de la trazabilidad.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="traza" class="section">
-      <div class="container">
-        <h2 class="section-title">Trazabilidad TRAZA-RIO</h2>
-        <p class="section-subtitle">Cadena bidireccional C→N→R→S→F→A→I→E y retorno E→I→A→F→S→R→N→C.</p>
-        <div class="card">
-          <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador → Evidencia.</p>
-          <div class="pill-row">
-            <span class="pill">C</span>
-            <span class="pill">N</span>
-            <span class="pill">R</span>
-            <span class="pill">S</span>
-            <span class="pill">F</span>
-            <span class="pill">A</span>
-            <span class="pill">I</span>
-            <span class="pill">E</span>
-          </div>
-        </div>
-
-        <div class="grid-2" style="margin-top: 20px;">
-          <div class="card">
-            <h3>Ejemplo de trazabilidad</h3>
-            <p><strong>C-01:</strong> interrupción eléctrica y ausencia de conectividad.</p>
-            <p><strong>N-01:</strong> continuidad del aprendizaje sin depender de red pública.</p>
-            <p><strong>R-TEC-01:</strong> ejecución 100% offline en LAN local.</p>
-            <p><strong>F-01:</strong> microservicio de IA local ejecutándose offline.</p>
-            <p><strong>A-01:</strong> resolución cooperativa de un problema ambiental.</p>
-            <p><strong>E-01:</strong> registro digital del trabajo y evaluación.</p>
-          </div>
-
-          <div class="card">
-            <h3>Indicadores</h3>
-            <table>
-              <thead><tr><th>Indicador</th><th>Fórmula</th><th>Meta</th></tr></thead>
-              <tbody>
-                <tr><td>CT</td><td>CT = (Rt / R_total) × 100</td><td>100%</td></tr>
-                <tr><td>TI_r</td><td>1 si traza completa, 0 si hay ruptura</td><td>sin rupturas</td></tr>
-                <tr><td>CE</td><td>CE = (Re / R_evaluados) × 100</td><td>máxima evidencia</td></tr>
-                <tr><td>CV</td><td>CV = (Rv / R_probados) × 100</td><td>verificación completa</td></tr>
-                <tr><td>CAP</td><td>CAP = (Ac / A_totales) × 100</td><td>alineación curricular</td></tr>
-                <tr><td>TCO</td><td>C_adquisición + energía + mantenimiento</td><td>≤ $600 USD/aula</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="falsacion" class="section">
-      <div class="container">
-        <h2 class="section-title">Condiciones de falsación empírica</h2>
-        <div class="req-table-wrap">
-          <table>
-            <thead>
-              <tr><th>Código</th><th>Condición</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>F-01</td><td>El sistema pierde la capacidad de ejecutar funciones esenciales si se interrumpe la conexión a internet.</td></tr>
-              <tr><td>F-02</td><td>El consumo energético excede la capacidad del sistema de respaldo.</td></tr>
-              <tr><td>F-03</td><td>El modelo local genera alucinaciones o errores conceptuales superiores al umbral aceptable.</td></tr>
-              <tr><td>F-04</td><td>El sistema emite contenido inapropiado o violatorio de normas éticas.</td></tr>
-              <tr><td>F-05</td><td>Se demuestra filtración de datos personales identificables de menores.</td></tr>
-              <tr><td>F-06</td><td>El mantenimiento o restauración requiere intervención de un ingeniero especialista.</td></tr>
-              <tr><td>F-07</td><td>La IA no guarda correspondencia con los objetivos del currículo.</td></tr>
-              <tr><td>F-08</td><td>La contextualización territorial genera distracciones cognitivas o distorsiones conceptuales.</td></tr>
-              <tr><td>F-09</td><td>El Costo Total de Propiedad resulta inviable.</td></tr>
-              <tr><td>F-10</td><td>La latencia del modelo local supera 8 segundos por respuesta.</td></tr>
-              <tr><td>F-11</td><td>El sistema toma decisiones evaluativas o disciplinarias sin la firma explícita del docente.</td></tr>
-              <tr><td>F-12</td><td>Se identifican rupturas injustificadas en TRAZA-RIO superiores al 10%.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="legal" class="section">
-      <div class="container">
-        <h2 class="section-title">Aclaraciones legales y de uso</h2>
-        <div class="legal-box">
-          <p>
-            Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado especialista en Colombia.
-          </p>
-          <p>
-            Para implementación real en instituciones educativas, se recomienda incorporar: aviso de privacidad, política de cookies, términos y condiciones, tratamiento de datos personales, consentimiento informado para menores y protocolos de seguridad. El contenido aquí expuesto debe revisarse y validarse por autoridades institucionales y por personal legal antes de ser desplegado en producción.
-          </p>
-        </div>
-
-        <div class="grid-2" style="margin-top: 20px;">
-          <div class="card">
-            <h3>Aviso de privacidad</h3>
-            <p>La información que se reciba a través del sitio, si aplica, deberá tratarse conforme a la Ley 1581 de 2012, el Decreto 1377 de 2013 y demás normas vigentes en Colombia.</p>
-          </div>
-          <div class="card">
-            <h3>Política de cookies</h3>
-            <p>El sitio puede utilizar cookies para mejorar la experiencia del usuario, medir tráfico y ofrecer personalización básica.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="referencias" class="section">
-      <div class="container">
-        <h2 class="section-title">Referencias</h2>
-        <div class="card">
-          <ol>
-            <li>Marzano, D. (2026). Generative AI in teaching and learning processes at the K-12 level.</li>
-            <li>Yang, X. (2026). Rural high school zero-cost offline generative AI framework.</li>
-            <li>Aguilera et al. (2026). Offline technology for rural AI literacy.</li>
-            <li>Brito et al. (2026). Uso de la IAG para apoyar la enseñanza del Conafe.</li>
-            <li>Cheng et al. (2026). Generative AI for requirements engineering.</li>
-            <li>Tan et al. (2025). Aligning pedagogy with generative AI.</li>
-            <li>Ferreira-Santos &amp; Pombo (2026). Requirements engineering and traceability.</li>
-            <li>Jaramillo Neira et al. (2025). Rural education in Colombia.</li>
-            <li>Serrano-Ardila et al. (2026). Digital integration in rural education.</li>
-            <li>UNESCO (2023). Guidance for generative AI in education and research.</li>
-            <li>ISO/IEC/IEEE 29148:2018.</li>
-            <li>ISO/IEC/IEEE 15288:2023.</li>
-          </ol>
-        </div>
-      </div>
-    </section>
-  </main>
+  <main id="app"></main>
 
   <footer class="footer">
     <div class="container footer-grid">
@@ -842,19 +393,471 @@
   </div>
 
   <script>
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const reqCards = document.querySelectorAll('.req-card');
+    const articleData = {
+      title: 'RIO-CARIBE',
+      tagline: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad',
+      heroBadges: ['Educación rural · IA generativa · offline', 'Offline-first', 'Trazabilidad C→N→R→S→F→A→I→E', 'Educación rural', 'Gobernanza docente'],
+      summary: {
+        intro: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad. Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de gobernanza en especificaciones verificables y auditables.',
+        executive: 'La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. En lugar de tratar esas condiciones como obstáculos, RIO-CARIBE propone traducirlas en requisitos verificables y auditables.',
+        argument: 'RIO-CARIBE articula infraestructura local, IA en el borde y mediación docente para diseñar sistemas educativos resilientes y sostenibles.',
+        keywords: ['computación en el borde', 'educación rural', 'IA generativa', 'ingeniería de requisitos', 'modelos de lenguaje pequeños', 'trazabilidad']
+      },
+      metrics: [
+        { value: '10', label: 'Dominios de diseño' },
+        { value: '30', label: 'Requisitos' },
+        { value: '3', label: 'Capas de arquitectura' },
+        { value: '12', label: 'Condiciones de falsación' }
+      ],
+      objectives: {
+        general: 'Diseñar y fundamentar el marco conceptual RIO-CARIBE para transformar condiciones territoriales y educativas en especificaciones técnicas y pedagógicas verificables.',
+        specifics: [
+          'Caracterizar contextos rurales del Caribe colombiano.',
+          'Definir dominios y requisitos.',
+          'Diseñar arquitectura offline/local.',
+          'Formalizar trazabilidad TRAZA-RIO.',
+          'Establecer esquema de auditoría RIO-QA.'
+        ],
+        question: '¿Cómo puede un marco de ingeniería de requisitos transformar condiciones territoriales y educativas de contextos rurales en especificaciones funcionales, no funcionales y sociopedagógicas verificables?'
+      },
+      domains: [
+        { code: 'R-TEC', name: 'Infraestructura y tecnología', description: 'Operación offline-first, almacenamiento local, sincronización diferida.' },
+        { code: 'R-IA', name: 'IA local', description: 'Selección de SLMs, adaptabilidad y verificación de salidas.' },
+        { code: 'R-PC', name: 'Pedagogía y currículo', description: 'Agencia docente, andamiaje curricular y cuestionamiento crítico.' },
+        { code: 'R-TLA', name: 'Territorio, lenguaje, accesibilidad', description: 'Contextualización sociocultural del Caribe y accesibilidad.' },
+        { code: 'R-ENE', name: 'Energía y resiliencia', description: 'Gestión energética y continuidad operativa.' },
+        { code: 'R-ECO', name: 'Economía y sostenibilidad', description: 'Coste total de propiedad y viabilidad financiera.' },
+        { code: 'R-MAN', name: 'Mantenimiento', description: 'Autodiagnóstico y restauración local.' },
+        { code: 'R-SP', name: 'Seguridad y privacidad', description: 'Minimización de datos, mínimo privilegio y aislamiento.' },
+        { code: 'R-GOB', name: 'Gobernanza', description: 'Rendición de cuentas y prohibición de decisiones IA autónomas.' },
+        { code: 'R-EVA', name: 'Evaluación y evidencia', description: 'Vínculo entre actividades y evidencia digital.' }
+      ],
+      sociopedagogicalPrinciples: [
+        'Preservación de la mediación del docente.',
+        'Verificación crítica de salidas generadas por IA.',
+        'Protección de menores y minimización de datos.',
+        'Alineación curricular explícita.',
+        'Contextualización regional y cultural.',
+        'Responsabilidad institucional y trazabilidad.'
+      ],
+      architecture: [
+        {
+          title: 'L1. Infraestructura local resiliente',
+          items: ['Servidor local de bajo consumo.', 'Almacenamiento local cifrado.', 'Red LAN y energía de respaldo.', 'Autodiagnóstico y restauración.']
+        },
+        {
+          title: 'L2. Inteligencia educativa local',
+          items: ['SLMs cuantizados y adaptados.', 'Motor de inferencia local.', 'RAG local con contenido curricular.', 'Filtros de contenido y validación.']
+        },
+        {
+          title: 'L3. Mediación pedagógico-territorial',
+          items: ['Interfaz adaptativa al contexto.', 'Aprobación docente RBAC.', 'Prompts contextualizados.', 'Cuaderno digital de evidencias.']
+        }
+      ],
+      methodology: [
+        {
+          title: 'Revisión documental',
+          text: 'Selección de fuentes sobre educación rural, IAG, SLMs, edge computing, ingeniería de requisitos y directrices éticas.'
+        },
+        {
+          title: 'Marco normativo',
+          text: 'Base en ISO/IEC/IEEE 29148 y 15288, además de principios educativos y de gobernanza.'
+        },
+        {
+          title: 'Modelado de requisitos',
+          text: 'Transformación de condiciones territoriales y pedagógicas en requisitos funcionales, no funcionales y sociopedagógicos.'
+        },
+        {
+          title: 'Validación futura',
+          text: 'Diseño de protocolo Delphi, auditoría RIO-QA y condiciones de falsación empírica para prueba en aula.'
+        }
+      ],
+      requirements: [
+        { id: 'R-TEC-01', description: 'El sistema debe ejecutar todas las funciones esenciales de aprendizaje en la red LAN local sin depender de Internet.', type: 'F' },
+        { id: 'R-TEC-02', description: 'El sistema no debe depender de APIs externas o SaaS para funcionar de forma básica.', type: 'NF' },
+        { id: 'R-TEC-03', description: 'Debe proporcionar almacenamiento local temporal cifrado para datos autorizados.', type: 'F' },
+        { id: 'R-TEC-04', description: 'Debe ejecutar sincronización diferida entre periodos de conectividad estable.', type: 'F' },
+        { id: 'R-IA-01', description: 'El modelo debe seleccionarse según cuantización, RAM y capacidad del hardware.', type: 'NF' },
+        { id: 'R-IA-02', description: 'El módulo debe generar recursos alineados con objetivos curriculares predefinidos.', type: 'F' },
+        { id: 'R-IA-03', description: 'Las salidas deben pasar por filtro local antes de mostrarse.', type: 'SP' },
+        { id: 'R-PC-01', description: 'Debe diferenciar claramente el texto generado por el estudiante y el generado por IA.', type: 'SP' },
+        { id: 'R-PC-02', description: 'Debe incorporar preguntas obligatorias de verificación crítica.', type: 'SP' },
+        { id: 'R-PC-03', description: 'Se exige aprobación y firma explícita del docente para evaluaciones o cierres de unidad.', type: 'SP' },
+        { id: 'R-PC-04', description: 'Las actividades deben vincularse a competencias curriculares oficiales.', type: 'SP' },
+        { id: 'R-PC-05', description: 'El uso de IA debe justificarse por valor pedagógico y no como fin en sí mismo.', type: 'SP' },
+        { id: 'R-TLA-01', description: 'Los prompts base deben incluir elementos socioculturales del Caribe colombiano.', type: 'SP' },
+        { id: 'R-TLA-02', description: 'El docente debe poder personalizar contextos específicos de la comunidad rural.', type: 'F' },
+        { id: 'R-TLA-03', description: 'La interfaz y el lenguaje deben adaptarse al nivel de lectoescritura y grado escolar.', type: 'F' },
+        { id: 'R-TLA-04', description: 'Debe cumplir con pautas de accesibilidad visual y cognitiva.', type: 'SP' },
+        { id: 'R-ENE-01', description: 'Debe monitorizar el consumo energético y ajustar potencia de cómputo.', type: 'NF' },
+        { id: 'R-ENE-02', description: 'Ante caídas del sistema eléctrico debe priorizar funciones esenciales y guardar evidencia.', type: 'NF' },
+        { id: 'R-ECO-01', description: 'La arquitectura debe mantener el TCO dentro de criterios sostenibles para escuelas rurales.', type: 'F' },
+        { id: 'R-ECO-02', description: 'Debe permitir comparar configuraciones de hardware/software con criterios económicos.', type: 'NF' },
+        { id: 'R-MAN-01', description: 'Debe incluir manuales e interfaces de autodiagnóstico ejecutables por docentes.', type: 'NF' },
+        { id: 'R-MAN-02', description: 'Debe incluir scripts de restauración rápida a partir de USB.', type: 'NF' },
+        { id: 'R-SP-01', description: 'Debe implementar autenticación y autorización basada en roles RBAC.', type: 'F' },
+        { id: 'R-SP-02', description: 'Debe aplicar mínimo privilegio sobre carpetas y bases de datos locales.', type: 'F' },
+        { id: 'R-SP-03', description: 'Debe prohibir recolección o transmisión de datos personales identificables de menores.', type: 'NF' },
+        { id: 'R-GOB-01', description: 'Debe bloquear funciones que deleguen decisiones disciplinarias o de reprobación a la IA.', type: 'SP' },
+        { id: 'R-GOB-02', description: 'Debe mantener registros de auditoría inalterables sobre interacciones con la IA.', type: 'SP' },
+        { id: 'R-EVA-01', description: 'Los instrumentos de evaluación deben alinearse directamente con indicadores de aprendizaje.', type: 'SP' },
+        { id: 'R-EVA-02', description: 'Las evidencias digitales deben guardar trazabilidad completa con los requisitos.', type: 'SP' },
+        { id: 'R-TRA-01', description: 'Debe garantizar la integridad bidireccional de la cadena de trazabilidad TRAZA-RIO.', type: 'SP' }
+      ],
+      traceability: {
+        chain: 'C→N→R→S→F→A→I→E',
+        returnChain: 'E→I→A→F→S→R→N→C',
+        example: [
+          { label: 'C-01', text: 'interrupción eléctrica y ausencia de conectividad.' },
+          { label: 'N-01', text: 'continuidad del aprendizaje sin depender de red pública.' },
+          { label: 'R-TEC-01', text: 'ejecución 100% offline en LAN local.' },
+          { label: 'F-01', text: 'microservicio de IA local ejecutándose offline.' },
+          { label: 'A-01', text: 'resolución cooperativa de un problema ambiental.' },
+          { label: 'E-01', text: 'registro digital del trabajo y evaluación.' }
+        ],
+        indicators: [
+          { name: 'CT', formula: 'CT = (Rt / R_total) × 100', target: '100%' },
+          { name: 'TI_r', formula: '1 si traza completa, 0 si hay ruptura', target: 'sin rupturas' },
+          { name: 'CE', formula: 'CE = (Re / R_evaluados) × 100', target: 'máxima evidencia' },
+          { name: 'CV', formula: 'CV = (Rv / R_probados) × 100', target: 'verificación completa' },
+          { name: 'CAP', formula: 'CAP = (Ac / A_totales) × 100', target: 'alineación curricular' },
+          { name: 'TCO', formula: 'C_adquisición + energía + mantenimiento', target: '≤ $600 USD/aula' }
+        ]
+      },
+      falsification: [
+        'El sistema pierde la capacidad de ejecutar funciones esenciales si se interrumpe la conexión a internet.',
+        'El consumo energético excede la capacidad del sistema de respaldo.',
+        'El modelo local genera alucinaciones o errores conceptuales superiores al umbral aceptable.',
+        'El sistema emite contenido inapropiado o violatorio de normas éticas.',
+        'Se demuestra filtración de datos personales identificables de menores.',
+        'El mantenimiento o restauración requiere intervención de un ingeniero especialista.',
+        'La IA no guarda correspondencia con los objetivos del currículo.',
+        'La contextualización territorial genera distracciones cognitivas o distorsiones conceptuales.',
+        'El Costo Total de Propiedad resulta inviable.',
+        'La latencia del modelo local supera 8 segundos por respuesta.',
+        'El sistema toma decisiones evaluativas o disciplinarias sin la firma explícita del docente.',
+        'Se identifican rupturas injustificadas en TRAZA-RIO superiores al 10%.'
+      ],
+      legal: {
+        intro: 'Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado especialista. Para implementación real en instituciones educativas, se recomienda incorporar aviso de privacidad, política de cookies, términos y condiciones, tratamiento de datos personales, consentimiento informado y gobernanza institucional.',
+        notices: [
+          { title: 'Aviso de privacidad', text: 'La información que se reciba a través del sitio, si aplica, deberá tratarse conforme a la Ley 1581 de 2012, el Decreto 1377 de 2013 y demás normas vigentes en Colombia.' },
+          { title: 'Política de cookies', text: 'El sitio puede utilizar cookies para mejorar la experiencia del usuario, medir tráfico y ofrecer personalización básica.' }
+        ]
+      },
+      references: [
+        'Marzano, D. (2026). Generative AI in teaching and learning processes at the K-12 level.',
+        'Yang, X. (2026). Rural high school zero-cost offline generative AI framework.',
+        'Aguilera et al. (2026). Offline technology for rural AI literacy.',
+        'Brito et al. (2026). Uso de la IAG para apoyar la enseñanza del Conafe.',
+        'Cheng et al. (2026). Generative AI for requirements engineering.',
+        'Tan et al. (2025). Aligning pedagogy with generative AI.',
+        'Ferreira-Santos & Pombo (2026). Requirements engineering and traceability.',
+        'Jaramillo Neira et al. (2025). Rural education in Colombia.',
+        'Serrano-Ardila et al. (2026). Digital integration in rural education.',
+        'UNESCO (2023). Guidance for generative AI in education and research.',
+        'ISO/IEC/IEEE 29148:2018.',
+        'ISO/IEC/IEEE 15288:2023.'
+      ]
+    };
 
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.toggle('active', b === btn));
-        const filter = btn.dataset.filter;
-        reqCards.forEach(card => {
-          const show = filter === 'all' ? true : card.dataset.card === filter;
-          card.classList.toggle('active', show);
+    const typeColors = { F: 'tag-f', NF: 'tag-nf', SP: 'tag-sp' };
+
+    function renderMetricCard(metric) {
+      return `
+        <div class="metric">
+          <strong>${metric.value}</strong>
+          <span>${metric.label}</span>
+        </div>
+      `;
+    }
+
+    function renderPills(items) {
+      return items.map(item => `<span class="pill">${item}</span>`).join('');
+    }
+
+    function renderRequirementsTable(items) {
+      const rows = items.map(item => `
+        <tr>
+          <td>${item.id}</td>
+          <td>${item.description}</td>
+          <td><span class="tipo-tag ${typeColors[item.type]}">${item.type}</span></td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="req-table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderApp() {
+      const app = document.getElementById('app');
+
+      app.innerHTML = `
+        <section id="inicio" class="hero">
+          <div class="container hero-grid">
+            <div>
+              <span class="badge">${articleData.heroBadges[0]}</span>
+              <h1>${articleData.title}</h1>
+              <p class="lead">${articleData.summary.intro}</p>
+              <div class="cta-row">
+                <a class="btn primary" href="#framework">Ver marco</a>
+                <a class="btn" href="./c_aribe.pdf" target="_blank" rel="noopener noreferrer">Ver artículo</a>
+              </div>
+              <div class="pill-row">
+                ${renderPills(articleData.heroBadges.slice(1))}
+              </div>
+            </div>
+
+            <aside class="hero-card" aria-label="Resumen de resultados">
+              <h3>Resumen del marco</h3>
+              <p class="muted">${articleData.summary.argument}</p>
+              <div class="metric-grid">
+                ${articleData.metrics.map(renderMetricCard).join('')}
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="abstract" class="section">
+          <div class="container">
+            <h2 class="section-title">Resumen</h2>
+            <div class="grid-2">
+              <div class="card">
+                <h3>Resumen ejecutivo</h3>
+                <p>${articleData.summary.executive}</p>
+                <p>${articleData.summary.argument}</p>
+              </div>
+              <div class="card">
+                <h3>Palabras clave</h3>
+                <div class="pill-row">${renderPills(articleData.summary.keywords)}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="objetivos" class="section">
+          <div class="container">
+            <h2 class="section-title">Objetivos</h2>
+            <div class="grid-3">
+              <div class="card">
+                <h3>Objetivo general</h3>
+                <p>${articleData.objectives.general}</p>
+              </div>
+              <div class="card">
+                <h3>Objetivos específicos</h3>
+                <ul>
+                  ${articleData.objectives.specifics.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Pregunta guía</h3>
+                <p>${articleData.objectives.question}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="framework" class="section">
+          <div class="container">
+            <h2 class="section-title">Marco conceptual RIO-CARIBE</h2>
+            <p class="section-subtitle">El marco se fundamenta en cuatro pilares: taxonomía de dominios, arquitectura de tres capas, principio offline-first y trazabilidad bidireccional.</p>
+
+            <div class="grid-2">
+              <div class="card">
+                <h3>1. Taxonomía de dominios</h3>
+                <table>
+                  <thead>
+                    <tr><th>Código</th><th>Dominio</th><th>Descripción</th></tr>
+                  </thead>
+                  <tbody>
+                    ${articleData.domains.map(item => `
+                      <tr>
+                        <td>${item.code}</td>
+                        <td>${item.name}</td>
+                        <td>${item.description}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card">
+                <h3>2. Requisitos sociopedagógicos</h3>
+                <p>Los requisitos SP codifican principios pedagógicos, éticos y comunitarios directamente en la especificación del sistema para que puedan ser verificados técnicamente.</p>
+                <ul>
+                  ${articleData.sociopedagogicalPrinciples.map(item => `<li>${item}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="arquitectura" class="section">
+          <div class="container">
+            <h2 class="section-title">Arquitectura sociotécnica de tres capas</h2>
+            <div class="grid-3">
+              ${articleData.architecture.map(layer => `
+                <div class="card">
+                  <h3>${layer.title}</h3>
+                  <ul>
+                    ${layer.items.map(item => `<li>${item}</li>`).join('')}
+                  </ul>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section id="metodologia" class="section">
+          <div class="container">
+            <h2 class="section-title">Metodología</h2>
+            <div class="timeline">
+              ${articleData.methodology.map((step, index) => `
+                <div class="step">
+                  <div class="step-index">${index + 1}</div>
+                  <div>
+                    <h3>${step.title}</h3>
+                    <p>${step.text}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section id="requisitos" class="section">
+          <div class="container">
+            <h2 class="section-title">Matriz de requisitos</h2>
+            <p class="section-subtitle">Se consolidan 30 requisitos en tres categorías: funcionales, no funcionales y sociopedagógicos.</p>
+
+            <div class="requirements-filters" aria-label="Filtros de requisitos">
+              <button class="filter-btn active" data-filter="all">Todos</button>
+              <button class="filter-btn" data-filter="F">Funcionales</button>
+              <button class="filter-btn" data-filter="NF">No funcionales</button>
+              <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
+            </div>
+
+            <div class="req-card active" data-card="all">
+              ${renderRequirementsTable(articleData.requirements)}
+            </div>
+            <div class="req-card" data-card="F">
+              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'F'))}
+            </div>
+            <div class="req-card" data-card="NF">
+              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'NF'))}
+            </div>
+            <div class="req-card" data-card="SP">
+              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'SP'))}
+            </div>
+          </div>
+        </section>
+
+        <section id="traza" class="section">
+          <div class="container">
+            <h2 class="section-title">Trazabilidad TRAZA-RIO</h2>
+            <p class="section-subtitle">Cadena bidireccional ${articleData.traceability.chain} y retorno ${articleData.traceability.returnChain}.</p>
+            <div class="card">
+              <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador de evaluación → Evidencia.</p>
+              <div class="pill-row">
+                ${['C','N','R','S','F','A','I','E'].map(item => `<span class="pill">${item}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 20px;">
+              <div class="card">
+                <h3>Ejemplo de trazabilidad</h3>
+                ${articleData.traceability.example.map(item => `<p><strong>${item.label}:</strong> ${item.text}</p>`).join('')}
+              </div>
+
+              <div class="card">
+                <h3>Indicadores</h3>
+                <table>
+                  <thead><tr><th>Indicador</th><th>Fórmula</th><th>Meta</th></tr></thead>
+                  <tbody>
+                    ${articleData.traceability.indicators.map(ind => `
+                      <tr>
+                        <td>${ind.name}</td>
+                        <td>${ind.formula}</td>
+                        <td>${ind.target}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="falsacion" class="section">
+          <div class="container">
+            <h2 class="section-title">Condiciones de falsación empírica</h2>
+            <div class="req-table-wrap">
+              <table>
+                <thead><tr><th>Código</th><th>Condición</th></tr></thead>
+                <tbody>
+                  ${articleData.falsification.map((condition, index) => `
+                    <tr><td>F-${String(index + 1).padStart(2, '0')}</td><td>${condition}</td></tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="legal" class="section">
+          <div class="container">
+            <h2 class="section-title">Aclaraciones legales y de uso</h2>
+            <div class="legal-box">
+              <p>${articleData.legal.intro}</p>
+            </div>
+
+            <div class="grid-2" style="margin-top: 20px;">
+              ${articleData.legal.notices.map(item => `
+                <div class="card">
+                  <h3>${item.title}</h3>
+                  <p>${item.text}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section id="referencias" class="section">
+          <div class="container">
+            <h2 class="section-title">Referencias</h2>
+            <div class="card">
+              <ol>
+                ${articleData.references.map(ref => `<li>${ref}</li>`).join('')}
+              </ol>
+            </div>
+          </div>
+        </section>
+      `;
+
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const reqCards = document.querySelectorAll('.req-card');
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => b.classList.toggle('active', b === btn));
+          const filter = btn.dataset.filter;
+          reqCards.forEach(card => {
+            const show = filter === 'all' ? true : card.dataset.card === filter;
+            card.classList.toggle('active', show);
+          });
         });
       });
-    });
+    }
+
+    renderApp();
 
     const cookieBanner = document.getElementById('cookieBanner');
     const acceptBtn = document.getElementById('acceptCookies');
