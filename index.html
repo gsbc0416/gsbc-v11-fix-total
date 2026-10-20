@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RIO-CARIBE Enterprise v9.0 | Plataforma Web de IA Rural & Conformidad Legal CO</title>
+<title>RIO-CARIBE Enterprise v11.0 | Plataforma Web de IA Rural & Conformidad Legal CO</title>
 
 <!-- Tailwind CSS CDN & Chart.js & SheetJS & jsPDF -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -41,7 +41,8 @@
 <style>
   body { background-color: #0a0f1d; color: #f3f4f6; }
   .glass-card { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.07); }
-  .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 800; shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
+  .tab-btn { cursor: pointer; user-select: none; }
+  .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 800; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35); }
   .badge-law { font-size: 9px; font-family: 'JetBrains Mono', monospace; padding: 2px 8px; border-radius: 9999px; font-weight: 700; }
 </style>
 </head>
@@ -54,7 +55,7 @@
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-cyan-500 to-indigo-500 flex items-center justify-center font-black text-white text-xl shadow-lg shadow-emerald-500/20">R</div>
       <div>
         <h1 class="font-black text-sm text-white tracking-tight flex items-center gap-2">
-          RIO-CARIBE <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Enterprise v9.0</span>
+          RIO-CARIBE <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Enterprise v11.0 Fixed</span>
         </h1>
         <p class="text-[10px] text-gray-400 font-mono">IA Rural Offline · Ley 1581 / Ley 1620 / Dec 1421 / Dec 1290 CO</p>
       </div>
@@ -82,27 +83,27 @@
 <!-- Layout Principal -->
 <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-12 gap-6">
 
-  <!-- Navegación de Módulos Interáctivos -->
+  <!-- Navegación de Módulos Interactivos -->
   <nav class="col-span-12 flex gap-2 overflow-x-auto pb-2 border-b border-gray-800">
-    <button onclick="showTab('dash')" id="tab-dash" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('dash')" id="tab-dash" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       🌐 1. Vista General & Arquitectura
     </button>
-    <button onclick="showTab('due')" id="tab-due" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('due')" id="tab-due" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       🇨🇴 2. Consulta DUE datos.gov.co
     </button>
-    <button onclick="showTab('reqs')" id="tab-reqs" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('reqs')" id="tab-reqs" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       📋 3. Audit 30 Requisitos RIO
     </button>
-    <button onclick="showTab('sim')" id="tab-sim" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('sim')" id="tab-sim" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       🤖 4. IA Local & Salvaguardas RSP
     </button>
-    <button onclick="showTab('piar')" id="tab-piar" class="tab-piar tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('piar')" id="tab-piar" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       ♿ 5. PIAR Dec 1421 (Inclusión)
     </button>
-    <button onclick="showTab('convivencia')" id="tab-convivencia" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('convivencia')" id="tab-convivencia" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       🛡️ 6. Ley 1620 Ruta Convivencia
     </button>
-    <button onclick="showTab('pmi')" id="tab-pmi" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
+    <button onclick="switchTab('pmi')" id="tab-pmi" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all">
       📈 7. PMI Guía 34 SMART
     </button>
   </nav>
@@ -147,8 +148,8 @@
       <div class="grid grid-cols-3 gap-4">
         <div class="glass-card p-4 rounded-2xl">
           <span class="text-[10px] font-mono text-gray-400">PRESUPUESTO CapEx</span>
-          <div class="text-lg font-black text-emerald-400 mt-1">$580 USD <span class="text-xs font-normal text-gray-500">/ ≤\$600</span></div>
-          <span class="text-[10px] text-emerald-500 mt-1 block">OpEx = \$0 USD/mes</span>
+          <div class="text-lg font-black text-emerald-400 mt-1">$580 USD <span class="text-xs font-normal text-gray-500">/ ≤$600</span></div>
+          <span class="text-[10px] text-emerald-500 mt-1 block">OpEx = $0 USD/mes</span>
         </div>
         <div class="glass-card p-4 rounded-2xl">
           <span class="text-[10px] font-mono text-gray-400">LATENCIA 1er TOKEN</span>
@@ -189,7 +190,7 @@
 
       <div class="mt-4 flex gap-3">
         <input id="daneInput" type="text" maxlength="12" class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs font-mono text-white w-full outline-none focus:border-emerald-500" placeholder="Ingrese código DANE 12 dígitos (Ej: 111001000078)...">
-        <button onclick="queryDANEGov()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3 rounded-xl whitespace-nowrap transition-all">
+        <button onclick="fetchDANEGovData()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3 rounded-xl whitespace-nowrap transition-all">
           🔍 Consultar datos.gov.co
         </button>
       </div>
@@ -213,7 +214,7 @@
         <p class="text-xs text-gray-400 mt-1">Clasificados en Funcionales (RF), No Funcionales (RNF) y Sociopedagógicos (RSP).</p>
       </div>
       <div class="flex items-center gap-3">
-        <select id="filterType" onchange="renderReqs()" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-xl px-3 py-2 outline-none">
+        <select id="filterType" onchange="displayReqsList()" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-xl px-3 py-2 outline-none">
           <option value="ALL">Todos los Tipos (30)</option>
           <option value="RF">Funcionales (RF - 10)</option>
           <option value="RNF">No Funcionales (RNF - 10)</option>
@@ -243,7 +244,7 @@
           
           <div class="flex justify-between items-center">
             <span class="text-[11px] font-mono text-gray-400">Ley 1581: <strong class="text-emerald-400">Anonimización Activa</strong></span>
-            <button onclick="runLocalInference()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
+            <button onclick="executeInferenceProcess()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
               ⚡ Ejecutar Inferencia Local
             </button>
           </div>
@@ -279,7 +280,7 @@
           
           <div class="flex justify-between items-center pt-2">
             <span class="text-[10px] text-rose-400 font-mono">Dec 1290 / RSP-03: Bloqueo de Nota Automática</span>
-            <button onclick="approveContent()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg">
+            <button onclick="verifyTeacherApproval()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg">
               ✅ Aprobar e Incluir en Aula (Docente)
             </button>
           </div>
@@ -304,7 +305,7 @@
         <textarea id="piarAjustes" rows="2" class="col-span-2 bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Ajustes Razonables DUA (Diseño Universal para el Aprendizaje)..."></textarea>
       </div>
 
-      <button onclick="genPIARPDF()" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 rounded-xl transition-all">
+      <button onclick="downloadPIARPDFDocument()" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 rounded-xl transition-all">
         📄 Generar Documento Oficial PIAR en PDF
       </button>
     </div>
@@ -355,10 +356,10 @@
       </div>
 
       <div class="mt-4 flex gap-3">
-        <button onclick="addPMI()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
+        <button onclick="registerPMIItem()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
           + Agregar Acción al PMI
         </button>
-        <button onclick="exportPMIExcel()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
+        <button onclick="downloadPMIExcelFile()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
           📊 Exportar PMI en Excel (.xlsx)
         </button>
       </div>
@@ -374,179 +375,214 @@
 
 </main>
 
-<!-- Scripts Lógicos Interactivos -->
+<!-- Scripts Lógicos Interactivos Sin Errores de Sintaxis -->
 <script>
-const REQS = [
-  {id:'RF-01', type:'RF', dom:'R-TEC', desc:'Inferencia local sin enlace de datos. 0 bytes WAN.', ok:true},
-  {id:'RF-02', type:'RF', dom:'R-IA', desc:'Ajuste de complejidad léxica al grado escolar.', ok:true},
-  {id:'RF-03', type:'RF', dom:'R-IA', desc:'Exportación a PDF y Markdown sin red.', ok:true},
-  {id:'RF-04', type:'RF', dom:'R-IA', desc:'RAG local citando fuente y página.', ok:true},
-  {id:'RF-05', type:'RF', dom:'R-TEC', desc:'Respaldo USB cifrado AES-256 (Ley 1581).', ok:true},
-  {id:'RF-06', type:'RF', dom:'R-TEC', desc:'Autenticación RBAC y contraseñas hash.', ok:true},
-  {id:'RF-07', type:'RF', dom:'R-EVA', desc:'Persistencia con Hash SHA-256 ante apagados.', ok:true},
-  {id:'RF-08', type:'RF', dom:'R-EVA', desc:'Tablero de desempeño exclusivo docente.', ok:true},
-  {id:'RF-09', type:'RF', dom:'R-MAN', desc:'Monitoreo automático de temperatura y batería.', ok:true},
-  {id:'RF-10', type:'RF', dom:'R-SP', desc:'Cierre de sesión por inactividad a 15 min.', ok:true},
+var REQS_DATA = [
+  {reqCode:'RF-01', reqType:'RF', reqDom:'R-TEC', reqDesc:'Inferencia local sin enlace de datos. 0 bytes WAN.', isOk:true},
+  {reqCode:'RF-02', reqType:'RF', reqDom:'R-IA', reqDesc:'Ajuste de complejidad léxica al grado escolar.', isOk:true},
+  {reqCode:'RF-03', reqType:'RF', reqDom:'R-IA', reqDesc:'Exportación a PDF y Markdown sin red.', isOk:true},
+  {reqCode:'RF-04', reqType:'RF', reqDom:'R-IA', reqDesc:'RAG local citando fuente y página.', isOk:true},
+  {reqCode:'RF-05', reqType:'RF', reqDom:'R-TEC', reqDesc:'Respaldo USB cifrado AES-256 (Ley 1581).', isOk:true},
+  {reqCode:'RF-06', reqType:'RF', reqDom:'R-TEC', reqDesc:'Autenticación RBAC y contraseñas hash.', isOk:true},
+  {reqCode:'RF-07', reqType:'RF', reqDom:'R-EVA', reqDesc:'Persistencia con Hash SHA-256 ante apagados.', isOk:true},
+  {reqCode:'RF-08', reqType:'RF', reqDom:'R-EVA', reqDesc:'Tablero de desempeño exclusivo docente.', isOk:true},
+  {reqCode:'RF-09', reqType:'RF', reqDom:'R-MAN', reqDesc:'Monitoreo automático de temperatura y batería.', isOk:true},
+  {reqCode:'RF-10', reqType:'RF', reqDom:'R-SP', reqDesc:'Cierre de sesión por inactividad a 15 min.', isOk:true},
 
-  {id:'RNF-01', type:'RNF', dom:'R-TEC', desc:'Funcionamiento 100% desconectado.', ok:true},
-  {id:'RNF-02', type:'RNF', dom:'R-ENE', desc:'Consumo eléctrico ≤ 20 Watts.', ok:true},
-  {id:'RNF-03', type:'RNF', dom:'R-ENE', desc:'Autonomía batería solar ≥ 6 horas.', ok:true},
-  {id:'RNF-04', type:'RNF', dom:'R-MAN', desc:'Restauración desde USB en ≤ 15 min.', ok:true},
-  {id:'RNF-05', type:'RNF', dom:'R-SP', desc:'Cifrado total de almacenamiento AES-256.', ok:true},
-  {id:'RNF-06', type:'RNF', dom:'R-SP', desc:'Diseño sin biometría para menores.', ok:true},
-  {id:'RNF-07', type:'RNF', dom:'R-ECO', desc:'Techo de adquisición CapEx ≤ \$600 USD.', ok:true},
-  {id:'RNF-08', type:'RNF', dom:'R-ECO', desc:'OpEx = \$0 USD/mes sin suscripciones.', ok:true},
-  {id:'RNF-09', type:'RNF', dom:'R-TEC', desc:'Arranque del sistema en ≤ 90 s.', ok:true},
-  {id:'RNF-10', type:'RNF', dom:'R-MAN', desc:'Operación con un solo clic sin consola.', ok:true},
+  {reqCode:'RNF-01', reqType:'RNF', reqDom:'R-TEC', reqDesc:'Funcionamiento 100% desconectado.', isOk:true},
+  {reqCode:'RNF-02', reqType:'RNF', reqDom:'R-ENE', reqDesc:'Consumo eléctrico ≤ 20 Watts.', isOk:true},
+  {reqCode:'RNF-03', reqType:'RNF', reqDom:'R-ENE', reqDesc:'Autonomía batería solar ≥ 6 horas.', isOk:true},
+  {reqCode:'RNF-04', reqType:'RNF', reqDom:'R-MAN', reqDesc:'Restauración desde USB en ≤ 15 min.', isOk:true},
+  {reqCode:'RNF-05', reqType:'RNF', reqDom:'R-SP', reqDesc:'Cifrado total de almacenamiento AES-256.', isOk:true},
+  {reqCode:'RNF-06', reqType:'RNF', reqDom:'R-SP', reqDesc:'Diseño sin biometría para menores.', isOk:true},
+  {reqCode:'RNF-07', reqType:'RNF', reqDom:'R-ECO', reqDesc:'Techo de adquisición CapEx ≤ $600 USD.', isOk:true},
+  {reqCode:'RNF-08', reqType:'RNF', reqDom:'R-ECO', reqDesc:'OpEx = $0 USD/mes sin suscripciones.', isOk:true},
+  {reqCode:'RNF-09', reqType:'RNF', reqDom:'R-TEC', reqDesc:'Arranque del sistema en ≤ 90 s.', isOk:true},
+  {reqCode:'RNF-10', reqType:'RNF', reqDom:'R-MAN', reqDesc:'Operación con un solo clic sin consola.', isOk:true},
 
-  {id:'RSP-01', type:'RSP', dom:'R-GOB', desc:'Marcado visible "Generado por IA Local".', ok:true},
-  {id:'RSP-02', type:'RSP', dom:'R-PC', desc:'Pregunta metacognitiva obligatoria antes de entregar.', ok:true},
-  {id:'RSP-03', type:'RSP', dom:'R-GOB', desc:'Notas solo del docente humano (Dec 1290).', ok:true},
-  {id:'RSP-04', type:'RSP', dom:'R-PC', desc:'Mapeo explícito a Derechos Básicos de Aprendizaje (DBA).', ok:true},
-  {id:'RSP-05', type:'RSP', dom:'R-TLA', desc:'Ejemplos con vocabulario y flora del Caribe.', ok:true},
-  {id:'RSP-06', type:'RSP', dom:'R-SP', desc:'Filtro léxico de estereotipos peyorativos.', ok:true},
-  {id:'RSP-07', type:'RSP', dom:'R-GOB', desc:'ERR_GOB_HUMAN_REQUIRED ante sanciones (Ley 1620).', ok:true},
-  {id:'RSP-08', type:'RSP', dom:'R-GOB', desc:'Transparencia e inalienabilidad evaluativa.', ok:true},
-  {id:'RSP-09', type:'RSP', dom:'R-EVA', desc:'Anonimización irreversible previa exportación.', ok:true},
-  {id:'RSP-10', type:'RSP', dom:'R-TLA', desc:'Comprensión de habla e hispanolectos rurales.', ok:true}
+  {reqCode:'RSP-01', reqType:'RSP', reqDom:'R-GOB', reqDesc:'Marcado visible "Generado por IA Local".', isOk:true},
+  {reqCode:'RSP-02', reqType:'RSP', reqDom:'R-PC', reqDesc:'Pregunta metacognitiva obligatoria antes de entregar.', isOk:true},
+  {reqCode:'RSP-03', reqType:'RSP', reqDom:'R-GOB', reqDesc:'Notas solo del docente humano (Dec 1290).', isOk:true},
+  {reqCode:'RSP-04', reqType:'RSP', reqDom:'R-PC', reqDesc:'Mapeo explícito a Derechos Básicos de Aprendizaje (DBA).', isOk:true},
+  {reqCode:'RSP-05', reqType:'RSP', reqDom:'R-TLA', reqDesc:'Ejemplos con vocabulario y flora del Caribe.', isOk:true},
+  {reqCode:'RSP-06', reqType:'RSP', reqDom:'R-SP', reqDesc:'Filtro léxico de estereotipos peyorativos.', isOk:true},
+  {reqCode:'RSP-07', reqType:'RSP', reqDom:'R-GOB', reqDesc:'ERR_GOB_HUMAN_REQUIRED ante sanciones (Ley 1620).', isOk:true},
+  {reqCode:'RSP-08', reqType:'RSP', reqDom:'R-GOB', reqDesc:'Transparencia e inalienabilidad evaluativa.', isOk:true},
+  {reqCode:'RSP-09', reqType:'RSP', reqDom:'R-EVA', reqDesc:'Anonimización irreversible previa exportación.', isOk:true},
+  {reqCode:'RSP-10', reqType:'RSP', reqDom:'R-TLA', reqDesc:'Comprensión de habla e hispanolectos rurales.', isOk:true}
 ];
 
-function showTab(t) {
-  ['dash','due','reqs','sim','piar','convivencia','pmi'].forEach(id => {
-    document.getElementById('pane-' + id).classList.add('hidden');
-    const b = document.getElementById('tab-' + id);
-    if(b) { b.classList.remove('active'); b.classList.add('bg-gray-800', 'text-gray-300'); }
-  });
-  document.getElementById('pane-' + t).classList.remove('hidden');
-  const btn = document.getElementById('tab-' + t);
-  if(btn) { btn.classList.add('active'); btn.classList.remove('bg-gray-800', 'text-gray-300'); }
+function switchTab(tabId) {
+  var panels = ['dash','due','reqs','sim','piar','convivencia','pmi'];
+  for(var i = 0; i < panels.length; i++) {
+    var p = document.getElementById('pane-' + panels[i]);
+    if(p) p.classList.add('hidden');
+    var b = document.getElementById('tab-' + panels[i]);
+    if(b) {
+      b.classList.remove('active');
+      b.classList.add('bg-gray-800', 'text-gray-300');
+    }
+  }
+  var targetP = document.getElementById('pane-' + tabId);
+  if(targetP) targetP.classList.remove('hidden');
+  var targetB = document.getElementById('tab-' + tabId);
+  if(targetB) {
+    targetB.classList.add('active');
+    targetB.classList.remove('bg-gray-800', 'text-gray-300');
+  }
 }
 
-async function queryDANEGov() {
-  const dane = document.getElementById('daneInput').value.trim();
-  const statusEl = document.getElementById('dueStatus');
-  const resultsEl = document.getElementById('dueResults');
+function fetchDANEGovData() {
+  var daneVal = document.getElementById('daneInput').value.trim();
+  var statusElem = document.getElementById('dueStatus');
+  var resultsElem = document.getElementById('dueResults');
 
-  if(dane.length !== 12) {
-    statusEl.innerText = '⚠️ El código DANE debe tener exactamente 12 dígitos.';
+  if(daneVal.length !== 12) {
+    statusElem.innerText = '⚠️ El código DANE debe tener exactamente 12 dígitos.';
     return;
   }
 
-  statusEl.innerText = '⏳ Conectando con la API de datos.gov.co...';
-  try {
-    const resp = await fetch(`[suspicious link removed]{dane}`);
-    const data = await resp.json();
-    if(data && data.length > 0) {
-      const item = data;
-      document.getElementById('dueNombre').innerText = item.nombre_establecimiento || item.nombre || 'IE Rural Colombia';
-      document.getElementById('dueSec').innerText = item.secretaria || item.nombre_secretaria || 'Secretaría Regional';
-      document.getElementById('dueMuni').innerText = (item.municipio || '') + ' / ' + (item.departamento || '');
-      resultsEl.classList.remove('hidden');
-      statusEl.innerText = '✅ Registro oficial validado en Datos Abiertos Colombia.';
-    } else {
-      statusEl.innerText = 'ℹ️ Registro no ubicado en el dataset público Socrata. Ingrese los datos manualmente.';
+  statusElem.innerText = '⏳ Conectando con la API de datos.gov.co...';
+  fetch('[suspicious link removed]' + daneVal)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if(data && data.length > 0) {
+        var record = data[0];
+        document.getElementById('dueNombre').innerText = record.nombre_establecimiento || record.nombre || 'IE Rural Colombia';
+        document.getElementById('dueSec').innerText = record.secretaria || record.nombre_secretaria || 'Secretaría Regional';
+        document.getElementById('dueMuni').innerText = (record.municipio || '') + ' / ' + (record.departamento || '');
+        resultsElem.classList.remove('hidden');
+        statusElem.innerText = '✅ Registro oficial validado en Datos Abiertos Colombia.';
+      } else {
+        statusElem.innerText = 'ℹ️ Registro no ubicado en el dataset público Socrata. Ingrese los datos manualmente.';
+      }
+    })
+    .catch(function(err) {
+      statusElem.innerText = '🌐 Modo Offline Activado: Registro guardado localmente en el nodo.';
+    });
+}
+
+function displayReqsList() {
+  var filterVal = document.getElementById('filterType').value;
+  var containerElem = document.getElementById('reqsContainer');
+  containerElem.innerHTML = '';
+
+  var countOk = 0;
+  for(var i = 0; i < REQS_DATA.length; i++) {
+    if(REQS_DATA[i].isOk) countOk++;
+  }
+  document.getElementById('reqCounter').innerText = countOk + ' / 30 Cumplidos (' + Math.round(countOk/30*100) + '%)';
+
+  for(var j = 0; j < REQS_DATA.length; j++) {
+    var item = REQS_DATA[j];
+    if(filterVal === 'ALL' || item.reqType === filterVal) {
+      var cardDiv = document.createElement('div');
+      var colorClass = item.reqType === 'RSP' ? 'text-indigo-400' : (item.reqType === 'RF' ? 'text-cyan-400' : 'text-emerald-400');
+      var bgClass = item.isOk ? 'bg-gray-900/80 border-gray-800' : 'bg-rose-950/30 border-rose-800/50';
+      
+      cardDiv.className = 'p-3.5 rounded-xl border text-xs flex items-start gap-3 ' + bgClass;
+      cardDiv.innerHTML = 
+        '<input type="checkbox" ' + (item.isOk ? 'checked' : '') + ' onclick="toggleRequirementState(\'' + item.reqCode + '\')" class="mt-1 w-4 h-4 accent-emerald-500 rounded cursor-pointer">' +
+        '<div>' +
+          '<div class="flex items-center gap-2">' +
+            '<span class="font-mono font-bold ' + colorClass + '">' + item.reqCode + '</span>' +
+            '<span class="text-[9px] px-2 py-0.5 rounded font-mono bg-gray-800 text-gray-400">' + item.reqDom + '</span>' +
+          '</div>' +
+          '<p class="text-gray-300 mt-1 leading-snug">' + item.reqDesc + '</p>' +
+        '</div>';
+      containerElem.appendChild(cardDiv);
     }
-  } catch(e) {
-    statusEl.innerText = '🌐 Modo Offline Activado: Registro guardado localmente en el nodo.';
   }
 }
 
-function renderReqs() {
-  const filter = document.getElementById('filterType').value;
-  const container = document.getElementById('reqsContainer');
-  container.innerHTML = '';
-
-  const list = REQS.filter(r => filter === 'ALL' || r.type === filter);
-  let countOk = REQS.filter(r => r.ok).length;
-  document.getElementById('reqCounter').innerText = `${countOk} / 30 Cumplidos (${Math.round(countOk/30*100)}%)`;
-
-  list.forEach(r => {
-    const card = document.createElement('div');
-    card.className = `p-3.5 rounded-xl border text-xs flex items-start gap-3 ${r.ok ? 'bg-gray-900/80 border-gray-800' : 'bg-rose-950/30 border-rose-800/50'}`;
-    card.innerHTML = `
-      <input type="checkbox" ${r.ok ? 'checked' : ''} onchange="toggleReq('${[enlace sospechoso eliminado]}')" class="mt-1 w-4 h-4 accent-emerald-500 rounded cursor-pointer">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="font-mono font-bold ${r.type === 'RSP' ? 'text-indigo-400' : r.type === 'RF' ? 'text-cyan-400' : 'text-emerald-400'}">${[enlace sospechoso eliminado]}</span>
-          <span class="text-[9px] px-2 py-0.5 rounded font-mono bg-gray-800 text-gray-400">${r.dom}</span>
-        </div>
-        <p class="text-gray-300 mt-1 leading-snug">${r.desc}</p>
-      </div>
-    `;
-    container.appendChild(card);
-  });
+function toggleRequirementState(code) {
+  for(var i = 0; i < REQS_DATA.length; i++) {
+    if(REQS_DATA[i].reqCode === code) {
+      REQS_DATA[i].isOk = !REQS_DATA[i].isOk;
+      break;
+    }
+  }
+  displayReqsList();
+  refreshRadarChart();
 }
 
-function toggleReq(id) {
-  const item = REQS.find(r => [enlace sospechoso eliminado] === id);
-  if(item) { item.ok = !item.ok; renderReqs(); updateChart(); }
-}
-
-function runLocalInference() {
-  const input = document.getElementById('promptInput').value.trim();
-  if(!input) { alert('Ingrese una consulta pedagógica.'); return; }
+function executeInferenceProcess() {
+  var promptText = document.getElementById('promptInput').value.trim();
+  if(!promptText) { alert('Ingrese una consulta pedagógica.'); return; }
 
   document.getElementById('mFirstToken').innerText = '1.4 s';
   document.getElementById('mSpeed').innerText = '5.2 tok/s';
   document.getElementById('mRAM').innerText = '2.1 GB';
 
   document.getElementById('badgeRSP1').classList.remove('hidden');
-  document.getElementById('outputBox').innerHTML = `
-    <div class="text-emerald-400 font-bold mb-1">📖 Actividad Generada (Corpus RAG Caribe_Educativo):</div>
-    <p class="mb-2">Taller de lectura sobre la leyenda de la Llorona en el río Magdalena, analizando la biodiversidad ribereña.</p>
-    <p class="text-gray-400"><strong>Alineación DBA:</strong> Estándar Lenguaje Grado 5° (Tradición oral y análisis crítico).</p>
-  `;
+  document.getElementById('outputBox').innerHTML = 
+    '<div class="text-emerald-400 font-bold mb-1">📖 Actividad Generada (Corpus RAG Caribe_Educativo):</div>' +
+    '<p class="mb-2">Taller de lectura sobre la leyenda de la Llorona en el río Magdalena, analizando la biodiversidad ribereña.</p>' +
+    '<p class="text-gray-400"><strong>Alineación DBA:</strong> Estándar Lenguaje Grado 5° (Tradición oral y análisis crítico).</p>';
   document.getElementById('rspGate').classList.remove('hidden');
 }
 
-function approveContent() {
-  const ans = document.getElementById('metaAnswer').value.trim();
-  if(!ans) { alert('RSP-02 exige responder la reflexión metacognitiva.'); return; }
+function verifyTeacherApproval() {
+  var metaAns = document.getElementById('metaAnswer').value.trim();
+  if(!metaAns) { alert('RSP-02 exige responder la reflexión metacognitiva.'); return; }
   alert('✅ Decreto 1290 Cumplido: Asignación validada y firmada por el docente humano.');
 }
 
-function genPIARPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.text("PIAR - DECRETO 1421 DE 2017 (EDUCACIÓN INCLUSIVA)", 10, 15);
-  doc.text("Estudiante: " + (document.getElementById('piarEst').value || 'Sin nombre'), 10, 25);
-  doc.text("Documento: " + (document.getElementById('piarDoc').value || 'Sin doc'), 10, 32);
-  doc.text("Grado: " + (document.getElementById('piarGrado').value || 'Sin grado'), 10, 39);
-  doc.text("Ajustes DUA: " + (document.getElementById('piarAjustes').value || 'Ninguno'), 10, 48);
+function downloadPIARPDFDocument() {
+  if(!window.jspdf) { alert('Librería jsPDF no cargada.'); return; }
+  var pdfDoc = new window.jspdf.jsPDF();
+  var studentName = document.getElementById('piarEst').value || 'Sin nombre';
+  var studentDoc = document.getElementById('piarDoc').value || 'Sin doc';
+  var studentGrade = document.getElementById('piarGrado').value || 'Sin grado';
+  var studentAdjusts = document.getElementById('piarAjustes').value || 'Ninguno';
+
+  pdfDoc.text("PIAR - DECRETO 1421 DE 2017 (EDUCACIÓN INCLUSIVA)", 10, 15);
+  pdfDoc.text("Estudiante: " + studentName, 10, 25);
+  pdfDoc.text("Documento: " + studentDoc, 10, 32);
+  pdfDoc.text("Grado: " + studentGrade, 10, 39);
+  pdfDoc.text("Ajustes DUA: " + studentAdjusts, 10, 48);
   [enlace sospechoso eliminado]("PIAR_Oficial_Decreto1421.pdf");
 }
 
-let pmiList = [];
-function addPMI() {
-  const h = document.getElementById('pmiHallazgo').value;
-  const a = document.getElementById('pmiAccion').value;
-  const m = document.getElementById('pmiMeta').value;
-  const i = document.getElementById('pmiInd').value;
+var pmiRecordsList = [];
+function registerPMIItem() {
+  var h = document.getElementById('pmiHallazgo').value;
+  var a = document.getElementById('pmiAccion').value;
+  var m = document.getElementById('pmiMeta').value;
+  var i = document.getElementById('pmiInd').value;
   if(!h || !a) { alert('Ingrese hallazgo y acción.'); return; }
 
-  pmiList.push({Hallazgo: h, Accion: a, MetaSMART: m, Indicador: i});
-  const tbody = document.querySelector('#pmiTable tbody');
-  tbody.innerHTML = [enlace sospechoso eliminado](p => `<tr><td class="p-2">${p.Hallazgo}</td><td class="p-2">${p.Accion}</td><td class="p-2">${p.MetaSMART}</td><td class="p-2">${p.Indicador}</td></tr>`).join('');
+  pmiRecordsList.push({Hallazgo: h, Accion: a, MetaSMART: m, Indicador: i});
+  var tbodyElem = document.querySelector('#pmiTable tbody');
+  var htmlRows = '';
+  for(var idx = 0; idx < pmiRecordsList.length; idx++) {
+    var rec = pmiRecordsList[idx];
+    htmlRows += '<tr><td class="p-2">' + rec.Hallazgo + '</td><td class="p-2">' + rec.Accion + '</td><td class="p-2">' + rec.MetaSMART + '</td><td class="p-2">' + rec.Indicador + '</td></tr>';
+  }
+  tbodyElem.innerHTML = htmlRows;
 }
 
-function exportPMIExcel() {
-  if(pmiList.length === 0) { alert('Agregue acciones al PMI.'); return; }
-  const ws = XLSX.utils.json_to_sheet(pmiList);
-  const wb = [enlace sospechoso eliminado]_new();
-  [enlace sospechoso eliminado]_append_sheet(wb, ws, "PMI Guia 34");
-  XLSX.writeFile(wb, "PMI_Guia34_MEN.xlsx");
+function downloadPMIExcelFile() {
+  if(pmiRecordsList.length === 0) { alert('Agregue acciones al PMI.'); return; }
+  if(!window.XLSX) { alert('Librería SheetJS no cargada.'); return; }
+  var sheet = window.XLSX.utils.json_to_sheet(pmiRecordsList);
+  var book = [enlace sospechoso eliminado]_new();
+  [enlace sospechoso eliminado]_append_sheet(book, sheet, "PMI Guia 34");
+  window.XLSX.writeFile(book, "PMI_Guia34_MEN.xlsx");
 }
 
-let radarChart;
-function initChart() {
-  const ctx = document.getElementById('radarDomains').getContext('2d');
-  radarChart = new Chart(ctx, {
+var globalRadarChart = null;
+function setupRadarChart() {
+  var canvasElem = document.getElementById('radarDomains');
+  if(!canvasElem || !window.Chart) return;
+  var ctx = canvasElem.getContext('2d');
+  globalRadarChart = new window.Chart(ctx, {
     type: 'radar',
     data: {
       labels: ['R-TEC', 'R-ENE', 'R-ECO', 'R-MAN', 'R-IA', 'R-PC', 'R-TLA', 'R-GOB', 'R-EVA', 'R-SP'],
       datasets: [{
         label: 'Cumplimiento (%)',
-        data: Array(10).fill(100),
+        data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
         backgroundColor: 'rgba(16, 185, 129, 0.2)',
         borderColor: '#10b981',
         borderWidth: 2,
@@ -570,19 +606,24 @@ function initChart() {
   });
 }
 
-function updateChart() {
-  if(!radarChart) return;
-  const count = REQS.filter(r => r.ok).length;
-  const val = Math.round((count / 30) * 100);
-  [enlace sospechoso eliminado].datasets.data = Array(10).fill(val);
-  radarChart.update();
-  document.getElementById('globalHealth').innerText = val + '% Auditado';
+function refreshRadarChart() {
+  if(!globalRadarChart) return;
+  var okCount = 0;
+  for(var k = 0; k < REQS_DATA.length; k++) {
+    if(REQS_DATA[k].isOk) okCount++;
+  }
+  var pct = Math.round((okCount / 30) * 100);
+  var newArr = [];
+  for(var m = 0; m < 10; m++) newArr.push(pct);
+  [enlace sospechoso eliminado].datasets[0].data = newArr;
+  globalRadarChart.update();
+  document.getElementById('globalHealth').innerText = pct + '% Auditado';
 }
 
-window.onload = () => {
-  renderReqs();
-  initChart();
-};
+window.addEventListener('DOMContentLoaded', function() {
+  displayReqsList();
+  setupRadarChart();
+});
 </script>
 </body>
 </html>
