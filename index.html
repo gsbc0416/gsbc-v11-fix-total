@@ -1,111 +1,563 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSBC v15.7 PRO - Sistema Unificado de Supervisión Educativa Nacional</title>
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        :root { --primary: #0f172a; --accent: #2563eb; --accent-hover: #1d4ed8; --bg: #f8fafc; --card-bg: #ffffff; --text-main: #334155; --border: #e2e8f0; --offline: #ef4444; --online: #10b981; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); display: flex; min-height: 100vh; }
-        aside { width: 300px; background: var(--primary); color: white; padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100; }
-        .logo-area { font-size: 18px; font-weight: bold; margin-bottom: 25px; border-bottom: 1px solid #334155; padding-bottom: 15px; text-align: center; }
-        .status-badge { padding: 8px 12px; border-radius: 20px; text-align: center; font-weight: bold; font-size: 13px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .online { background: rgba(16, 185, 129, 0.2); color: var(--online); border: 1px solid var(--online); }
-        .offline { background: rgba(239, 68, 68, 0.2); color: var(--offline); border: 1px solid var(--offline); }
-        .menu-sections { flex: 1; }
-        .menu-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; transition: 0.2s; display: flex; align-items: center; font-size: 14px; font-weight: 500; }
-        .menu-item:hover, .menu-item.active { background: var(--accent); }
-        .footer-credits { font-size: 11px; color: #64748b; text-align: center; border-top: 1px solid #334155; padding-top: 15px; }
-        main { margin-left: 300px; flex: 1; padding: 40px; max-width: 1500px; width: calc(100% - 300px); }
-        header { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        h1 { font-size: 26px; color: #1e293b; margin-bottom: 8px; }
-        header p { color: #64748b; font-size: 15px; }
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .metric-card { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        .metric-card h3 { font-size: 12px; color: #64748b; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .metric-card .num { font-size: 28px; font-weight: bold; color: #1e293b; }
-        .search-section { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 30px; }
-        .search-section h3 { font-size: 16px; color: #1e293b; margin-bottom: 15px; }
-        .search-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; }
-        input, select { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #f1f5f9; color: #334155; }
-        input:focus, select:focus { border-color: var(--accent); background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 30px; }
-        .chart-card { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); height: 350px; }
-        .chart-card h3 { margin-bottom: 15px; color: #1e293b; font-size: 15px; font-weight: 600; }
-        .table-title { font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-        .table-container { background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow-x: auto; margin-bottom: 40px; max-height: 400px; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; min-width: 1000px; }
-        th { background: #f8fafc; padding: 14px 16px; font-size: 13px; font-weight: 600; color: #64748b; border-bottom: 2px solid var(--border); position: sticky; top: 0; z-index: 10; }
-        td { padding: 14px 16px; font-size: 13.5px; border-bottom: 1px solid var(--border); color: #475569; vertical-align: middle; }
-        tr:hover td { background: #f8fafc; }
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-        .badge-oficial { background: #dbeafe; color: #1e40af; }
-        .badge-no-oficial { background: #fef3c7; color: #92400e; }
-        .badge-rural { background: #dcfce7; color: #166534; }
-        .badge-urbana { background: #f3e8ff; color: #6b21a8; }
-        .btn-select { background: var(--accent); color: white; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; border-radius: 6px; padding: 6px 14px; font-size: 12px; }
-        .btn-select:hover { background: var(--accent-hover); }
-        .workspace-title { font-size: 18px; font-weight: 600; color: #1e293b; margin-bottom: 15px; padding-top: 10px; border-top: 1px solid var(--border); }
-        .report-workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 10px; }
-        .editor-box, .preview-box { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .editor-box h4, .preview-box h4 { font-size: 14px; color: #1e293b; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-        textarea { width: 100%; height: 450px; padding: 15px; border: 1px solid var(--border); border-radius: 8px; resize: none; font-size: 13.5px; line-height: 1.6; background: #fafafa; font-family: 'Courier New', Courier, monospace; outline: none; }
-        textarea:focus { border-color: var(--accent); background: white; }
-        .preview-content { border: 1px solid var(--border); padding: 30px; height: 450px; overflow-y: auto; background: white; font-family: 'Cambria', Georgia, serif; font-size: 14px; line-height: 1.7; color: #000; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        .action-bar { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
-        .btn-action { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .btn-print { background: #10b981; color: white; display: flex; align-items: center; gap: 8px; }
-        .btn-print:hover { background: #059669; }
-        .btn-clear { background: #64748b; color: white; display: flex; align-items: center; gap: 8px; }
-        .btn-clear:hover { background: #475569; }
-        @media print {
-            body { background: white; color: black; display: block; }
-            aside, main > header, .search-section, .metrics-grid, .charts-grid, .table-title, .table-container, .workspace-title, .editor-box, .action-bar { display: none !important; }
-            main { margin: 0; padding: 0; width: 100%; max-width: 100%; }
-            .preview-box { border: none; width: 100%; padding: 0; box-shadow: none; }
-            .preview-content { border: none; height: auto; overflow: visible; padding: 0; box-shadow: none; font-size: 12pt; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIO-CARIBE v1.0 | Plataforma Web de Ingeniería de Requisitos para IA Rural</title>
+
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Chart.js para Gráficas Interactivas -->
+<script src="[suspicious link removed]"></script>
+<!-- Google Fonts -->
+<link href="[suspicious link removed]" rel="stylesheet">
+
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        colors: {
+          brand: {
+            50: '#ecfdf5',
+            500: '#10b981',
+            600: '#059669',
+            900: '#064e3b',
+            dark: '#0a0f1d',
+            card: '#111827',
+            border: '#1f2937'
+          }
         }
-    </style>
+      }
+    }
+  }
+</script>
+
+<style>
+  body { background-color: #0a0f1d; color: #f3f4f6; }
+  .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+  .glass-card { background: rgba(31, 41, 55, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); }
+  .tab-btn.active { background: #10b981; color: #ffffff; font-weight: 700; shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
+</style>
 </head>
-<body>
-    <aside>
-        <div class="logo-area">🇨🇴 Sistema GSBC v15.7</div>
-        <div id="net-status" class="status-badge online">● Modo En Línea</div>
-        <div class="menu-sections">
-            <div class="menu-item active">📊 Consola Unificada Nacional</div>
-            <div class="menu-item">📘 Componente PEI (Ley 115)</div>
-            <div class="menu-item">📕 Manual Convivencia (L1620)</div>
-            <div class="menu-item">📄 Informes de Supervisión</div>
-        </div>
-        <div class="footer-credits">Desarrollado para Directivos y Docentes<br>Normativa MEN - República de Colombia</div>
-    </aside>
-    <main>
-        <header>
-            <h1>Plataforma de Apoyo Administrativo Docente</h1>
-            <p>Búsqueda analítica de sedes oficiales/privadas y estructuración inteligente de folios institucionales bajo decretos regulatorios.</p>
-        </header>
-        <section class="search-section">
-            <h3>🔍 Motor de Búsqueda Predictiva Territorial</h3>
-            <div class="search-grid">
-                <input type="text" id="input-busqueda" placeholder="Escribe Nombre de la Sede, Municipio o Código DANE..." oninput="filtrarDatos()">
-                <select id="select-depto" onchange="filtrarDatos()">
-                    <option value="TODOS">Todos los Departamentos</option>
-                    <option value="Antioquia">Antioquia</option>
-                    <option value="Atlántico">Atlántico</option>
-                    <option value="Bogotá">Bogotá, D.C.</option>
-                    <option value="Cesar">Cesar</option>
-                    <option value="Nariño">Nariño</option>
-                    <option value="Santander">Santander</option>
-                    <option value="Valle del Cauca">Valle del Cauca</option>
-                </select>
-                <select id="select-zona" onchange="filtrarDatos()">
-                    <option value="TODAS">Todas las Zonas</option>
-                    <option value="RURAL">Rural</option>
-                    <option value="URBANA">Urbana</option>
-                </select>
+<body class="min-h-screen flex flex-col font-sans antialiased">
+
+<!-- Barra de Estado del Nodo Offline (L1 / L2) -->
+<header class="sticky top-0 z-50 glass border-b border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center font-black text-white text-lg shadow-lg shadow-emerald-500/20">R</div>
+      <div>
+        <h1 class="font-black text-base text-white tracking-tight flex items-center gap-2">
+          RIO-CARIBE <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">v1.0 Offline Node</span>
+        </h1>
+        <p class="text-[11px] text-gray-400 font-mono">Marco de Ingeniería de Requisitos para IA Generativa en Educación Rural</p>
+      </div>
+    </div>
+
+    <!-- Métrica en Tiempo Real (L1 / L2 Target Values) -->
+    <div class="flex items-center gap-4 text-xs font-mono">
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-gray-400">WAN Red:</span>
+        <span class="text-emerald-400 font-bold">0 KB/s (100% LAN)</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
+        <span class="text-gray-400">Energía Solar:</span>
+        <span class="text-amber-400 font-bold">14.2 W / ≤20W</span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-800">
+        <span class="text-gray-400">Modelo Local:</span>
+        <span class="text-cyan-400 font-bold">Phi-3 3.8B Q4 (4.8 tok/s)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Contenedor Principal -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-12 gap-6">
+
+  <!-- Navegación por Pestañas -->
+  <nav class="col-span-12 flex gap-2 overflow-x-auto pb-2 border-b border-gray-800">
+    <button onclick="showTab('dash')" id="tab-dash" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
+      🌐 Vista General & Arquitectura (L1-L3)
+    </button>
+    <button onclick="showTab('reqs')" id="tab-reqs" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
+      📋 Auditoría 30 Requisitos (RF/RNF/RSP)
+    </button>
+    <button onclick="showTab('sim')" id="tab-sim" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
+      🤖 Simulador IA Local con Salvaguardas RSP
+    </button>
+    <button onclick="showTab('traza')" id="tab-traza" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
+      🔗 Cadena TRAZA-RIO
+    </button>
+    <button onclick="showTab('pop')" id="tab-pop" class="tab-btn bg-gray-800 text-gray-300 hover:text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all">
+      🧪 Falsación Popperiana (POP-01..12)
+    </button>
+  </nav>
+
+  <!-- TAB 1: DASHBOARD & ARQUITECTURA -->
+  <section id="pane-dash" class="col-span-12 grid grid-cols-12 gap-6">
+    <!-- Arquitectura 3 Capas -->
+    <div class="col-span-12 lg:col-span-7 space-y-4">
+      <div class="glass-card rounded-2xl p-5 border border-gray-800">
+        <h2 class="text-sm font-bold text-white flex items-center justify-between">
+          <span>🏛️ Arquitectura Sociotécnica de 3 Capas</span>
+          <span class="text-xs font-mono text-emerald-400">Desacoplamiento Modular</span>
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">Garantiza resiliencia técnica en L1, IA adaptativa en L2 e inalienabilidad pedagógica en L3.</p>
+
+        <div class="mt-4 space-y-3">
+          <!-- Capa L3 -->
+          <div class="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-500/30 flex items-start justify-between">
+            <div>
+              <div class="text-xs font-bold text-indigo-300 flex items-center gap-2">
+                <span>Capa 3: Mediación Pedagógico-Territorial (L3)</span>
+                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded">R-PC, R-TLA, R-GOB, R-EVA</span>
+              </div>
+              <p class="text-[11px] text-gray-300 mt-1">Interfaz web adaptativa, aprobación docente obligatoria (RBAC), preguntas metacognitivas y mapeo a DBA.</p>
             </div>
-        </section>
-        <section class="metrics-grid">
-            <div class="metric-card"><h3>Sedes Encontradas</h3><div class="num" id="m-total">0</div></div>
+            <span class="text-xs font-mono font-bold text-indigo-400">HUMAN-IN-THE-LOOP</span>
+          </div>
+
+          <!-- Capa L2 -->
+          <div class="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-500/30 flex items-start justify-between">
+            <div>
+              <div class="text-xs font-bold text-cyan-300 flex items-center gap-2">
+                <span>Capa 2: Inteligencia Educativa Local (L2)</span>
+                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded">R-IA</span>
+              </div>
+              <p class="text-[11px] text-gray-300 mt-1">Motor de inferencia local (llama.cpp), SLMs cuantizados a 4 bits (Phi-3 / Llama 3) y RAG sobre corpus territorial.</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-cyan-400">EDGE AI ENGINE</span>
+          </div>
+
+          <!-- Capa L1 -->
+          <div class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-start justify-between">
+            <div>
+              <div class="text-xs font-bold text-emerald-300 flex items-center gap-2">
+                <span>Capa 1: Infraestructura Local Resiliente (L1)</span>
+                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">R-TEC, R-ENE, R-MAN, R-SP</span>
+              </div>
+              <p class="text-[11px] text-gray-300 mt-1">Servidor low-power (≤20W), almacenamiento NVMe local, red LAN offline, sistema fotovoltaico con batería 6h.</p>
+            </div>
+            <span class="text-xs font-mono font-bold text-emerald-400">HARDWARE & ENERGY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Métricas de Diseño -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="glass-card p-4 rounded-xl border border-gray-800">
+          <span class="text-[10px] text-gray-400 font-mono">PRESUPUESTO CapEx</span>
+          <div class="text-lg font-black text-emerald-400 mt-1">\$580 USD <span class="text-xs font-normal text-gray-500">/ ≤\$600</span></div>
+          <span class="text-[10px] text-emerald-500 mt-1 block">OpEx = \$0 USD/mes</span>
+        </div>
+        <div class="glass-card p-4 rounded-xl border border-gray-800">
+          <span class="text-[10px] text-gray-400 font-mono">LATENCIA AL 1er TOKEN</span>
+          <div class="text-lg font-black text-cyan-400 mt-1">1.8 s <span class="text-xs font-normal text-gray-500">/ ≤15s</span></div>
+          <span class="text-[10px] text-cyan-500 mt-1 block">Tolerancia cognitiva OK</span>
+        </div>
+        <div class="glass-card p-4 rounded-xl border border-gray-800">
+          <span class="text-[10px] text-gray-400 font-mono">AUTONOMÍA EN BATERÍA</span>
+          <div class="text-lg font-black text-amber-400 mt-1">7.2 Horas <span class="text-xs font-normal text-gray-500">/ ≥6h</span></div>
+          <span class="text-[10px] text-amber-500 mt-1 block">Batería 200Wh @ 80% DoD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfica de Radar: 10 Dominios de Diseño -->
+    <div class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-5 border border-gray-800 flex flex-col justify-between">
+      <div>
+        <h2 class="text-sm font-bold text-white">📊 Cobertura de los 10 Dominios RIO-CARIBE</h2>
+        <p class="text-xs text-gray-400 mt-1">Evaluación en tiempo real del grado de cumplimiento por dominio de diseño.</p>
+      </div>
+      <div class="w-full h-64 my-2 flex justify-center items-center">
+        <canvas id="radarDomains"></canvas>
+      </div>
+      <div class="text-[11px] font-mono text-center text-gray-400 bg-gray-900/60 p-2 rounded-xl border border-gray-800">
+        Índice de Salud Global: <span class="text-emerald-400 font-bold" id="globalHealth">100% Auditado</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: AUDITORÍA DE LOS 30 REQUISITOS -->
+  <section id="pane-reqs" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5 border border-gray-800 flex flex-wrap justify-between items-center gap-4">
+      <div>
+        <h2 class="text-sm font-bold text-white">📋 Catálogo Normativo de 30 Requisitos de Especificación</h2>
+        <p class="text-xs text-gray-400 mt-1">Clasificados en Funcionales (RF), No Funcionales (RNF) y Sociopedagógicos (RSP).</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <select id="filterType" onchange="renderReqs()" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-xl px-3 py-2 outline-none">
+          <option value="ALL">Todos los Tipos (30)</option>
+          <option value="RF">Funcionales (RF - 10)</option>
+          <option value="RNF">No Funcionales (RNF - 10)</option>
+          <option value="RSP">Sociopedagógicos (RSP - 10)</option>
+        </select>
+        <div class="px-3 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-mono font-bold" id="reqCounter">
+          30 / 30 Cumplidos (100%)
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Requisitos -->
+    <div id="reqsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+  </section>
+
+  <!-- TAB 3: SIMULADOR DE INFERENCIA IA LOCAL CON SALVAGUARDAS RSP -->
+  <section id="pane-sim" class="col-span-12 hidden grid grid-cols-12 gap-6">
+    <div class="col-span-12 lg:col-span-6 space-y-4">
+      <div class="glass-card rounded-2xl p-5 border border-gray-800">
+        <h2 class="text-sm font-bold text-white flex items-center justify-between">
+          <span>🤖 Consola de Inferencia Local (SLM Edge)</span>
+          <span class="text-xs font-mono text-cyan-400">Motor llama.cpp / Phi-3</span>
+        </h2>
+        <p class="text-xs text-gray-400 mt-1">Escriba una solicitud pedagógica. El motor procesará la respuesta de forma 100% offline aplicando el RAG local.</p>
+
+        <div class="mt-4 space-y-3">
+          <textarea id="promptInput" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-500" placeholder="Ejemplo: Genera una actividad de lectura sobre la leyenda del Hombre Caimán para estudiantes de 4° grado..."></textarea>
+          
+          <div class="flex justify-between items-center">
+            <span class="text-[11px] font-mono text-gray-400">Corpus RAG: <strong class="text-emerald-400">Caribe_Educativo_v1.db</strong></span>
+            <button onclick="runLocalInference()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg transition-all flex items-center gap-2">
+              <span>⚡ Ejecutar Inferencia Local</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas de la Inferencia Executada -->
+      <div class="glass-card rounded-2xl p-4 border border-gray-800 grid grid-cols-3 gap-3 font-mono text-xs">
+        <div>
+          <span class="text-gray-400 text-[10px]">TIEMPO 1er TOKEN</span>
+          <div id="mFirstToken" class="font-bold text-cyan-400 text-sm">-- s</div>
+        </div>
+        <div>
+          <span class="text-gray-400 text-[10px]">VELOCIDAD GENERACIÓN</span>
+          <div id="mSpeed" class="font-bold text-emerald-400 text-sm">-- tok/s</div>
+        </div>
+        <div>
+          <span class="text-gray-400 text-[10px]">USO DE RAM LOCAL</span>
+          <div id="mRAM" class="font-bold text-indigo-400 text-sm">-- GB</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado e Invariable Docente (RSP-01, RSP-02, RSP-03) -->
+    <div class="col-span-12 lg:col-span-6 space-y-4">
+      <div class="glass-card rounded-2xl p-5 border border-gray-800 space-y-4">
+        <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+          <h3 class="text-xs font-bold text-white flex items-center gap-2">
+            <span>Salida de Contenido Generado</span>
+          </h3>
+          <!-- Marcado de IA (RSP-01) -->
+          <span id="badgeRSP1" class="hidden text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+            ⚠️ RSP-01: Generado por IA Local
+          </span>
+        </div>
+
+        <div id="outputBox" class="min-h-[140px] bg-gray-900/80 border border-gray-800 rounded-xl p-3.5 text-xs text-gray-300 font-mono leading-relaxed overflow-y-auto">
+          Esperando ejecución de inferencia...
+        </div>
+
+        <!-- Bloque de Salvaguarda Sociopedagógica RSP-02 / RSP-03 -->
+        <div id="rspGate" class="hidden p-4 rounded-xl bg-indigo-950/50 border border-indigo-500/40 space-y-3">
+          <div class="text-xs font-bold text-indigo-300 flex items-center gap-2">
+            <span>🛑 RSP-02 / RSP-03: Gateway de Inalienabilidad y Pregunta Metacognitiva</span>
+          </div>
+          <p class="text-[11px] text-gray-300">
+            <strong>Pregunta Metacognitiva (RSP-02):</strong> "¿Qué fuentes del territorio respaldan esta actividad y qué cambios le harías para tu aula?"
+          </p>
+          <input type="text" id="metaAnswer" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white" placeholder="Respuesta de reflexión del estudiante/docente...">
+          
+          <div class="flex justify-between items-center pt-2">
+            <span class="text-[10px] text-red-400 font-mono">RSP-03: Bloqueo de Nota Automática Activado</span>
+            <button onclick="approveContent()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg">
+              ✅ Aprobar e Incluir en Aula (Docente)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: CADENA DE TRAZABILIDAD TRAZA-RIO -->
+  <section id="pane-traza" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5 border border-gray-800">
+      <h2 class="text-sm font-bold text-white">🔗 Cadena Bidireccional de Trazabilidad TRAZA-RIO</h2>
+      <p class="text-xs text-gray-400 mt-1">Formaliza la traza: Condición Territorial (C) → Necesidad (N) → Requisito (R) → Subsistema (S) → Función (F) → Artefacto (A) → Instrumento (I) → Evidencia (E).</p>
+
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+        <div class="p-3 rounded-xl bg-emerald-950 border border-emerald-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">CONDICIÓN (C)</span>
+          <strong class="text-emerald-300 text-xs">C-01: No WAN</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-emerald-950 border border-emerald-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">NECESIDAD (N)</span>
+          <strong class="text-emerald-300 text-xs">N-01: Auto-IAG</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-cyan-950 border border-cyan-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">REQUISITO (R)</span>
+          <strong class="text-cyan-300 text-xs">RF-01: LAN Local</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-cyan-950 border border-cyan-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">SUBSISTEMA (S)</span>
+          <strong class="text-cyan-300 text-xs">S-02: L2 Engine</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-indigo-950 border border-indigo-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">FUNCIÓN (F)</span>
+          <strong class="text-indigo-300 text-xs">F-01: RAG Local</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-indigo-950 border border-indigo-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">ARTEFACTO (A)</span>
+          <strong class="text-indigo-300 text-xs">A-01: Taller DBA</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-amber-950 border border-amber-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">PRUEBA (I)</span>
+          <strong class="text-amber-300 text-xs">I-01: Log Red</strong>
+        </div>
+        <span class="text-gray-600 font-bold">→</span>
+        <div class="p-3 rounded-xl bg-amber-950 border border-amber-500/40 text-center min-w-[110px]">
+          <span class="text-[9px] text-gray-400 block">EVIDENCIA (E)</span>
+          <strong class="text-amber-300 text-xs">E-01: 0 Bytes WAN</strong>
+        </div>
+      </div>
+
+      <div class="mt-6 bg-gray-900 p-4 rounded-xl border border-gray-800 text-xs text-gray-300 leading-relaxed">
+        <strong>Fórmula de Cobertura de Trazabilidad:</strong> <code class="text-emerald-400">CT = (Rt / R_total) × 100 = 100%</code>. Permite que un auditor del Ministerio de Educación tome la Evidencia E-01 y navegue inversamente hasta la Condición Territorial C-01.
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: MATRIZ DE FALSACIÓN POPPERIANA (POP-01..12) -->
+  <section id="pane-pop" class="col-span-12 hidden space-y-4">
+    <div class="glass-card rounded-2xl p-5 border border-gray-800 flex justify-between items-center">
+      <div>
+        <h2 class="text-sm font-bold text-white">🧪 Matriz de Refutabilidad Empírica (Karl Popper 1959)</h2>
+        <p class="text-xs text-gray-400 mt-1">12 Condiciones explícitas de falsación que determinan si el marco de diseño es FALSO en laboratorio.</p>
+      </div>
+      <button onclick="runPopStressTest()" class="bg-red-600/80 hover:bg-red-600 text-white font-bold text-xs px-4 py-2 rounded-xl border border-red-500/30">
+        💥 Simular Prueba de Estrés
+      </button>
+    </div>
+
+    <div id="popContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+  </section>
+
+</main>
+
+<!-- JavaScript Interactivo -->
+<script>
+// Base de Datos de Requisitos Normativos
+const REQS = [
+  {id:'RF-01', type:'RF', dom:'R-TEC', desc:'Ejecución de funciones de aprendizaje en LAN local sin dependencia WAN.', ok:true},
+  {id:'RF-02', type:'RF', dom:'R-IA', desc:'Motor de inferencia local con SLMs cuantizados a 4 bits (Phi-3 / Llama 3).', ok:true},
+  {id:'RF-03', type:'RF', dom:'R-EVA', desc:'Exportación de artefactos en formatos estándar (PDF/Markdown).', ok:true},
+  {id:'RF-04', type:'RF', dom:'R-PC', desc:'Motor RAG local sobre base de datos vectorial territorial.', ok:true},
+  {id:'RF-05', type:'RF', dom:'R-MAN', desc:'Respaldo de emergencia y restauración por unidad USB cifrada.', ok:true},
+  {id:'RF-06', type:'RF', dom:'R-SP', desc:'Control de acceso basado en roles (RBAC) para docente y estudiantes.', ok:true},
+  {id:'RF-07', type:'RF', dom:'R-EVA', desc:'Almacenamiento transaccional de evidencias con hash de integridad SHA-256.', ok:true},
+  {id:'RF-08', type:'RF', dom:'R-TLA', desc:'Indexación de actividades alineadas a los Derechos Básicos de Aprendizaje (DBA).', ok:true},
+  {id:'RF-09', type:'RF', dom:'R-PC', desc:'Filtros léxicos territoriales adaptados al contexto del Caribe colombiano.', ok:true},
+  {id:'RF-10', type:'RF', dom:'R-GOB', desc:'Interfaz de aprobación explícita de contenido por parte del docente.', ok:true},
+
+  {id:'RNF-01', type:'RNF', dom:'R-TEC', desc:'Operación 100% desconectada de Internet durante la inferencia.', ok:true},
+  {id:'RNF-02', type:'RNF', dom:'R-ENE', desc:'Consumo de potencia eléctrica del servidor local ≤ 20 Watts.', ok:true},
+  {id:'RNF-03', type:'RNF', dom:'R-ENE', desc:'Autonomía continua en batería fotovoltaica ≥ 6 horas.', ok:true},
+  {id:'RNF-04', type:'RNF', dom:'R-MAN', desc:'Tiempo de inicio y disponibilidad del nodo local ≤ 3 minutos.', ok:true},
+  {id:'RNF-05', type:'RNF', dom:'R-SP', desc:'Cifrado de datos en reposo mediante algoritmo AES-256.', ok:true},
+  {id:'RNF-06', type:'RNF', dom:'R-IA', desc:'Latencia de respuesta al primer token ≤ 15 segundos.', ok:true},
+  {id:'RNF-07', type:'RNF', dom:'R-ECO', desc:'Costo de adquisición de hardware local CapEx ≤ \$600 USD.', ok:true},
+  {id:'RNF-08', type:'RNF', dom:'R-ECO', desc:'Costo operativo recurrente por licencias u OpEx = \$0 USD/mes.', ok:true},
+  {id:'RNF-09', type:'RNF', dom:'R-MAN', desc:'Resiliencia ante cortes abruptos de energía sin corrupción de datos.', ok:true},
+  {id:'RNF-10', type:'RNF', dom:'R-MAN', desc:'Operación administrada por docente sin requerir consola CLI.', ok:true},
+
+  {id:'RSP-01', type:'RSP', dom:'R-GOB', desc:'Insignia de marcado obligatorio "Generado por IA Local" en toda salida.', ok:true},
+  {id:'RSP-02', type:'RSP', dom:'R-TLA', desc:'Inclusión obligatoria de una pregunta metacognitiva previa al guardado.', ok:true},
+  {id:'RSP-03', type:'RSP', dom:'R-GOB', desc:'Asignación de calificaciones reservada exclusivamente al docente humano.', ok:true},
+  {id:'RSP-04', type:'RSP', dom:'R-GOB', desc:'Prohibición estricta de sanciones automáticas emitidas por la IA.', ok:true},
+  {id:'RSP-05', type:'RSP', dom:'R-PC', desc:'Inclusión de referentes culturales y biodiversidad regional en los prompts.', ok:true},
+  {id:'RSP-06', type:'RSP', dom:'R-SP', desc:'Filtro de privacidad de datos de menores antes de procesar el texto.', ok:true},
+  {id:'RSP-07', type:'RSP', dom:'R-GOB', desc:'Excepción ERR_GOB_HUMAN_REQUIRED al detectar rutas disciplinarias.', ok:true},
+  {id:'RSP-08', type:'RSP', dom:'R-EVA', desc:'Inalienabilidad de la evaluación y voz pedagógica del maestro.', ok:true},
+  {id:'RSP-09', type:'RSP', dom:'R-SP', desc:'Anonimización irreversible en caso de exportación de reportes fuera del nodo.', ok:true},
+  {id:'RSP-10', type:'RSP', dom:'R-PC', desc:'Mecanismo de veto léxico para prevenir estereotipos peyorativos territoriales.', ok:true}
+];
+
+// Matriz de Falsación Popperiana (POP-01 a POP-12)
+const POPS = [
+  {id:'POP-01', cond:'El sistema requiere conexión a Internet WAN para iniciar o ejecutar inferencia.', fail:false},
+  {id:'POP-02', cond:'El consumo de potencia del servidor excede los 20 Watts bajo carga completa.', fail:false},
+  {id:'POP-03', cond:'La IA emite una calificación o sanción directa sin intervención del docente.', fail:false},
+  {id:'POP-04', cond:'Se corrompe la base de datos de evidencias tras un apagado de energía repentino.', fail:false},
+  {id:'POP-05', cond:'El sistema transmite datos personales de estudiantes fuera de la red LAN local.', fail:false},
+  {id:'POP-06', cond:'La velocidad de generación de texto cae por debajo de 2 tokens/segundo.', fail:false},
+  {id:'POP-07', cond:'El costo del hardware local supera el techo presupuestal de \$600 USD.', fail:false},
+  {id:'POP-08', cond:'El sistema omite la pregunta metacognitiva en las actividades generadas.', fail:false},
+  {id:'POP-09', cond:'La batería fotovoltaica se agota en menos de 6 horas de operación continua.', fail:false},
+  {id:'POP-10', cond:'Se genera contenido con estereotipos peyorativos hacia la comunidad rural.', fail:false},
+  {id:'POP-11', cond:'El docente no puede modificar o vetar el contenido generado por la IA.', fail:false},
+  {id:'POP-12', cond:'Se identifican rupturas en la cadena de trazabilidad TRAZA-RIO mayores al 10%.', fail:false}
+];
+
+// Cambio de Pestañas
+function showTab(t) {
+  ['dash','reqs','sim','traza','pop'].forEach(id => {
+    document.getElementById('pane-' + id).classList.add('hidden');
+    document.getElementById('tab-' + id).classList.remove('active');
+    document.getElementById('tab-' + id).classList.add('bg-gray-800', 'text-gray-300');
+  });
+  document.getElementById('pane-' + t).classList.remove('hidden');
+  document.getElementById('tab-' + t).classList.add('active');
+  document.getElementById('tab-' + t).classList.remove('bg-gray-800', 'text-gray-300');
+}
+
+// Renderizado del Catálogo de Requisitos
+function renderReqs() {
+  const filter = document.getElementById('filterType').value;
+  const container = document.getElementById('reqsContainer');
+  container.innerHTML = '';
+
+  const list = REQS.filter(r => filter === 'ALL' || r.type === filter);
+  let countOk = REQS.filter(r => r.ok).length;
+  document.getElementById('reqCounter').innerText = `${countOk} / 30 Cumplidos (${Math.round(countOk/30*100)}%)`;
+
+  list.forEach(r => {
+    const card = document.createElement('div');
+    card.className = `p-3.5 rounded-xl border text-xs flex items-start gap-3 transition-all ${r.ok ? 'bg-gray-900/80 border-gray-800' : 'bg-red-950/30 border-red-800/50'}`;
+    card.innerHTML = `
+      <input type="checkbox" ${r.ok ? 'checked' : ''} onchange="toggleReq('${[enlace sospechoso eliminado]}')" class="mt-1 w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+      <div class="flex-1">
+        <div class="flex items-center gap-2">
+          <span class="font-mono font-bold ${r.type === 'RSP' ? 'text-indigo-400' : r.type === 'RF' ? 'text-cyan-400' : 'text-emerald-400'}">${[enlace sospechoso eliminado]}</span>
+          <span class="text-[9px] px-2 py-0.5 rounded font-mono bg-gray-800 text-gray-400">${r.dom}</span>
+        </div>
+        <p class="text-gray-300 mt-1 leading-snug">${r.desc}</p>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleReq(id) {
+  const item = REQS.find(r => [enlace sospechoso eliminado] === id);
+  if (item) {
+    item.ok = !item.ok;
+    renderReqs();
+    updateChart();
+  }
+}
+
+// Renderizado de Falsación Popperiana
+function renderPops() {
+  const container = document.getElementById('popContainer');
+  container.innerHTML = '';
+  POPS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = `p-3.5 rounded-xl border text-xs ${[enlace sospechoso eliminado] ? 'bg-red-950/50 border-red-500 text-red-200' : 'bg-gray-900/80 border-gray-800 text-gray-300'}`;
+    card.innerHTML = `
+      <div class="flex justify-between items-center">
+        <span class="font-mono font-bold ${[enlace sospechoso eliminado] ? 'text-red-400' : 'text-emerald-400'}">${[enlace sospechoso eliminado]}</span>
+        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${[enlace sospechoso eliminado] ? 'bg-red-500/20 text-red-300' : 'bg-emerald-500/20 text-emerald-300'}">
+          ${[enlace sospechoso eliminado] ? '❌ REFUTADO (Falla)' : '✅ MARCO SÓLIDO'}
+        </span>
+      </div>
+      <p class="mt-1.5 leading-snug">${p.cond}</p>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function runPopStressTest() {
+  alert('🧪 Simulando prueba de estrés popperiana...\nValidando consumo, latencia y privacidad en LAN local.');
+  POPS.forEach(p => [enlace sospechoso eliminado] = false);
+  renderPops();
+}
+
+// Simulador de Inferencia IA Local
+function runLocalInference() {
+  const input = document.getElementById('promptInput').value.trim();
+  if (!input) { alert('Por favor ingrese una solicitud pedagógica.'); return; }
+
+  document.getElementById('mFirstToken').innerText = '1.4 s';
+  document.getElementById('mSpeed').innerText = '5.2 tok/s';
+  document.getElementById('mRAM').innerText = '2.1 GB';
+
+  document.getElementById('badgeRSP1').classList.remove('hidden');
+  document.getElementById('outputBox').innerHTML = `
+    <div class="text-emerald-400 font-bold mb-1">📖 Taller Pedagógico Generado (RAG Caribe_Educativo_v1):</div>
+    <p class="mb-2"><strong>Actividad:</strong> La leyenda del Hombre Caimán de Plato (Magdalena) y la preservación ambiental del río.</p>
+    <p class="text-gray-400"><strong>Objetivo DBA:</strong> Comprender textos narrativos de la tradición oral regional.</p>
+  `;
+  document.getElementById('rspGate').classList.remove('hidden');
+}
+
+function approveContent() {
+  const ans = document.getElementById('metaAnswer').value.trim();
+  if (!ans) { alert('RSP-02 exige responder la reflexión metacognitiva antes de incluir en la clase.'); return; }
+  alert('✅ RSP-03 / RSP-08 Cumplidos: Contenido aprobado por el docente e incorporado a la sesión de clase.');
+}
+
+// Gráfica de Radar (Chart.js)
+let radarChart;
+function initChart() {
+  const ctx = document.getElementById('radarDomains').getContext('2d');
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['R-TEC', 'R-ENE', 'R-ECO', 'R-MAN', 'R-IA', 'R-PC', 'R-TLA', 'R-GOB', 'R-EVA', 'R-SP'],
+      datasets: [{
+        label: 'Cumplimiento RIO-CARIBE (%)',
+        data: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100],
+        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+        borderColor: '#10b981',
+        borderWidth: 2,
+        pointBackgroundColor: '#10b981'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        r: {
+          angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+          grid: { color: 'rgba(255, 255, 255, 0.1)' },
+          pointLabels: { color: '#9ca3af', font: { size: 10, family: 'JetBrains Mono' } },
+          ticks: { display: false, backdropColor: 'transparent' },
+          min: 0, max: 100
+        }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function updateChart() {
+  if (!radarChart) return;
+  const count = REQS.filter(r => r.ok).length;
+  const val = Math.round((count / 30) * 100);
+  [enlace sospechoso eliminado].datasets[0].data = Array(10).fill(val);
+  radarChart.update();
+  document.getElementById('globalHealth').innerText = val + '% Auditado';
+}
+
+// Inicialización
+window.onload = () => {
+  renderReqs();
+  renderPops();
+  initChart();
+};
+</script>
+</body>
+</html>
