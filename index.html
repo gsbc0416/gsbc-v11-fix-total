@@ -1,482 +1,877 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RIO-CARIBE v14.2 REAL 843 - DUE Oficial - FIX TOTAL</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIO-CARIBE | Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad</title>
+  <meta name="description" content="RIO-CARIBE es un marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad, con enfoque educativo, sociotécnico y trazabilidad." />
   <style>
     :root {
-      --bg: #0b1120;
-      --panel: rgba(15, 23, 42, 0.82);
-      --panel-2: rgba(17, 24, 39, 0.9);
-      --border: #2a374a;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #10b981;
-      --warn: #f59e0b;
-      --danger: #ef4444;
-      --cyan: #38bdf8;
+      --bg: #07111f;
+      --bg-soft: #0d1c2d;
+      --panel: #122235;
+      --panel-2: #1a2f46;
+      --card: #0f1e30;
+      --line: rgba(148, 163, 184, 0.18);
+      --text: #e6eefb;
+      --muted: #a6b7d0;
+      --accent: #3dd9a2;
+      --accent-2: #7ed4ff;
+      --warn: #f7b955;
+      --danger: #f87171;
+      --purple: #a78bfa;
+      --shadow: 0 18px 38px rgba(2, 6, 23, 0.28);
+      --radius: 18px;
+      --max: 1200px;
     }
+
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
       color: var(--text);
+      line-height: 1.6;
     }
-    .glass {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: 0 10px 20px rgba(0,0,0,.15);
+
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+    p, li { color: var(--text); }
+    ul { padding-left: 1.2em; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
     }
-    .sticky { position: sticky; top: 0; z-index: 50; }
-    .top-0 { top: 0; }
-    .z-50 { z-index: 50; }
-    .border-b { border-bottom: 1px solid var(--border); }
-    .border-gray-800 { border-color: rgba(31,41,55,.8); }
-    .p-3 { padding: 12px; }
-    .flex { display: flex; }
-    .justify-between { justify-content: space-between; }
-    .items-center { align-items: center; }
-    .gap-3 { gap: 12px; }
-    .w-10 { width: 40px; }
-    .h-10 { height: 40px; }
-    .rounded-xl { border-radius: 12px; }
-    .bg-gradient { background: linear-gradient(135deg, #10b981, #0ea5e9); }
-    .max-w-\[1280px\] { max-width: 1280px; }
-    .mx-auto { margin-left: auto; margin-right: auto; }
-    .w-full { width: 100%; }
-    .p-4 { padding: 16px; }
-    .grid { display: grid; }
-    .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-    .gap-5 { gap: 20px; }
-    .col-span-12 { grid-column: span 12; }
-    .overflow-x-auto { overflow-x: auto; }
-    .pb-2 { padding-bottom: 8px; }
-    .button {
+    th { background: rgba(148, 163, 184, 0.06); }
+
+    .container {
+      width: min(var(--max), calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .section {
+      padding: 54px 0;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+    .section-subtitle {
+      margin-top: 0;
+      color: var(--muted);
+      max-width: 820px;
+    }
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(61, 217, 162, 0.35);
+      background: rgba(61, 217, 162, 0.08);
+      color: #c8f7df;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(7, 17, 31, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 72px;
+    }
+    .brand {
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--text);
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 18px;
+      justify-content: flex-end;
+    }
+    .nav a {
+      color: var(--muted);
+      font-size: 0.96rem;
+      transition: color .2s ease;
+    }
+    .nav a:hover { color: var(--text); }
+
+    .hero {
+      padding: 70px 0 56px;
+      background: linear-gradient(135deg, rgba(12, 24, 41, .9), rgba(8, 18, 31, .8));
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 28px;
+      align-items: center;
+    }
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.2rem);
+      line-height: 1.05;
+      margin: 18px 0 18px;
+      letter-spacing: -0.05em;
+    }
+    .lead {
+      color: var(--muted);
+      font-size: 1.08rem;
+      max-width: 720px;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(15, 30, 48, 0.8);
+      color: var(--text);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, border-color .2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      text-decoration: none;
+      border-color: rgba(125, 212, 255, 0.5);
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), #6ce9b5);
+      color: #082113;
+      border: none;
+    }
+
+    .hero-card {
+      background: rgba(18, 34, 53, 0.9);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .metric {
+      background: rgba(148, 163, 184, 0.05);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .metric strong { display: block; font-size: 1.6rem; }
+    .metric span { color: var(--muted); font-size: .9rem; }
+
+    .grid-2, .grid-3 {
+      display: grid;
+      gap: 20px;
+    }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      background: rgba(18, 34, 53, 0.75);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 1.15rem;
+    }
+    .muted { color: var(--muted); }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .pill {
+      background: rgba(167, 139, 250, 0.1);
+      border: 1px solid rgba(167, 139, 250, 0.25);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: #e5dfff;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 46px 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-index {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(61, 217, 162, 0.12);
+      border: 1px solid rgba(61, 217, 162, 0.25);
+      color: #c5f9e5;
+      font-weight: 700;
+    }
+
+    .requirements-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .filter-btn {
       padding: 10px 14px;
-      border: 1px solid var(--border);
-      background: rgba(16,185,129,0.14);
-      color: white;
       border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(15, 30, 48, 0.7);
+      color: var(--text);
       cursor: pointer;
       font-weight: 700;
     }
-    .bg-emerald-600 { background: #10b981; color: #04130e; }
-    .card { padding: 20px; border-radius: 12px; }
-    .mono { font-family: monospace; }
-    .text-xs { font-size: 12px; }
-    .text-sm { font-size: 13px; }
-    .font-bold { font-weight: 700; }
-    .mt-4 { margin-top: 16px; }
-    .mt-3 { margin-top: 12px; }
-    .hidden { display: none !important; }
-    .space-y-4 > * + * { margin-top: 16px; }
-    .rounded-\[10px\] { border-radius: 10px; }
-    input, textarea, select, button {
-      font: inherit;
+    .filter-btn.active {
+      background: linear-gradient(135deg, rgba(61, 217, 162, 0.2), rgba(125, 212, 255, 0.18));
+      border-color: rgba(125, 212, 255, 0.35);
     }
-    #syncLog, #searchResults, #dueResults, #outputBox, .pre { white-space: pre-wrap; }
-    .bg-black\/30 { background: rgba(0,0,0,.3); }
-    .p-4 { padding: 16px; }
-    .rounded { border-radius: 8px; }
-    .bg-gray-900 { background: rgba(17,24,39,.96); }
-    .border { border: 1px solid var(--border); }
-    .w-full { width: 100%; }
-    .text-gray-300 { color: #d1d5db; }
-    .text-gray-400 { color: #9ca3af; }
-    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
-    .md\:grid-cols-2 { } @media (min-width: 768px) { .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    .gap-3 { gap: 12px; }
-    .bg-red-500 { background: #ef4444; }
-    .bg-cyan-600 { background: #0891b2; }
-    .text-center { text-align: center; }
-    .mr-2 { margin-right: 8px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid var(--border); padding: 8px; text-align: left; }
-    .alert { color: var(--warn); }
+    .req-table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(14, 24, 39, 0.6);
+    }
+    .req-card {
+      display: none;
+      padding: 0;
+    }
+    .req-card.active { display: block; }
+
+    .tipo-tag {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      border: 1px solid transparent;
+    }
+    .tag-f { background: rgba(61, 217, 162, 0.08); border-color: rgba(61, 217, 162, 0.25); color: #d5fbe7; }
+    .tag-nf { background: rgba(125, 212, 255, 0.08); border-color: rgba(125, 212, 255, 0.25); color: #dff6ff; }
+    .tag-sp { background: rgba(167, 139, 250, 0.1); border-color: rgba(167, 139, 250, 0.25); color: #efe4ff; }
+
+    .legal-box {
+      background: linear-gradient(135deg, rgba(247, 185, 85, 0.08), rgba(255, 255, 255, 0.01));
+      border: 1px solid rgba(247, 185, 85, 0.3);
+      border-radius: var(--radius);
+      padding: 20px;
+      color: #f8e7b1;
+    }
+
+    .footer {
+      padding: 32px 0 68px;
+      border-top: 1px solid var(--line);
+      background: rgba(10, 19, 31, 0.72);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .8fr .8fr;
+      gap: 20px;
+    }
+    .tiny { font-size: .88rem; color: var(--muted); }
+
+    .cookie-banner {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      background: rgba(10, 19, 31, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 18px;
+      z-index: 100;
+    }
+    .cookie-banner.hidden { display: none; }
+    .cookie-actions { display: flex; gap: 12px; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .grid-2, .grid-3, .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .cookie-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-  <header class="sticky top-0 z-50 glass border-b border-gray-800 p-3">
-    <div class="flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient"></div>
-        <div>
-          <div class="font-bold">RIO-CARIBE v14.2 REAL 843</div>
-          <div class="text-xs text-gray-400">DUE Oficial - FIX TOTAL</div>
-        </div>
-      </div>
-      <div class="text-xs text-gray-400">REAL • 843 lineas</div>
+  <header>
+    <div class="container topbar">
+      <div class="brand">RIO-CARIBE</div>
+      <nav class="nav" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#abstract">Resumen</a>
+        <a href="#objetivos">Objetivos</a>
+        <a href="#framework">Marco</a>
+        <a href="#arquitectura">Arquitectura</a>
+        <a href="#requisitos">Requisitos</a>
+        <a href="#traza">Trazabilidad</a>
+        <a href="#legal">Legal</a>
+      </nav>
     </div>
   </header>
 
-  <main class="max-w-[1280px] mx-auto w-full p-4 grid grid-cols-12 gap-5">
-    <nav class="col-span-12 flex gap-2 overflow-x-auto pb-2 border-b border-gray-800">
-      <button onclick="switchTab('dash')" id="tab-dash" class="button bg-emerald-600">Dashboard</button>
-      <button onclick="switchTab('search')" id="tab-search" class="button">Buscador</button>
-      <button onclick="switchTab('sync')" id="tab-sync" class="button">Sync</button>
-      <button onclick="switchTab('reqs')" id="tab-reqs" class="button">Requisitos</button>
-      <button onclick="switchTab('ai')" id="tab-ai" class="button">IA</button>
-      <button onclick="switchTab('fals')" id="tab-fals" class="button">Falsificaciones</button>
-      <button onclick="switchTab('traza')" id="tab-traza" class="button">Traza</button>
-    </nav>
+  <main>
+    <section id="inicio" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge">Educación rural · IA generativa · offline</span>
+          <h1>RIO-CARIBE</h1>
+          <p class="lead">
+            Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad.
+            Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de gobernanza en especificaciones verificables y auditables.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#framework">Ver marco</a>
+            <a class="btn" href="#requisitos">Ver requisitos</a>
+          </div>
+          <div class="pill-row">
+            <span class="pill">Offline-first</span>
+            <span class="pill">Trazabilidad C→N→R→S→F→A→I→E</span>
+            <span class="pill">Educación rural</span>
+            <span class="pill">Gobernanza docente</span>
+          </div>
+        </div>
 
-    <section id="pane-dash" class="col-span-12 grid grid-cols-12 gap-5">
-      <div class="col-span-12 lg:col-span-8 glass card p-5">
-        <h2 class="font-bold text-sm">Dashboard RIO-QA 100% - 843 lineas</h2>
-        <canvas id="radarDomains" height="240" class="mt-4 w-full"></canvas>
+        <aside class="hero-card" aria-label="Resumen de resultados">
+          <h3>Resumen del marco</h3>
+          <p class="muted">RIO-CARIBE articula infraestructura local, IA en el borde y mediación docente para diseñar sistemas educativos resilientes y sostenibles.</p>
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>10</strong>
+              <span>Dominios de diseño</span>
+            </div>
+            <div class="metric">
+              <strong>30</strong>
+              <span>Requisitos</span>
+            </div>
+            <div class="metric">
+              <strong>3</strong>
+              <span>Capas de arquitectura</span>
+            </div>
+            <div class="metric">
+              <strong>12</strong>
+              <span>Condiciones de falsación</span>
+            </div>
+          </div>
+        </aside>
       </div>
-      <div class="col-span-12 lg:col-span-4 glass card p-5">
-        <h3 class="font-bold text-sm">Cache REAL</h3>
-        <div id="cacheCount" class="mt-3 mono text-xs">0 REAL</div>
-        <div id="kpiCache" class="mt-2 mono text-xs">0 REAL</div>
-        <div id="cacheList" class="mt-3 mono text-xs bg-black/30 p-4 rounded">Cache vacio - Sync primero</div>
-        <div class="mt-4 flex gap-3">
-          <button onclick="clearCacheReal()" class="button bg-red-500">Limpiar</button>
-          <button onclick="exportCacheReal()" class="button bg-cyan-600">Exportar</button>
+    </section>
+
+    <section id="abstract" class="section">
+      <div class="container">
+        <h2 class="section-title">Resumen</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Resumen ejecutivo</h3>
+            <p>
+              La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. Los estándares internacionales de ingeniería de requisitos no detallan por sí solos cómo traducir esas restricciones en criterios verificables.
+            </p>
+            <p>
+              RIO-CARIBE propone un marco conceptual para transformar condiciones sociotécnicas y pedagógicas en especificaciones formales, auditables y operativas. La propuesta articula tres categorías de requisitos: funcionales, no funcionales y sociopedagógicos.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Palabras clave</h3>
+            <div class="pill-row">
+              <span class="pill">computación en el borde</span>
+              <span class="pill">educación rural</span>
+              <span class="pill">IA generativa</span>
+              <span class="pill">ingeniería de requisitos</span>
+              <span class="pill">modelos de lenguaje pequeños</span>
+              <span class="pill">trazabilidad</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="pane-search" class="col-span-12 hidden glass card p-5 space-y-4">
-      <h2 class="font-bold text-sm">Buscador REAL - datos.gov.co/resource/9ct3-92f5.json - PROHIBIDO INVENTAR</h2>
-      <div class="flex gap-3 mt-4">
-        <input id="generalSearch" type="text" placeholder="Buscar en DUE real..." class="w-full bg-gray-900 border rounded-[10px] p-3 text-gray-300">
-        <button onclick="aiSearchReal()" class="button bg-emerald-600">Buscar</button>
+    <section id="objetivos" class="section">
+      <div class="container">
+        <h2 class="section-title">Objetivos</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Objetivo general</h3>
+            <p>Diseñar y fundamentar el marco conceptual RIO-CARIBE para transformar condiciones territoriales y educativas en especificaciones técnicas y pedagógicas verificables.</p>
+          </div>
+          <div class="card">
+            <h3>Objetivos específicos</h3>
+            <ul>
+              <li>Caracterizar contextos rurales del Caribe colombiano.</li>
+              <li>Definir dominios y requisitos.</li>
+              <li>Diseñar arquitectura offshore/local.</li>
+              <li>Formalizar trazabilidad TRAZA-RIO.</li>
+              <li>Establecer esquema de auditoría RIO-QA.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Pregunta guía</h3>
+            <p>¿Cómo puede un marco de ingeniería de requisitos transformar condiciones territoriales y educativas de contextos rurales en especificaciones funcionales, no funcionales y sociopedagógicas verificables?</p>
+          </div>
+        </div>
       </div>
-      <div id="aiHelpBox" class="text-xs text-gray-400">Consulta sobre establecimiento, departamento, municipio o codigo DANE.</div>
-      <div id="searchResults" class="mono text-xs bg-black/30 p-4 rounded"></div>
     </section>
 
-    <section id="pane-sync" class="col-span-12 hidden glass card p-5">
-      <h2 class="font-bold text-sm">Sync REAL - R-TEC-01</h2>
-      <div class="flex gap-3 mt-4">
-        <button onclick="syncDUEOnline()" class="button bg-emerald-600">SYNC DUE ONLINE</button>
+    <section id="framework" class="section">
+      <div class="container">
+        <h2 class="section-title">Marco conceptual RIO-CARIBE</h2>
+        <p class="section-subtitle">El marco se fundamenta en cuatro pilares: taxonomía de dominios, arquitectura de tres capas, principio offline-first y trazabilidad bidireccional.</p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>1. Taxonomía de dominios</h3>
+            <table>
+              <thead>
+                <tr><th>Código</th><th>Dominio</th><th>Descripción</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>R-TEC</td><td>Infraestructura y tecnología</td><td>Operación offline-first, almacenamiento local, sincronización diferida.</td></tr>
+                <tr><td>R-IA</td><td>IA local</td><td>Selección de SLMs, adaptabilidad y verificación de salidas.</td></tr>
+                <tr><td>R-PC</td><td>Pedagogía y currículo</td><td>Agencia docente, andamiaje curricular y cuestionamiento crítico.</td></tr>
+                <tr><td>R-TLA</td><td>Territorio, lenguaje, accesibilidad</td><td>Contextualización sociocultural del Caribe y accesibilidad.</td></tr>
+                <tr><td>R-ENE</td><td>Energía y resiliencia</td><td>Gestión energética y continuidad operativa.</td></tr>
+                <tr><td>R-ECO</td><td>Economía y sostenibilidad</td><td>Coste total de propiedad y viabilidad financiera.</td></tr>
+                <tr><td>R-MAN</td><td>Mantenimiento</td><td>Autodiagnóstico y restauración local.</td></tr>
+                <tr><td>R-SP</td><td>Seguridad y privacidad</td><td>Minimización de datos, mínimo privilegio y aislamiento.</td></tr>
+                <tr><td>R-GOB</td><td>Gobernanza</td><td>Rendición de cuentas y prohibición de decisiones IA autónomas.</td></tr>
+                <tr><td>R-EVA</td><td>Evaluación y evidencia</td><td>Vínculo entre actividades y evidencia digital.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>2. Requisitos sociopedagógicos</h3>
+            <p>Los requisitos SP codifican principios pedagógicos, éticos y comunitarios directamente en la especificación del sistema para que puedan ser verificados técnicamente.</p>
+            <ul>
+              <li>Preservación de la mediación del docente.</li>
+              <li>Verificación crítica de salidas generadas por IA.</li>
+              <li>Protección de menores y minimización de datos.</li>
+              <li>Alineación curricular explícita.</li>
+              <li>Contextualización regional y cultural.</li>
+              <li>Responsabilidad institucional y trazabilidad.</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div id="syncLog" class="mt-4 mono text-xs bg-black/30 p-4 rounded"></div>
     </section>
 
-    <section id="pane-reqs" class="col-span-12 hidden glass card p-5">
-      <h2 class="font-bold text-sm">30 Requisitos</h2>
-      <div id="reqsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 mono text-xs"></div>
-    </section>
-
-    <section id="pane-ai" class="col-span-12 hidden glass card p-5">
-      <h3 class="font-bold text-xs">IA Local L2 REAL</h3>
-      <textarea id="promptInput" rows="3" class="w-full mt-3 bg-gray-900 border rounded-[10px] p-3 text-gray-300"></textarea>
-      <div class="mt-3 flex gap-3">
-        <button onclick="executeInferenceProcess()" class="button bg-emerald-600">Ejecutar</button>
+    <section id="arquitectura" class="section">
+      <div class="container">
+        <h2 class="section-title">Arquitectura sociotécnica de tres capas</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3>L1. Infraestructura local resiliente</h3>
+            <ul>
+              <li>Servidor local de bajo consumo.</li>
+              <li>Almacenamiento local cifrado.</li>
+              <li>Red LAN y energía de respaldo.</li>
+              <li>Autodiagnóstico y restauración.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>L2. Inteligencia educativa local</h3>
+            <ul>
+              <li>SLMs cuantizados y adaptados.</li>
+              <li>Motor de inferencia local.</li>
+              <li>RAG local con contenido curricular.</li>
+              <li>Filtros de contenido y validación.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>L3. Mediación pedagógico-territorial</h3>
+            <ul>
+              <li>Interfaz adaptativa al contexto.</li>
+              <li>Aprobación docente RBAC.</li>
+              <li>Prompts contextualizados.</li>
+              <li>Cuaderno digital de evidencias.</li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div id="outputBox" class="mt-4 mono text-xs bg-black/30 p-4 rounded">Esperando entrada...</div>
     </section>
 
-    <section id="pane-fals" class="col-span-12 hidden glass card p-5">
-      <h2 class="font-bold text-sm">12 Falsificaciones</h2>
-      <div id="falsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4"></div>
+    <section id="metodologia" class="section">
+      <div class="container">
+        <h2 class="section-title">Metodología</h2>
+        <div class="timeline">
+          <div class="step">
+            <div class="step-index">1</div>
+            <div>
+              <h3>Revisión documental</h3>
+              <p>Selección de fuentes sobre educación rural, IAG, SLMs, edge computing, ingeniería de requisitos y directrices éticas.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-index">2</div>
+            <div>
+              <h3>Marco normativo</h3>
+              <p>Base en ISO/IEC/IEEE 29148 y 15288, además de principios educativos y de gobernanza.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-index">3</div>
+            <div>
+              <h3>Modelado de requisitos</h3>
+              <p>Transformación de condiciones territoriales y pedagógicas en requisitos funcionales, no funcionales y sociopedagógicos.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-index">4</div>
+            <div>
+              <h3>Validación futura</h3>
+              <p>Diseño de protocolo Delphi, auditoría RIO-QA y condiciones de falsación empírica para prueba en aula.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="pane-traza" class="col-span-12 hidden glass card p-5">
-      <h2 class="font-bold text-sm">TRAZA-RIO C->N->R->S->F->A->I->E - 843 lineas</h2>
-      <div class="mt-4 mono text-xs bg-black/30 p-4 rounded">
-        <div>1. Carga de fuente real</div>
-        <div>2. Normalizacion de DANE dinamico</div>
-        <div>3. Relevamiento de rows</div>
-        <div>4. Cache local 2000 REALES</div>
-        <div>5. Consulta y validacion</div>
+    <section id="requisitos" class="section">
+      <div class="container">
+        <h2 class="section-title">Matriz de requisitos</h2>
+        <p class="section-subtitle">Se consolidan 30 requisitos en tres categorías: funcionales, no funcionales y sociopedagógicos.</p>
+
+        <div class="requirements-filters" aria-label="Filtros de requisitos">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="F">Funcionales</button>
+          <button class="filter-btn" data-filter="NF">No funcionales</button>
+          <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
+        </div>
+
+        <div class="req-table-wrap req-card active" data-card="all">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Descripción</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>R-TEC-01</td><td>El sistema debe ejecutar todas las funciones esenciales de aprendizaje en la red LAN local sin depender de Internet.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TEC-02</td><td>El sistema no debe depender de APIs externas o SaaS para funcionar de forma básica.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-TEC-03</td><td>Debe proporcionar almacenamiento local temporal cifrado para datos autorizados.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TEC-04</td><td>Debe ejecutar sincronización diferida entre periodos de conectividad estable.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-IA-01</td><td>El modelo debe seleccionarse según cuantización, RAM y capacidad del hardware.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-IA-02</td><td>El módulo debe generar recursos alineados con objetivos curriculares predefinidos.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-IA-03</td><td>Las salidas deben pasar por filtro local antes de mostrarse.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-01</td><td>Debe diferenciar claramente el texto generado por el estudiante y el generado por IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-02</td><td>Debe incorporar preguntas obligatorias de verificación crítica.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-03</td><td>Se exige aprobación y firma explícita del docente para evaluaciones o cierres de unidad.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-04</td><td>Las actividades deben vincularse a competencias curriculares oficiales.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-05</td><td>El uso de IA debe justificarse por valor pedagógico y no como fin en sí mismo.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TLA-01</td><td>Los prompts base deben incluir elementos socioculturales del Caribe colombiano.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TLA-02</td><td>El docente debe poder personalizar contextos específicos de la comunidad rural.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TLA-03</td><td>La interfaz y el lenguaje deben adaptarse al nivel de lectoescritura y grado escolar.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TLA-04</td><td>Debe cumplir con pautas de accesibilidad visual y cognitiva.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-ENE-01</td><td>Debe monitorizar el consumo energético y ajustar potencia de cómputo.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-ENE-02</td><td>Ante caídas del sistema eléctrico debe priorizar funciones esenciales y guardar evidencia.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-ECO-01</td><td>La arquitectura debe mantener el TCO dentro de criterios sostenibles para escuelas rurales.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-ECO-02</td><td>Debe permitir comparar configuraciones de hardware/software con criterios económicos.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-MAN-01</td><td>Debe incluir manuales e interfaces de autodiagnóstico ejecutables por docentes.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-MAN-02</td><td>Debe incluir scripts de restauración rápida a partir de USB.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-SP-01</td><td>Debe implementar autenticación y autorización basada en roles RBAC.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-SP-02</td><td>Debe aplicar mínimo privilegio sobre carpetas y bases de datos locales.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-SP-03</td><td>Debe prohibir recolección o transmisión de datos personales identificables de menores.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-GOB-01</td><td>Debe bloquear funciones que deleguen decisiones disciplinarias o de reprobación a la IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-GOB-02</td><td>Debe mantener registros de auditoría inalterables sobre interacciones con la IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-EVA-01</td><td>Los instrumentos de evaluación deben alinearse directamente con indicadores de aprendizaje.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-EVA-02</td><td>Las evidencias digitales deben guardar trazabilidad completa con los requisitos.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TRA-01</td><td>Debe garantizar la integridad bidireccional de la cadena de trazabilidad TRAZA-RIO.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="req-table-wrap req-card" data-card="F">
+          <table>
+            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
+            <tbody>
+              <tr><td>R-TEC-01</td><td>Ejecutar funciones esenciales en LAN local sin Internet.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TEC-03</td><td>Almacenamiento local cifrado para sesión escolar.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TEC-04</td><td>Sincronización diferida asíncrona.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-IA-02</td><td>Generación de recursos educativos alineados al currículo.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TLA-02</td><td>Personalización por contexto y comunidad rural.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-TLA-03</td><td>Adaptación visual y textual.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-ECO-01</td><td>Viabilidad económica del proyecto.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-SP-01</td><td>Autenticación y autorización RBAC.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+              <tr><td>R-SP-02</td><td>Principio de mínimo privilegio.</td><td><span class="tipo-tag tag-f">F</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="req-table-wrap req-card" data-card="NF">
+          <table>
+            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
+            <tbody>
+              <tr><td>R-TEC-02</td><td>Sin dependencias externas para funcionamiento básico.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-IA-01</td><td>Selección de SLM según capacidad de hardware.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-ENE-01</td><td>Monitoreo energético y ajuste de consumo.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-ENE-02</td><td>Prioridad de funciones ante caídas eléctricas.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-ECO-02</td><td>Comparación de configuraciones con criterios de sostenibilidad.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-MAN-01</td><td>Manuales y diagnósticos para docentes no expertos.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-MAN-02</td><td>Scripts de restauración rápida y mantenibilidad.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+              <tr><td>R-SP-03</td><td>Prohibición de datos personales fuera de la red local.</td><td><span class="tipo-tag tag-nf">NF</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="req-table-wrap req-card" data-card="SP">
+          <table>
+            <thead><tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr></thead>
+            <tbody>
+              <tr><td>R-IA-03</td><td>Filtro local para verificación de contenido.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-01</td><td>Diferenciación entre respuesta del estudiante y respuesta de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-02</td><td>Verificación crítica del contenido de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-03</td><td>Aprobación del docente antes de evaluación y cierre.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-04</td><td>Relación de la actividad con competencias curriculares.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-PC-05</td><td>Justificación pedagógica del uso de IA.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TLA-01</td><td>Contextualización territorial y cultural.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TLA-04</td><td>Accesibilidad visual y cognitiva.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-GOB-01</td><td>Bloqueo de decisiones disciplinarias o evaluativas delegadas.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-GOB-02</td><td>Registros de auditoría inalterables.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-EVA-01</td><td>Alineación de instrumentos con indicadores de aprendizaje.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-EVA-02</td><td>Evidencia digital con trazabilidad completa.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+              <tr><td>R-TRA-01</td><td>Integridad bidireccional de la trazabilidad.</td><td><span class="tipo-tag tag-sp">SP</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="traza" class="section">
+      <div class="container">
+        <h2 class="section-title">Trazabilidad TRAZA-RIO</h2>
+        <p class="section-subtitle">Cadena bidireccional C→N→R→S→F→A→I→E y retorno E→I→A→F→S→R→N→C.</p>
+        <div class="card">
+          <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador → Evidencia.</p>
+          <div class="pill-row">
+            <span class="pill">C</span>
+            <span class="pill">N</span>
+            <span class="pill">R</span>
+            <span class="pill">S</span>
+            <span class="pill">F</span>
+            <span class="pill">A</span>
+            <span class="pill">I</span>
+            <span class="pill">E</span>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="card">
+            <h3>Ejemplo de trazabilidad</h3>
+            <p><strong>C-01:</strong> interrupción eléctrica y ausencia de conectividad.</p>
+            <p><strong>N-01:</strong> continuidad del aprendizaje sin depender de red pública.</p>
+            <p><strong>R-TEC-01:</strong> ejecución 100% offline en LAN local.</p>
+            <p><strong>F-01:</strong> microservicio de IA local ejecutándose offline.</p>
+            <p><strong>A-01:</strong> resolución cooperativa de un problema ambiental.</p>
+            <p><strong>E-01:</strong> registro digital del trabajo y evaluación.</p>
+          </div>
+
+          <div class="card">
+            <h3>Indicadores</h3>
+            <table>
+              <thead><tr><th>Indicador</th><th>Fórmula</th><th>Meta</th></tr></thead>
+              <tbody>
+                <tr><td>CT</td><td>CT = (Rt / R_total) × 100</td><td>100%</td></tr>
+                <tr><td>TI_r</td><td>1 si traza completa, 0 si hay ruptura</td><td>sin rupturas</td></tr>
+                <tr><td>CE</td><td>CE = (Re / R_evaluados) × 100</td><td>máxima evidencia</td></tr>
+                <tr><td>CV</td><td>CV = (Rv / R_probados) × 100</td><td>verificación completa</td></tr>
+                <tr><td>CAP</td><td>CAP = (Ac / A_totales) × 100</td><td>alineación curricular</td></tr>
+                <tr><td>TCO</td><td>C_adquisición + energía + mantenimiento</td><td>≤ $600 USD/aula</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="falsacion" class="section">
+      <div class="container">
+        <h2 class="section-title">Condiciones de falsación empírica</h2>
+        <div class="req-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Código</th><th>Condición</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>F-01</td><td>El sistema pierde la capacidad de ejecutar funciones esenciales si se interrumpe la conexión a internet.</td></tr>
+              <tr><td>F-02</td><td>El consumo energético excede la capacidad del sistema de respaldo.</td></tr>
+              <tr><td>F-03</td><td>El modelo local genera alucinaciones o errores conceptuales superiores al umbral aceptable.</td></tr>
+              <tr><td>F-04</td><td>El sistema emite contenido inapropiado o violatorio de normas éticas.</td></tr>
+              <tr><td>F-05</td><td>Se demuestra filtración de datos personales identificables de menores.</td></tr>
+              <tr><td>F-06</td><td>El mantenimiento o restauración requiere intervención de un ingeniero especialista.</td></tr>
+              <tr><td>F-07</td><td>La IA no guarda correspondencia con los objetivos del currículo.</td></tr>
+              <tr><td>F-08</td><td>La contextualización territorial genera distracciones cognitivas o distorsiones conceptuales.</td></tr>
+              <tr><td>F-09</td><td>El Costo Total de Propiedad resulta inviable.</td></tr>
+              <tr><td>F-10</td><td>La latencia del modelo local supera 8 segundos por respuesta.</td></tr>
+              <tr><td>F-11</td><td>El sistema toma decisiones evaluativas o disciplinarias sin la firma explícita del docente.</td></tr>
+              <tr><td>F-12</td><td>Se identifican rupturas injustificadas en TRAZA-RIO superiores al 10%.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="legal" class="section">
+      <div class="container">
+        <h2 class="section-title">Aclaraciones legales y de uso</h2>
+        <div class="legal-box">
+          <p>
+            Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado especialista en Colombia.
+          </p>
+          <p>
+            Para implementación real en instituciones educativas, se recomienda incorporar: aviso de privacidad, política de cookies, términos y condiciones, tratamiento de datos personales, consentimiento informado para menores y protocolos de seguridad. El contenido aquí expuesto debe revisarse y validarse por autoridades institucionales y por personal legal antes de ser desplegado en producción.
+          </p>
+        </div>
+
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="card">
+            <h3>Aviso de privacidad</h3>
+            <p>La información que se reciba a través del sitio, si aplica, deberá tratarse conforme a la Ley 1581 de 2012, el Decreto 1377 de 2013 y demás normas vigentes en Colombia.</p>
+          </div>
+          <div class="card">
+            <h3>Política de cookies</h3>
+            <p>El sitio puede utilizar cookies para mejorar la experiencia del usuario, medir tráfico y ofrecer personalización básica.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="referencias" class="section">
+      <div class="container">
+        <h2 class="section-title">Referencias</h2>
+        <div class="card">
+          <ol>
+            <li>Marzano, D. (2026). Generative AI in teaching and learning processes at the K-12 level.</li>
+            <li>Yang, X. (2026). Rural high school zero-cost offline generative AI framework.</li>
+            <li>Aguilera et al. (2026). Offline technology for rural AI literacy.</li>
+            <li>Brito et al. (2026). Uso de la IAG para apoyar la enseñanza del Conafe.</li>
+            <li>Cheng et al. (2026). Generative AI for requirements engineering.</li>
+            <li>Tan et al. (2025). Aligning pedagogy with generative AI.</li>
+            <li>Ferreira-Santos &amp; Pombo (2026). Requirements engineering and traceability.</li>
+            <li>Jaramillo Neira et al. (2025). Rural education in Colombia.</li>
+            <li>Serrano-Ardila et al. (2026). Digital integration in rural education.</li>
+            <li>UNESCO (2023). Guidance for generative AI in education and research.</li>
+            <li>ISO/IEC/IEEE 29148:2018.</li>
+            <li>ISO/IEC/IEEE 15288:2023.</li>
+          </ol>
+        </div>
       </div>
     </section>
   </main>
 
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">RIO-CARIBE</div>
+        <p class="tiny">Marco de ingeniería de requisitos para IA generativa en educación rural.</p>
+      </div>
+      <div>
+        <h4>Secciones</h4>
+        <p class="tiny"><a href="#framework">Marco</a></p>
+        <p class="tiny"><a href="#requisitos">Requisitos</a></p>
+        <p class="tiny"><a href="#traza">Trazabilidad</a></p>
+      </div>
+      <div>
+        <h4>Documentación</h4>
+        <p class="tiny"><a href="#legal">Aviso legal</a></p>
+        <p class="tiny"><a href="#referencias">Referencias</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div>
+      <strong>Uso de cookies</strong><br>
+      Este sitio puede utilizar cookies para mejorar la experiencia, medir uso y ofrecer una navegación más útil.
+    </div>
+    <div class="cookie-actions">
+      <button class="btn primary" id="acceptCookies">Aceptar</button>
+      <button class="btn" id="closeCookies">Cerrar</button>
+    </div>
+  </div>
+
   <script>
-    var DUE_API_BASE = "https://www.datos.gov.co/resource/9ct3-92f5.json";
-    var CACHE_KEY = "rio_caribe_due_real_cache_v14_2";
-    var dueRealCache = [];
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const reqCards = document.querySelectorAll('.req-card');
 
-    function normalizeKey(value) {
-      return String(value || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9]/g, "");
-    }
-
-    function detectDaneFields(rows) {
-      var sample = Array.isArray(rows) ? rows.find(function (row) { return row && typeof row === "object"; }) : null;
-      var result = { departamento: null, municipio: null, departamentoCodigo: null, municipioCodigo: null };
-      if (!sample) return result;
-
-      var keys = Object.keys(sample);
-      keys.forEach(function (key) {
-        var norm = normalizeKey(key);
-
-        if (!result.departamentoCodigo && /(codigo.*dane.*depart|codigo.*depart.*dane|dane.*depart.*codigo|depart.*dane.*codigo|codigodane.*depart|departamentocodigo)/.test(norm)) {
-          result.departamentoCodigo = key;
-        }
-        if (!result.municipioCodigo && /(codigo.*dane.*mun|codigo.*mun.*dane|dane.*mun.*codigo|mun.*dane.*codigo|codigodane.*mun|municipiocodigo)/.test(norm)) {
-          result.municipioCodigo = key;
-        }
-        if (!result.departamento && /(departamento|dpto|nombredepartamento|departamentonombre)/.test(norm)) {
-          result.departamento = key;
-        }
-        if (!result.municipio && /(municipio|ciudad|nombremunicipio|municipionombre)/.test(norm)) {
-          result.municipio = key;
-        }
-      });
-
-      if (!result.departamentoCodigo && !result.departamento) {
-        keys.forEach(function (key) {
-          var norm = normalizeKey(key);
-          if (!result.departamentoCodigo && /depart/.test(norm) && /codigo/.test(norm)) result.departamentoCodigo = key;
-          if (!result.departamento && /depart/.test(norm)) result.departamento = key;
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.toggle('active', b === btn));
+        const filter = btn.dataset.filter;
+        reqCards.forEach(card => {
+          const show = filter === 'all' ? true : card.dataset.card === filter;
+          card.classList.toggle('active', show);
         });
-      }
-
-      if (!result.municipioCodigo && !result.municipio) {
-        keys.forEach(function (key) {
-          var norm = normalizeKey(key);
-          if (!result.municipioCodigo && /mun/.test(norm) && /codigo/.test(norm)) result.municipioCodigo = key;
-          if (!result.municipio && /mun/.test(norm)) result.municipio = key;
-        });
-      }
-
-      return result;
-    }
-
-    function loadCacheReal() {
-      try {
-        var raw = localStorage.getItem(CACHE_KEY);
-        if (raw) dueRealCache = JSON.parse(raw);
-      } catch (e) {}
-      updateCacheUI();
-      renderCacheList();
-    }
-
-    function saveCacheReal() {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(dueRealCache));
-      updateCacheUI();
-      renderCacheList();
-    }
-
-    function updateCacheUI() {
-      var c = document.getElementById("cacheCount");
-      if (c) c.innerText = dueRealCache.length + " REAL";
-      var k = document.getElementById("kpiCache");
-      if (k) k.innerText = dueRealCache.length + " REAL";
-    }
-
-    function renderCacheList() {
-      var l = document.getElementById("cacheList");
-      if (!l) return;
-      if (dueRealCache.length === 0) {
-        l.innerHTML = "Cache vacio - Sync primero";
-        return;
-      }
-      var rows = dueRealCache.slice(0, 50);
-      l.innerHTML = rows.map(function (r, i) {
-        var nombre = r.nombre_establecimiento || r.razon_social || r.nombre || "Sin nombre";
-        var municipio = r.municipio || r.codigo_dane_municipio || r.ciudad || "-";
-        return "<div>" + (i + 1) + ". " + nombre + " / " + municipio + "</div>";
-      }).join("");
-    }
-
-    function logSync(m) {
-      var l = document.getElementById("syncLog");
-      if (!l) return;
-      var t = new Date().toLocaleTimeString();
-      l.innerHTML = "<div>[" + t + "] " + m + "</div>" + l.innerHTML;
-    }
-
-    function syncDUEOnline() {
-      if (!navigator.onLine) {
-        logSync("OFFLINE - Usando cache " + dueRealCache.length + " REALES - 0 Bytes WAN");
-        return;
-      }
-
-      logSync("ONLINE - Fetching DUE REAL...");
-
-      fetch(DUE_API_BASE + "?$limit=2000")
-        .then(function (response) {
-          if (!response.ok) {
-            throw new Error("HTTP " + response.status);
-          }
-          return response.json();
-        })
-        .then(function (rows) {
-          if (!Array.isArray(rows) || rows.length === 0) {
-            logSync("Sync ERROR - 0 REALES");
-            return;
-          }
-
-          var dane = detectDaneFields(rows);
-          dueRealCache = rows.slice(0, 2000);
-          saveCacheReal();
-
-          var detected = [];
-          [dane.departamentoCodigo, dane.municipioCodigo, dane.departamento, dane.municipio].forEach(function (field) {
-            if (field) detected.push(field);
-          });
-
-          var suffix = detected.length ? " - DANE detectado: " + detected.join(" | ") : "";
-          logSync("Sync OK " + dueRealCache.length + " REALES" + suffix);
-        })
-        .catch(function (error) {
-          logSync("Sync ERROR - " + (error && error.message ? error.message : "fallo de conexión"));
-        });
-    }
-
-    function clearCacheReal() {
-      localStorage.removeItem(CACHE_KEY);
-      dueRealCache = [];
-      updateCacheUI();
-      renderCacheList();
-      logSync("Cache limpiado");
-    }
-
-    function exportCacheReal() {
-      if (dueRealCache.length === 0) {
-        alert("Cache vacio");
-        return;
-      }
-      if (window.XLSX && XLSX.utils && XLSX.utils.json_to_sheet) {
-        var ws = XLSX.utils.json_to_sheet(dueRealCache);
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "DUE");
-        XLSX.writeFile(wb, "rio_caribe_due_real.xlsx");
-        logSync("Exportado XLSX con " + dueRealCache.length + " REALES");
-      } else {
-        alert("XLSX no disponible");
-      }
-    }
-
-    function aiSearchReal() {
-      var qEl = document.getElementById("generalSearch");
-      var res = document.getElementById("searchResults");
-      var helpBox = document.getElementById("aiHelpBox");
-      var helpText = qEl ? qEl.value.trim() : "";
-      if (!res) return;
-
-      if (!helpText) {
-        res.innerHTML = "Escriba una busqueda...";
-        return;
-      }
-
-      var matches = dueRealCache.filter(function (row) {
-        var haystack = JSON.stringify(row).toLowerCase();
-        return haystack.indexOf(helpText.toLowerCase()) !== -1;
       });
-
-      res.innerHTML = matches.length ? matches.slice(0, 10).map(function (row, i) {
-        var nombre = row.nombre_establecimiento || row.razon_social || row.nombre || "Sin nombre";
-        var dept = row.departamento || row.codigo_dane_departamento || "-";
-        var muni = row.municipio || row.codigo_dane_municipio || "-";
-        return (i + 1) + ". " + nombre + " | " + dept + " | " + muni + "\n";
-      }).join("") : "No hay coincidencias";
-
-      if (helpBox) helpBox.innerText = "Resultado para: " + helpText + " (" + matches.length + ")";
-    }
-
-    function fetchDANEGovData() {
-      var vEl = document.getElementById("daneInput");
-      var statusEl = document.getElementById("dueStatus");
-      var v = vEl ? vEl.value.trim() : "";
-      if (!statusEl) return;
-      if (v.length < 8) {
-        statusEl.innerText = "DANE 12 digitos requerido";
-        return;
-      }
-      statusEl.innerText = "Buscando DANE...";
-      var found = dueRealCache.filter(function (row) {
-        var val = row.codigo_dane_departamento || row.codigo_dane_municipio || row.departamento || row.municipio || "";
-        return String(val).indexOf(v) !== -1;
-      });
-      statusEl.innerText = found.length ? "Coincidencias: " + found.length : "Sin coincidencias";
-    }
-
-    function showDueResult(r, source) {
-      var res = document.getElementById("dueResults");
-      if (!res) return;
-      res.classList.remove("hidden");
-      var nombre = document.getElementById("dueNombre");
-      if (nombre) nombre.innerText = (r.nombre_establecimiento || r.razon_social || r.nombre || "") + " (" + source + ")";
-      var val = document.getElementById("dueValor");
-      if (val) val.innerText = JSON.stringify(r, null, 2);
-    }
-
-    function switchTab(id) {
-      var panes = ["dash", "search", "sync", "reqs", "ai", "fals", "traza"];
-      panes.forEach(function (p) {
-        var e = document.getElementById("pane-" + p);
-        if (e) e.classList.toggle("hidden", p !== id);
-        var btn = document.getElementById("tab-" + p);
-        if (btn) btn.classList.toggle("bg-emerald-600", p === id);
-      });
-    }
-
-    function displayReqsList() {
-      var c = document.getElementById("reqsContainer");
-      if (!c || c.dataset.loaded === "1") return;
-      var reqs = [];
-      for (var i = 1; i <= 9; i++) reqs.push({ id: "R-TEC-0" + i, desc: "Tecnico " + i + " DUE REAL" });
-      c.innerHTML = reqs.map(function (r) {
-        return "<div class='glass p-3 rounded'>" + r.id + "<br><span class='text-gray-400'>" + r.desc + "</span></div>";
-      }).join("");
-      c.dataset.loaded = "1";
-    }
-
-    function displayFalsList() {
-      var c = document.getElementById("falsContainer");
-      if (!c || c.dataset.loaded === "1") return;
-      var fals = [];
-      for (var i = 1; i <= 12; i++) fals.push({ id: "F-" + (i < 10 ? "0" + i : i), mit: "Mitigacion " + i });
-      c.innerHTML = fals.map(function (f) {
-        return "<div class='glass p-3 rounded'>" + f.id + "<br><span class='text-gray-400'>" + f.mit + "</span></div>";
-      }).join("");
-      c.dataset.loaded = "1";
-    }
-
-    function executeInferenceProcess() {
-      var pEl = document.getElementById("promptInput");
-      var outEl = document.getElementById("outputBox");
-      if (!pEl || !outEl) return;
-      var prompt = pEl.value.trim();
-      if (prompt.length < 5) {
-        outEl.innerText = "Escriba una instruccion valida...";
-        return;
-      }
-      outEl.innerText = "Procesando prompt local: \n" + prompt + "\n\nResultado: DUE REAL validado con cache local y DANE detectado dinamicamente.";
-    }
-
-    function setupRadarChart() {
-      var canvas = document.getElementById("radarDomains");
-      if (!canvas || !window.Chart) return;
-      try {
-        var ctx = canvas.getContext("2d");
-        new window.Chart(ctx, {
-          type: "radar",
-          data: {
-            labels: ["DUE", "DANE", "SYNC", "CACHE", "IA", "CLI"],
-            datasets: [{
-              label: "RIO-CARIBE",
-              data: [90, 92, 96, 88, 84, 90],
-              borderColor: "#10b981",
-              backgroundColor: "rgba(16,185,129,0.25)",
-              borderWidth: 2
-            }]
-          },
-          options: { responsive: true, scales: { r: { suggestedMin: 0, suggestedMax: 100 } } }
-        });
-      } catch (e) {}
-    }
-
-    window.addEventListener("DOMContentLoaded", function () {
-      loadCacheReal();
-      setupRadarChart();
-      displayReqsList();
-      displayFalsList();
     });
+
+    const cookieBanner = document.getElementById('cookieBanner');
+    const acceptBtn = document.getElementById('acceptCookies');
+    const closeBtn = document.getElementById('closeCookies');
+
+    const storedConsent = localStorage.getItem('rioCookieConsent');
+    if (storedConsent === 'accepted') {
+      cookieBanner.classList.add('hidden');
+    }
+
+    const dismissBanner = () => {
+      cookieBanner.classList.add('hidden');
+      localStorage.setItem('rioCookieConsent', 'accepted');
+    };
+
+    acceptBtn.addEventListener('click', dismissBanner);
+    closeBtn.addEventListener('click', dismissBanner);
   </script>
-  <!-- 843 LINEAS CUMPLIDAS - DUE REAL 9ct3-92f5 - PROHIBIDO INVENTAR - FIX TOTAL BOTONES - 843 -->
 </body>
 </html>
