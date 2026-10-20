@@ -47,7 +47,6 @@
 </style>
 </head>
 <body class="min-h-screen flex flex-col font-sans antialiased">
-
 <!-- Header Superior con Estado de Red & Leyes CO -->
 <header class="sticky top-0 z-50 glass-card border-b border-gray-800">
   <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
@@ -60,8 +59,6 @@
         <p class="text-[10px] text-gray-400 font-mono">IA Rural Offline · Copiloto Analítico & Diagnóstico Integrado</p>
       </div>
     </div>
-
-    <!-- Métricas en Tiempo Real (L1 / L2) -->
     <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
       <div class="px-3 py-1.5 rounded-xl bg-gray-900 border border-gray-800 flex items-center gap-2">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -184,7 +181,6 @@
 
   <!-- MÓDULO 2: MOTOR DE IA ANALÍTICA & ASISTENTE CO-PILOTO -->
   <section id="pane-ai" class="col-span-12 hidden grid grid-cols-12 gap-6">
-    <!-- Panel Izquierdo: Botón de Análisis Integral -->
     <div class="col-span-12 lg:col-span-7 space-y-4">
       <div class="glass-card rounded-2xl p-5">
         <div class="flex justify-between items-center">
@@ -199,13 +195,10 @@
             <span>⚡ Analizar Todo el Nodo con IA</span>
           </button>
         </div>
-
         <div id="aiAnalysisOutput" class="mt-4 p-4 rounded-xl bg-gray-900/90 border border-gray-800 text-xs font-mono leading-relaxed space-y-3 min-h-[220px]">
           <div class="text-gray-500 italic">Haga clic en "Analizar Todo el Nodo con IA" para iniciar el diagnóstico inteligente...</div>
         </div>
       </div>
-
-      <!-- Tarjetas de Recomendaciones SMART rápidas -->
       <div class="grid grid-cols-2 gap-4 text-xs font-mono">
         <div class="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30">
           <div class="font-bold text-emerald-400 flex items-center justify-between">
@@ -214,7 +207,6 @@
           </div>
           <p class="text-gray-300 mt-2 text-[11px]" id="recDUA">Inicie un caso en el módulo PIAR para generar ajustes razonables automáticos adaptados al aula multigrado.</p>
         </div>
-
         <div class="p-4 rounded-xl bg-amber-950/30 border border-amber-500/30">
           <div class="font-bold text-amber-400 flex items-center justify-between">
             <span>🛡️ Salvaguarda Convivencia</span>
@@ -224,8 +216,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Panel Derecho: Chat Copiloto Pedagógico RAG -->
     <div class="col-span-12 lg:col-span-5 glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
       <div>
         <h3 class="text-sm font-bold text-white flex justify-between items-center">
@@ -234,13 +224,11 @@
         </h3>
         <p class="text-xs text-gray-400 mt-1">Consulte sobre inclusión DUA, DBA, evaluación Dec 1290 y leyes educativas.</p>
       </div>
-
       <div id="chatHistory" class="flex-1 min-h-[240px] max-h-[300px] bg-gray-900 p-3 rounded-xl border border-gray-800 text-xs font-mono space-y-3 overflow-y-auto">
         <div class="p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-500/30 text-indigo-200">
           🤖 <strong>RIO-AI:</strong> ¡Hola, Docente! Estoy listo para asistirte en la planificación curricular, diseño de actividades DUA y aplicación de la legislación educativa colombiana. ¿En qué te puedo colaborar hoy?
         </div>
       </div>
-
       <div class="flex gap-2">
         <input id="chatInput" type="text" class="bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white w-full outline-none focus:border-indigo-500" placeholder="Ej: ¿Cómo adapto una evaluación para 4° grado sin internet?">
         <button onclick="sendAIChatQuery()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl whitespace-nowrap">
@@ -258,16 +246,13 @@
         <span class="badge-law bg-blue-500/20 text-blue-300 border border-blue-500/30">Socrata API Colombia</span>
       </h2>
       <p class="text-xs text-gray-400 mt-2">Consulta la base de datos oficial del Ministerio de Educación de Colombia con los 12 dígitos del código DANE de la escuela rural.</p>
-
       <div class="mt-4 flex gap-3">
         <input id="daneInput" type="text" maxlength="12" class="bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-xs font-mono text-white w-full outline-none focus:border-emerald-500" placeholder="Ingrese código DANE 12 dígitos (Ej: 111001000078)...">
         <button onclick="fetchDANEGovData()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-6 py-3 rounded-xl whitespace-nowrap transition-all">
           🔍 Consultar datos.gov.co
         </button>
       </div>
-
       <div id="dueStatus" class="mt-3 text-xs font-mono text-gray-400"></div>
-
       <div id="dueResults" class="hidden mt-4 grid grid-cols-2 gap-3 text-xs font-mono bg-gray-900 p-4 rounded-xl border border-gray-800">
         <div><span class="text-gray-500">Establecimiento:</span> <strong id="dueNombre" class="text-emerald-400">--</strong></div>
         <div><span class="text-gray-500">Secretaría:</span> <strong id="dueSec" class="text-white">--</strong></div>
@@ -296,7 +281,6 @@
         </div>
       </div>
     </div>
-
     <div id="reqsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
   </section>
 
@@ -309,10 +293,8 @@
           <span class="badge-law bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">RAG Caribe_Educativo.db</span>
         </h2>
         <p class="text-xs text-gray-400 mt-1">Escriba una solicitud pedagógica. La IA procesará en el servidor escolar sin internet.</p>
-
         <div class="mt-4 space-y-3">
           <textarea id="promptInput" rows="3" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs text-white placeholder-gray-500 outline-none focus:border-emerald-500" placeholder="Ejemplo: Genera un taller de lectura sobre la leyenda de la Llorona en el río Magdalena para estudiantes de 5° grado..."></textarea>
-          
           <div class="flex justify-between items-center">
             <span class="text-[11px] font-mono text-gray-400">Ley 1581: <strong class="text-emerald-400">Anonimización Activa</strong></span>
             <button onclick="executeInferenceProcess()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-all">
@@ -321,14 +303,12 @@
           </div>
         </div>
       </div>
-
       <div class="glass-card rounded-2xl p-4 grid grid-cols-3 gap-3 font-mono text-xs">
         <div><span class="text-gray-500 text-[10px]">TIEMPO 1er TOKEN</span><div id="mFirstToken" class="font-bold text-cyan-400 text-sm">-- s</div></div>
         <div><span class="text-gray-500 text-[10px]">VELOCIDAD GENERACIÓN</span><div id="mSpeed" class="font-bold text-emerald-400 text-sm">-- tok/s</div></div>
         <div><span class="text-gray-500 text-[10px]">USO RAM LOCAL</span><div id="mRAM" class="font-bold text-indigo-400 text-sm">-- GB</div></div>
       </div>
     </div>
-
     <div class="col-span-12 lg:col-span-6 space-y-4">
       <div class="glass-card rounded-2xl p-5 space-y-4">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
@@ -337,18 +317,15 @@
             ⚠️ RSP-01: Generado por IA Local
           </span>
         </div>
-
         <div id="outputBox" class="min-h-[140px] bg-gray-900 border border-gray-800 rounded-xl p-3.5 text-xs text-gray-300 font-mono leading-relaxed overflow-y-auto">
           Esperando ejecución de inferencia...
         </div>
-
         <div id="rspGate" class="hidden p-4 rounded-xl bg-indigo-950/50 border border-indigo-500/40 space-y-3">
           <div class="text-xs font-bold text-indigo-300">🛑 RSP-02 / RSP-03: Gateway de Inalienabilidad y Pregunta Metacognitiva</div>
           <p class="text-[11px] text-gray-300">
             <strong>Pregunta Metacognitiva (RSP-02):</strong> "¿Qué fuentes del territorio respaldan esta actividad y qué cambios le harías para tu aula?"
           </p>
           <input type="text" id="metaAnswer" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white" placeholder="Respuesta de reflexión del estudiante/docente...">
-          
           <div class="flex justify-between items-center pt-2">
             <span class="text-[10px] text-rose-400 font-mono">Dec 1290 / RSP-03: Bloqueo de Nota Automática</span>
             <button onclick="verifyTeacherApproval()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg">
@@ -367,7 +344,6 @@
         <span>♿ Generador Oficial PIAR - Decreto 1421 de 2017 (Inclusión / DUA)</span>
         <span class="badge-law bg-rose-500/20 text-rose-300 border border-rose-500/30">Plan Individual de Ajustes Razonables</span>
       </h2>
-
       <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
         <input id="piarEst" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Nombre Estudiante...">
         <input id="piarDoc" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Documento Identidad...">
@@ -375,7 +351,6 @@
         <input id="piarDiag" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Diagnóstico / Barrera de Aprendizaje...">
         <textarea id="piarAjustes" rows="2" class="col-span-2 bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Ajustes Razonables DUA (Diseño Universal para el Aprendizaje)..."></textarea>
       </div>
-
       <button onclick="downloadPIARPDFDocument()" class="mt-4 w-full bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-3 rounded-xl transition-all">
         📄 Generar Documento Oficial PIAR en PDF
       </button>
@@ -389,7 +364,6 @@
         <span>🛡️ Ruta de Atención Integral - Ley 1620 de 2013 & Decreto 1965 de 2013</span>
         <span class="badge-law bg-amber-500/20 text-amber-300 border border-amber-500/30">Comité de Convivencia / SIUCE</span>
       </h2>
-
       <div class="mt-4 grid grid-cols-3 gap-4 text-xs">
         <div class="p-4 rounded-xl bg-blue-950/40 border border-blue-500/30">
           <div class="font-bold text-blue-300">TIPO I - Conflictos Manejados Inadecuadamente</div>
@@ -404,7 +378,6 @@
           <p class="text-gray-300 mt-2">Atención en salud, notificación a ICBF, Fiscalía y Policía de Infancia y Adolescencia.</p>
         </div>
       </div>
-
       <div class="mt-4 p-3 bg-red-950/30 border border-red-800 rounded-xl text-xs font-mono text-red-300">
         🛑 RSP-07 Excepción Activa: Si el sistema detecta intento de sanción automática por IA, emite <code class="bg-red-900 px-1 rounded font-bold">ERR_GOB_HUMAN_REQUIRED</code> bloqueando el registro en la base de datos sin la firma del Rector.
       </div>
@@ -418,14 +391,12 @@
         <span>📈 Plan de Mejoramiento Institucional (PMI Guía 34 MEN)</span>
         <span class="badge-law bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Exportación Excel SMART</span>
       </h2>
-
       <div class="mt-4 grid grid-cols-2 gap-3 text-xs">
         <input id="pmiHallazgo" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Hallazgo Autoevaluación Guía 34...">
         <input id="pmiAccion" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Acción de Mejora...">
         <input id="pmiMeta" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Meta SMART (Ej: Lograr 90% cobertura)...">
         <input id="pmiInd" class="bg-gray-900 border border-gray-700 rounded-xl p-3 text-white" placeholder="Indicador de Seguimiento...">
       </div>
-
       <div class="mt-4 flex gap-3">
         <button onclick="registerPMIItem()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-5 py-3 rounded-xl flex-1">
           + Agregar Acción al PMI
@@ -434,7 +405,6 @@
           📊 Exportar PMI en Excel (.xlsx)
         </button>
       </div>
-
       <div class="mt-4 max-h-40 overflow-y-auto border border-gray-800 rounded-xl">
         <table id="pmiTable" class="w-full text-left text-xs font-mono">
           <thead class="bg-gray-900 text-gray-400"><tr><th class="p-2">Hallazgo</th><th class="p-2">Acción</th><th class="p-2">Meta SMART</th><th class="p-2">Indicador</th></tr></thead>
@@ -446,7 +416,7 @@
 
 </main>
 
-<!-- Scripts Lógicos Interactivos 100% Validados -->
+<!-- Scripts Lógicos Interactivos 100% Validados - FIX TOTAL v13.1 -->
 <script>
 var REQS_DATA = [
   {reqCode:'RF-01', reqType:'RF', reqDom:'R-TEC', reqDesc:'Inferencia local sin enlace de datos. 0 bytes WAN.', isOk:true},
@@ -459,7 +429,6 @@ var REQS_DATA = [
   {reqCode:'RF-08', reqType:'RF', reqDom:'R-EVA', reqDesc:'Tablero de desempeño exclusivo docente.', isOk:true},
   {reqCode:'RF-09', reqType:'RF', reqDom:'R-MAN', reqDesc:'Monitoreo automático de temperatura y batería.', isOk:true},
   {reqCode:'RF-10', reqType:'RF', reqDom:'R-SP', reqDesc:'Cierre de sesión por inactividad a 15 min.', isOk:true},
-
   {reqCode:'RNF-01', reqType:'RNF', reqDom:'R-TEC', reqDesc:'Funcionamiento 100% desconectado.', isOk:true},
   {reqCode:'RNF-02', reqType:'RNF', reqDom:'R-ENE', reqDesc:'Consumo eléctrico ≤ 20 Watts.', isOk:true},
   {reqCode:'RNF-03', reqType:'RNF', reqDom:'R-ENE', reqDesc:'Autonomía batería solar ≥ 6 horas.', isOk:true},
@@ -470,7 +439,6 @@ var REQS_DATA = [
   {reqCode:'RNF-08', reqType:'RNF', reqDom:'R-ECO', reqDesc:'OpEx = $0 USD/mes sin suscripciones.', isOk:true},
   {reqCode:'RNF-09', reqType:'RNF', reqDom:'R-TEC', reqDesc:'Arranque del sistema en ≤ 90 s.', isOk:true},
   {reqCode:'RNF-10', reqType:'RNF', reqDom:'R-MAN', reqDesc:'Operación con un solo clic sin consola.', isOk:true},
-
   {reqCode:'RSP-01', reqType:'RSP', reqDom:'R-GOB', reqDesc:'Marcado visible "Generado por IA Local".', isOk:true},
   {reqCode:'RSP-02', reqType:'RSP', reqDom:'R-PC', reqDesc:'Pregunta metacognitiva obligatoria antes de entregar.', isOk:true},
   {reqCode:'RSP-03', reqType:'RSP', reqDom:'R-GOB', reqDesc:'Notas solo del docente humano (Dec 1290).', isOk:true},
@@ -507,16 +475,13 @@ function runGlobalAIAnalysis() {
   var outputElem = document.getElementById('aiAnalysisOutput');
   var recDUAElem = document.getElementById('recDUA');
   var recLeyElem = document.getElementById('recLey1620');
-  
   var okCount = 0;
   for(var i = 0; i < REQS_DATA.length; i++) {
     if(REQS_DATA[i].isOk) okCount++;
   }
   var pct = Math.round((okCount / 30) * 100);
-
   var piarEstVal = document.getElementById('piarEst') ? document.getElementById('piarEst').value.trim() : '';
   var dueNombreVal = document.getElementById('dueNombre') ? document.getElementById('dueNombre').innerText : '--';
-
   outputElem.innerHTML = 
     '<div class="text-emerald-400 font-bold mb-1">🔍 INFORME DE DIAGNÓSTICO INTEGADO (RIO-AI ENGINE):</div>' +
     '<div class="text-cyan-300">• Estado del Nodo: ' + pct + '% de Requisitos Cumplidos. (Autonomía Solar: 14.2W / ≤20W).</div>' +
@@ -526,13 +491,11 @@ function runGlobalAIAnalysis() {
     '1. Mantener actualizado el banco de preguntas metacognitivas (RSP-02).<br>' +
     '2. Exportar mensualmente la copia de seguridad cifrada en unidad USB (RF-05).<br>' +
     '3. Generar las fichas DUA para los estudiantes registrados en el módulo PIAR.</div>';
-
   if(piarEstVal) {
     recDUAElem.innerText = 'Caso activo para ' + piarEstVal + '. Se sugiere aplicar apoyo de lectura interactiva con audio local DUA.';
   } else {
     recDUAElem.innerText = 'Excelente cobertura de requisitos. Registre casos individuales en el módulo PIAR para personalizar apoyos.';
   }
-
   recLeyElem.innerText = 'Cumplimiento verificado. Recuerde registrar las sesiones del Comité de Convivencia sin compartir datos sensibles fuera del colegio.';
 }
 
@@ -540,24 +503,18 @@ function sendAIChatQuery() {
   var inputElem = document.getElementById('chatInput');
   var text = inputElem.value.trim();
   if(!text) return;
-
   var historyElem = document.getElementById('chatHistory');
-  
   var userDiv = document.createElement('div');
   userDiv.className = 'p-2.5 rounded-lg bg-gray-800 text-gray-200 border border-gray-700';
   userDiv.innerHTML = '👤 <strong>Docente:</strong> ' + text;
   historyElem.appendChild(userDiv);
-
   inputElem.value = '';
-
   var aiResponse = 'Para responder a tu consulta sobre "' + text + '", te recomiendo aplicar los Derechos Básicos de Aprendizaje (DBA) junto con el motor RAG local. Recuerda que bajo el Decreto 1290, tú como docente debes validar la actividad antes de calificar.';
-  
   if(text.toLowerCase().indexOf('piar') !== -1 || text.toLowerCase().indexOf('inclusi') !== -1) {
     aiResponse = 'Bajo el Decreto 1421 de 2017, debes dilucidar las barreras para el aprendizaje e implementar Ajustes Razonables (DUA) en flexibilidad curricular y evaluación, sin reducir las expectativas altas del estudiante.';
   } else if(text.toLowerCase().indexOf('convivencia') !== -1 || text.toLowerCase().indexOf('acoso') !== -1) {
     aiResponse = 'Conforme a la Ley 1620 de 2013, clasifica la situación (Tipo I, II o III). Si es Tipo II o III, debes activar el Comité de Convivencia y reportar en el SIUCE. Ninguna sanción puede ser emitida por la IA.';
   }
-
   setTimeout(function() {
     var aiDiv = document.createElement('div');
     aiDiv.className = 'p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-500/30 text-indigo-200';
@@ -571,16 +528,13 @@ function fetchDANEGovData() {
   var daneVal = document.getElementById('daneInput').value.trim();
   var statusElem = document.getElementById('dueStatus');
   var resultsElem = document.getElementById('dueResults');
-
   if(daneVal.length !== 12) {
     statusElem.innerText = '⚠️ El código DANE debe tener exactamente 12 dígitos.';
     return;
   }
-
   statusElem.innerText = '⏳ Conectando con la API de datos.gov.co...';
   var domainName = 'datos' + '.' + 'gov' + '.' + 'co';
   var apiEndpoint = 'https://' + domainName + '/resource/9ct3-92f5.json?codigo_dane=';
-  
   if (typeof fetch !== 'undefined') {
     fetch(apiEndpoint + daneVal)
       .then(function(res) { return res.json(); })
@@ -608,23 +562,19 @@ function displayReqsList() {
   var containerElem = document.getElementById('reqsContainer');
   if(!containerElem) return;
   containerElem.innerHTML = '';
-
   var countOk = 0;
   for(var i = 0; i < REQS_DATA.length; i++) {
     if(REQS_DATA[i].isOk) countOk++;
   }
   var counterElem = document.getElementById('reqCounter');
   if(counterElem) counterElem.innerText = countOk + ' / 30 Cumplidos (' + Math.round(countOk/30*100) + '%)';
-
   for(var j = 0; j < REQS_DATA.length; j++) {
     var item = REQS_DATA[j];
     if(filterVal === 'ALL' || item.reqType === filterVal) {
       var cardDiv = document.createElement('div');
       var colorClass = item.reqType === 'RSP' ? 'text-indigo-400' : (item.reqType === 'RF' ? 'text-cyan-400' : 'text-emerald-400');
       var bgClass = item.isOk ? 'bg-gray-900/80 border-gray-800' : 'bg-rose-950/30 border-rose-800/50';
-      
       cardDiv.className = 'p-3.5 rounded-xl border text-xs flex items-start gap-3 ' + bgClass;
-      
       var checkedAttr = item.isOk ? 'checked' : '';
       cardDiv.innerHTML = 
         '<input type="checkbox" ' + checkedAttr + ' data-code="' + item.reqCode + '" class="req-checkbox mt-1 w-4 h-4 accent-emerald-500 rounded cursor-pointer">' +
@@ -638,7 +588,6 @@ function displayReqsList() {
       containerElem.appendChild(cardDiv);
     }
   }
-
   var checkboxes = containerElem.querySelectorAll('.req-checkbox');
   for(var k = 0; k < checkboxes.length; k++) {
     checkboxes[k].addEventListener('change', function(e) {
@@ -662,11 +611,9 @@ function toggleRequirementState(code) {
 function executeInferenceProcess() {
   var promptText = document.getElementById('promptInput').value.trim();
   if(!promptText) { alert('Ingrese una consulta pedagógica.'); return; }
-
   document.getElementById('mFirstToken').innerText = '1.4 s';
   document.getElementById('mSpeed').innerText = '5.2 tok/s';
   document.getElementById('mRAM').innerText = '2.1 GB';
-
   document.getElementById('badgeRSP1').classList.remove('hidden');
   document.getElementById('outputBox').innerHTML = 
     '<div class="text-emerald-400 font-bold mb-1">📖 Actividad Generada (Corpus RAG Caribe_Educativo):</div>' +
@@ -688,7 +635,6 @@ function downloadPIARPDFDocument() {
   var studentDoc = document.getElementById('piarDoc').value || 'Sin doc';
   var studentGrade = document.getElementById('piarGrado').value || 'Sin grado';
   var studentAdjusts = document.getElementById('piarAjustes').value || 'Ninguno';
-
   pdfDoc.text("PIAR - DECRETO 1421 DE 2017 (EDUCACIÓN INCLUSIVA)", 10, 15);
   pdfDoc.text("Estudiante: " + studentName, 10, 25);
   pdfDoc.text("Documento: " + studentDoc, 10, 32);
@@ -705,7 +651,6 @@ function registerPMIItem() {
   var m = document.getElementById('pmiMeta').value;
   var i = document.getElementById('pmiInd').value;
   if(!h || !a) { alert('Ingrese hallazgo y acción.'); return; }
-
   pmiRecordsList.push({Hallazgo: h, Accion: a, MetaSMART: m, Indicador: i});
   var tbodyElem = document.querySelector('#pmiTable tbody');
   var htmlRows = '';
@@ -770,9 +715,8 @@ function refreshRadarChart() {
     if(REQS_DATA[k].isOk) okCount++;
   }
   var pct = Math.round((okCount / 30) * 100);
-  var newArr = [pct, pct, pct, pct, pct, pct, pct, pct, pct, pct];
-  
-  [enlace sospechoso eliminado].datasets[0].data = newArr;
+  var newArr = [pct, pct, pct, pct, pct, pct];
+  globalRadarChart.data.datasets[0].data = newArr;
   globalRadarChart.update();
   var elem = document.getElementById('globalHealth');
   if(elem) elem.innerText = pct + '% Auditado';
