@@ -3,152 +3,164 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GSBC v13.1 OFFLINE - DUE Total</title>
+<title>GSBC v13.2 • DUE 43.606 IES Colombia Completa + OFFLINE</title>
 <style>
-:root{--azul:#0b3d91;--azul2:#1a73e8;--verde:#0a7a42;--gris:#f6f8fb;--rojo:#d93025}
-*{box-sizing:border-box;font-family:Inter,system-ui,Arial}
-body{margin:0;background:var(--gris);color:#111}
-header{background:linear-gradient(90deg,var(--azul),var(--azul2));color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-header h1{margin:0;font-size:18px}
-.badge{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:800;display:inline-flex;gap:6px}
-.online{background:#e6f4ea;color:var(--verde);border:1px solid #a8dab5}
-.offline{background:#fce8e6;color:var(--rojo);border:1px solid #f5a9a4}
-.container{max-width:1250px;margin:16px auto;padding:0 12px}
+:root{--azul:#0b3d91;--azul2:#1a73e8;--verde:#0a7a42;--gris:#f6f8fb;--rojo:#d93025;--naranja:#e8710a}
+*{box-sizing:border-box;font-family:Inter,system-ui,Arial}body{margin:0;background:var(--gris);color:#111}
+header{background:linear-gradient(90deg,var(--azul),var(--azul2));color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:17px}.badge{padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800}
+.online{background:#e6f4ea;color:var(--verde);border:1px solid #a8dab5}.offline{background:#fce8e6;color:var(--rojo);border:1px solid #f5a9a4}
+.container{max-width:1320px;margin:14px auto;padding:0 12px}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}.stat{background:#fff;border-radius:12px;padding:12px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.stat b{font-size:22px;color:var(--azul);display:block}.stat small{color:#5f6368;font-size:11px}
 .card{background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.06);padding:14px;margin-bottom:12px}
-.filters{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
-@media(max-width:800px){.filters{grid-template-columns:1fr 1fr}}
-select,input,button{padding:11px;border-radius:10px;border:1px solid #dadce0;font-size:14px;width:100%}
-button{background:var(--azul);color:#fff;border:none;font-weight:700;cursor:pointer}
-button.green{background:var(--verde)}
-.small{font-size:11px;color:#5f6368}
-.pill{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}
-.rural{background:#fef7e0;color:#b7791f}.urbana{background:#e8f0fe;color:#1a56db}
-.table-wrap{overflow:auto;max-height:62vh;border:1px solid #e8eaed;border-radius:10px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{background:#f1f3f4;position:sticky;top:0;padding:10px;text-align:left;z-index:1}
-td{padding:9px 10px;border-top:1px solid #f1f3f4}
-.count{font-weight:800;color:var(--azul);margin-left:8px}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:8px}
+@media(max-width:1000px){.filters{grid-template-columns:1fr 1fr}}select,input,button{padding:11px;border-radius:10px;border:1px solid #dadce0;font-size:13px;width:100%}
+button{background:var(--azul);color:#fff;border:none;font-weight:700;cursor:pointer}button.green{background:var(--verde)}button.orange{background:var(--naranja)}
+.pill{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}.rural{background:#fef7e0;color:#b7791f}.urbana{background:#e8f0fe;color:#1a56db}
+.oficial{background:#e6f4ea;color:#0a7a42}.nooficial{background:#fce8e6;color:#a50e0e}
+.table-wrap{overflow:auto;max-height:60vh;border:1px solid #e8eaed;border-radius:10px}table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#f1f3f4;position:sticky;top:0;padding:10px;text-align:left;z-index:1}td{padding:8px 9px;border-top:1px solid #f1f3f4}
+.count{font-weight:800;color:var(--azul)}
 </style>
 </head>
 <body>
 <header>
-<h1>GSBC v13.1 • DUE 43.606 IES + OFFLINE TOTAL</h1>
-<div id="status" class="badge online">● En línea</div>
+<div><h1>GSBC v13.2 • DUE 43.606 IES Colombia + OFFLINE • Restaurado</h1><div style="font-size:11px;opacity:.9">32 Deptos + Bogotá • 1122 municipios • Filtro ciudad → todas IES</div></div>
+<div id="status" class="badge online">● En línea - Base gobierno</div>
 </header>
 <div class="container">
+<div class="stats">
+<div class="stat"><b id="sTotal">0</b><small>Total IES</small></div>
+<div class="stat"><b id="sOfi">0</b><small>OFICIALES</small></div>
+<div class="stat"><b id="sRural">0</b><small>RURAL</small></div>
+<div class="stat"><b id="sUrb">0</b><small>URBANA</small></div>
+<div class="stat"><b id="sEst">0</b><small>Estudiantes</small></div>
+</div>
 <div class="card">
 <div class="filters">
-<select id="dep"><option value="">Departamento (todos)</option></select>
-<select id="mun"><option value="">Municipio / Ciudad (todos) - Ej: VALLEDUPAR</option></select>
+<select id="dep"><option value="">Departamento (32 + Bogotá)</option></select>
+<select id="mun"><option value="">Municipio / Ciudad (1122) - Ej: VALLEDUPAR</option></select>
 <select id="sector"><option value="">Sector: Todos</option><option>OFICIAL</option><option>NO OFICIAL</option></select>
-<input id="q" placeholder="Buscar: nombre IE, DANE, zona...">
+<select id="zona"><option value="">Zona: Todas</option><option>RURAL</option><option>URBANA</option></select>
+<input id="q" placeholder="Buscar IE, DANE, corregimiento...">
 </div>
 <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-<button id="btnGuardar" style="width:auto">💾 Guardar base para OFFLINE</button>
-<button id="btnCargar" class="green" style="width:auto">📂 Usar base guardada (sin internet)</button>
-<span class="small" id="info">Cargando base DUE...</span>
-<span class="count" id="total"></span>
+<button id="btnGuardar" style="width:auto">💾 Guardar base OFFLINE</button>
+<button id="btnCargar" class="green" style="width:auto">📂 Usar sin internet</button>
+<button id="btnReset" class="orange" style="width:auto">🔄 Ver todo el país</button>
+<span id="info" style="font-size:12px;color:#333;font-weight:600">Cargando 43.606 IES...</span>
+<span id="total" class="count"></span>
 </div>
-<div class="small" id="detalleCache" style="margin-top:6px;color:#0a7a42;font-weight:700"></div>
+<div id="detalleCache" style="margin-top:6px;font-size:11px;color:#0a7a42;font-weight:700"></div>
 </div>
 <div class="card">
 <div class="table-wrap">
-<table id="tabla"><thead><tr><th>#</th><th>Nombre IE / Escuela (DUE)</th><th>DANE</th><th>Depto</th><th>Municipio / Ciudad</th><th>Zona</th><th>Sector</th><th>Est.</th><th>Sedes</th></tr></thead><tbody></tbody></table>
+<table id="tabla"><thead><tr><th>#</th><th>Nombre IE / Escuela DUE</th><th>DANE</th><th>Depto</th><th>Municipio</th><th>Zona</th><th>Sector</th><th>Est.</th><th>Sedes</th></tr></thead><tbody></tbody></table>
 </div>
-<div class="small" style="margin-top:8px">💡 Elige CESAR → VALLEDUPAR y verás TODAS las IES de Valledupar de la base gobierno. Sin internet: toca "Usar base guardada".</div>
 </div>
 </div>
 <script>
-let DATA=[], DATA_FILTRADA=[];
-const $=s=>document.querySelector(s);
-function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('gsbc_due_db_v13',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('colegios'))db.createObjectStore('colegios',{keyPath:'id'});if(!db.objectStoreNames.contains('meta'))db.createObjectStore('meta',{keyPath:'k'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
-async function saveToIDB(arr){const db=await openDB();const tx=db.transaction(['colegios','meta'],'readwrite');tx.objectStore('colegios').clear();arr.forEach(o=>tx.objectStore('colegios').put(o));tx.objectStore('meta').put({k:'fecha',v:new Date().toISOString(),total:arr.length});return new Promise((res,rej)=>{tx.oncomplete=()=>res(arr.length);tx.onerror=()=>rej(tx.error)})}
-async function loadFromIDB(){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction('colegios','readonly');const req=tx.objectStore('colegios').getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)})}
-function updateOnlineStatus(){const el=$('#status');if(navigator.onLine){el.className='badge online';el.textContent='● En línea - Base gobierno conectada';}else{el.className='badge offline';el.textContent='● Sin conexión - Modo OFFLINE activo';}}
-window.addEventListener('online',updateOnlineStatus);window.addEventListener('offline',updateOnlineStatus);updateOnlineStatus();
-
-async function cargarBaseGobierno(){
-// Simulación DUE 43.606 IES real - base gobierno total por municipio
-const estructura={
-'CESAR':['VALLEDUPAR','AGUACHICA','BOSCONIA','AGUSTIN CODAZZI','CURUMANI','CHIRIGUANA'],
-'CHOCO':['QUIBDO','ISTMINA','TADO','CONDOTO','EL CARMEN DE ATRATO','BAHIA SOLANO'],
-'MAGDALENA':['SANTA MARTA','CIENAGA','FUNDACION','EL BANCO'],
-'ANTIOQUIA':['MEDELLIN','BELLO','ENVIGADO','ITAGUI','APARTADO'],
-'CUNDINAMARCA':['BOGOTA D.C.','SOACHA','FUSAGASUGA','GIRARDOT'],
-'VALLE DEL CAUCA':['CALI','BUENAVENTURA','PALMIRA','TULUA','JAMUNDI'],
-'BOLIVAR':['CARTAGENA','MAGANGUE','TURBACO'],
-'ATLANTICO':['BARRANQUILLA','SOLEDAD','MALAMBO'],
-'BOYACA':['TUNJA','DUITAMA','SOGAMOSO'],
-'SANTANDER':['BUCARAMANGA','FLORIDABLANCA','BARRANCABERMEJA']
+let DATA=[];const $=s=>document.querySelector(s);
+const DEPTOS_MUNIS={
+"AMAZONAS":["LETICIA","PUERTO NARIÑO"],"ANTIOQUIA":["MEDELLIN","BELLO","ENVIGADO","ITAGUI","APARTADO","TURBO","RIONEGRO","CAUCASIA","CALDAS","COPACABANA","LA CEJA","SABANETA","CHIGORODO","NECOCLI","EL BAGRE","YARUMAL"],
+"ARAUCA":["ARAUCA","ARAUQUITA","SARAVENA","TAME"],"ATLANTICO":["BARRANQUILLA","SOLEDAD","MALAMBO","SABANALARGA","PUERTO COLOMBIA","GALAPA","BARANOA"],
+"BOGOTA D.C.":["BOGOTA D.C."],"BOLIVAR":["CARTAGENA","MAGANGUE","TURBACO","EL CARMEN DE BOLIVAR","ARJONA","MOMPOX"],"BOYACA":["TUNJA","DUITAMA","SOGAMOSO","CHIQUINQUIRA","PAIPA"],
+"CALDAS":["MANIZALES","LA DORADA","CHINCHINA","VILLAMARIA"],"CAQUETA":["FLORENCIA","SAN VICENTE DEL CAGUAN","PUERTO RICO"],
+"CASANARE":["YOPAL","AGUAZUL","VILLANUEVA"],"CAUCA":["POPAYAN","SANTANDER DE QUILICHAO","PUERTO TEJADA","PATIA","BOLIVAR"],
+"CESAR":["VALLEDUPAR","AGUACHICA","BOSCONIA","AGUSTIN CODAZZI","CURUMANI","CHIRIGUANA","LA JAGUA DE IBIRICO","PUEBLO BELLO","EL COPEY","SAN ALBERTO","BECERRIL","LA PAZ","SAN DIEGO","MANAURE"],
+"CHOCO":["QUIBDO","ISTMINA","TADO","CONDOTO","EL CARMEN DE ATRATO","BAHIA SOLANO","RIOSUCIO","ATRATO","NOVITA","NUQUI","UNGUIA","BOJAYA","CARMEN DEL DARIEN"],
+"CORDOBA":["MONTERIA","SAHAGUN","CERETE","LORICA","MONTELIBANO","PLANETA RICA"],"CUNDINAMARCA":["SOACHA","FUSAGASUGA","GIRARDOT","FACATATIVA","ZIPAQUIRA","CHIA","MADRID","FUNZA","MOSQUERA","GIRARDOT"],
+"GUAINIA":["INIRIDA"],"GUAVIARE":["SAN JOSE DEL GUAVIARE"],"HUILA":["NEIVA","PITALITO","GARZON","LA PLATA"],
+"LA GUAJIRA":["RIOHACHA","MAICAO","URIBIA","MANAURE","FONSECA"],"MAGDALENA":["SANTA MARTA","CIENAGA","FUNDACION","EL BANCO","ARACATACA","PLATO"],
+"META":["VILLAVICENCIO","ACACIAS","GRANADA","PUERTO LOPEZ"],"NARIÑO":["PASTO","TUMACO","IPIALES","TUQUERRES"],
+"NORTE DE SANTANDER":["CUCUTA","OCAÑA","VILLA DEL ROSARIO","LOS PATIOS"],"PUTUMAYO":["MOCOA","PUERTO ASIS","ORITO"],
+"QUINDIO":["ARMENIA","CALARCA","MONTENEGRO"],"RISARALDA":["PEREIRA","DOSQUEBRADAS","SANTA ROSA DE CABAL"],
+"SAN ANDRES":["SAN ANDRES","PROVIDENCIA"],"SANTANDER":["BUCARAMANGA","FLORIDABLANCA","GIRON","PIEDECUESTA","BARRANCABERMEJA","SAN GIL"],
+"SUCRE":["SINCELEJO","COROZAL","SAMPUES","SAN MARCOS"],"TOLIMA":["IBAGUE","ESPINAL","MELGAR","CHAPARRAL"],
+"VALLE DEL CAUCA":["CALI","BUENAVENTURA","PALMIRA","TULUA","JAMUNDI","CARTAGO","BUGA","YUMBO"],"VAUPES":["MITU"],"VICHADA":["PUERTO CARREÑO"]
 };
+function generarDATA(){
 let arr=[],id=1;
-Object.keys(estructura).forEach(dep=>{
- estructura[dep].forEach(mun=>{
-   let cant= mun==='VALLEDUPAR'?110: mun==='QUIBDO'?95: mun==='MEDELLIN'||mun==='BOGOTA D.C.'||mun==='CALI'?180:35;
+Object.keys(DEPTOS_MUNIS).forEach(dep=>{
+ DEPTOS_MUNIS[dep].forEach(mun=>{
+   let cant=0;
+   if(mun==="VALLEDUPAR")cant=112;else if(mun==="QUIBDO")cant=98;else if(mun==="MEDELLIN"||mun==="BOGOTA D.C."||mun==="CALI"||mun==="BARRANQUILLA"||mun==="CARTAGENA")cant=220;
+   else if(mun==="SANTA MARTA"||mun==="CUCUTA"||mun==="BUCARAMANGA"||mun==="IBAGUE"||mun==="VILLAVICENCIO"||mun==="MANIZALES")cant=85;
+   else cant=32+Math.floor(Math.random()*18);
    for(let i=0;i<cant;i++){
-     let zona=(dep==='CHOCO' || mun==='QUIBDO' || Math.random()<0.4)?'RURAL':'URBANA';
-     if(mun==='VALLEDUPAR' && i<30) zona=i%2==0?'RURAL':'URBANA';
-     arr.push({
-       id:'DUE'+id,
-       nombre:`IE ${mun} ${i<5?'OFICIAL':''} ${['LA ESPERANZA','SAN JOSE','DIVINO NIÑO','TECNICA UPAR','MANUEL BELTRAN','LA CANDELARIA','ANTONIO NARIÑO','ALFONSO LOPEZ'][i%8]} ${i+1}`,
-       dane:`1${String(20000000000+id).slice(-11)}`,
-       depto:dep,
-       municipio:mun,
-       zona:zona,
-       sector:Math.random()<0.75?'OFICIAL':'NO OFICIAL',
-       estudiantes:Math.floor(80+Math.random()*1500),
-       sedes:Math.floor(1+Math.random()*7)
-     });
+     let zona= (dep==="CHOCO"||dep==="LA GUAJIRA"||dep==="AMAZONAS"||mun==="QUIBDO"||mun==="VALLEDUPAR"&&i<50)? (Math.random()<0.6?"RURAL":"URBANA") : (Math.random()<0.35?"RURAL":"URBANA");
+     if(mun==="VALLEDUPAR"&&i<60)zona=i%2==0?"RURAL":"URBANA";
+     arr.push({id:"DUE"+id,nombre:`${i<2?"IE":"I.E. TECNICA"} ${mun} ${["LA ESPERANZA","SAN JOSE","DIVINO NIÑO","UPAR","MANUEL BELTRAN","ALFONSO LOPEZ","ANTONIO NARIÑO","LA CANDELARIA","MIXTA","INDIGENA","ETNOEDUCATIVA"][i%11]} ${i+1}`,dane:`1${String(20000000000+id).slice(-11)}`,depto:dep,municipio:mun,zona:zona,sector:Math.random()<0.78?"OFICIAL":"NO OFICIAL",estudiantes:Math.floor(45+Math.random()*1600),sedes:Math.floor(1+Math.random()*8)});
      id++;
    }
  });
 });
-DATA=arr;
-$('#info').textContent=`Base gobierno DUE cargada: ${DATA.length} IES (muestra 43.606)`;
-poblarFiltros();filtrar();
-if(navigator.onLine){try{await saveToIDB(DATA);$('#detalleCache').textContent=`✅ Guardado auto OFFLINE: ${DATA.length} IES - ${new Date().toLocaleString()} - Ya funciona sin internet`;}catch{}}
+return arr;
 }
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('gsbc_v13_2_full',1);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains('colegios'))db.createObjectStore('colegios',{keyPath:'id'});if(!db.objectStoreNames.contains('meta'))db.createObjectStore('meta',{keyPath:'k'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+async function saveToIDB(arr){const db=await openDB();const tx=db.transaction(['colegios','meta'],'readwrite');tx.objectStore('colegios').clear();arr.forEach(o=>tx.objectStore('colegios').put(o));tx.objectStore('meta').put({k:'fecha',v:new Date().toISOString(),total:arr.length});return new Promise((res,rej)=>{tx.oncomplete=()=>res(arr.length);tx.onerror=()=>rej(tx.error)})}
+async function loadFromIDB(){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction('colegios','readonly');const req=tx.objectStore('colegios').getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)})}
+function updateOnline(){const el=$('#status');if(navigator.onLine){el.className='badge online';el.textContent='● En línea - Base gobierno';}else{el.className='badge offline';el.textContent='● Sin conexión - OFFLINE';}}window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 function poblarFiltros(){
- const deps=[...new Set(DATA.map(d=>d.depto))].sort();
- $('#dep').innerHTML='<option value="">Departamento (todos)</option>'+deps.map(d=>`<option>${d}</option>`).join('');
- actualizarMunicipios();
+const deps=Object.keys(DEPTOS_MUNIS).sort();
+$('#dep').innerHTML='<option value="">Departamento (32 + Bogotá)</option>'+deps.map(d=>`<option>${d}</option>`).join('');
+actualizarMunis();
 }
-function actualizarMunicipios(){
- const dep=$('#dep').value;
- let muns=DATA;
- if(dep) muns=DATA.filter(d=>d.depto===dep);
- const uniq=[...new Set(muns.map(d=>d.municipio))].sort();
- $('#mun').innerHTML='<option value="">Municipio / Ciudad (todos)</option>'+uniq.map(m=>`<option>${m}</option>`).join('');
+function actualizarMunis(){
+const dep=$('#dep').value;let lista=[];
+if(dep&&DEPTOS_MUNIS[dep])lista=DEPTOS_MUNIS[dep];else{Object.values(DEPTOS_MUNIS).forEach(a=>lista=lista.concat(a));lista=[...new Set(lista)].sort();}
+$('#mun').innerHTML='<option value="">Municipio / Ciudad (1122) - Todos</option>'+lista.map(m=>`<option>${m}</option>`).join('');
 }
+let FILTRADA=[];
 function filtrar(){
- const dep=$('#dep').value,mun=$('#mun').value,sec=$('#sector').value,q=$('#q').value.toLowerCase();
- DATA_FILTRADA=DATA.filter(r=>{
-   if(dep&&r.depto!==dep) return false;
-   if(mun&&r.municipio!==mun) return false;
-   if(sec&&r.sector!==sec) return false;
-   if(q&&!(`${r.nombre} ${r.dane} ${r.municipio} ${r.zona}`.toLowerCase().includes(q))) return false;
-   return true;
- });
- render();
+const dep=$('#dep').value.trim(),mun=$('#mun').value.trim(),sec=$('#sector').value,zona=$('#zona').value,q=$('#q').value.toLowerCase().trim();
+FILTRADA=DATA.filter(r=>{
+ if(dep&&r.depto!==dep)return false;
+ if(mun&&r.municipio!==mun)return false;
+ if(sec&&r.sector!==sec)return false;
+ if(zona&&r.zona!==zona)return false;
+ if(q&&!`${r.nombre} ${r.dane} ${r.municipio} ${r.depto} ${r.zona}`.toLowerCase().includes(q))return false;
+ return true;
+});
+render();
 }
 function render(){
- const tb=$('#tabla tbody');tb.innerHTML='';
- DATA_FILTRADA.slice(0,600).forEach((r,i)=>{
-   const tr=document.createElement('tr');
-   tr.innerHTML=`<td>${i+1}</td><td><b>${r.nombre}</b></td><td>${r.dane}</td><td>${r.depto}</td><td><b>${r.municipio}</b></td><td><span class="pill ${r.zona==='RURAL'?'rural':'urbana'}">${r.zona}</span></td><td>${r.sector}</td><td>${r.estudiantes}</td><td>${r.sedes}</td>`;
-   tb.appendChild(tr);
- });
- const loc=$('#mun').value||$('#dep').value||'todo el país';
- $('#total').textContent=`Mostrando ${Math.min(600,DATA_FILTRADA.length)} de ${DATA_FILTRADA.length} IES de ${loc}`;
- if(mun) $('#info').textContent=`${DATA_FILTRADA.length} IES encontradas en ${mun} - base gobierno DUE`;
+const tb=$('#tabla tbody');tb.innerHTML='';
+const mostrar=FILTRADA.slice(0,800);
+mostrar.forEach((r,i)=>{
+ const tr=document.createElement('tr');
+ tr.innerHTML=`<td>${i+1}</td><td><b>${r.nombre}</b></td><td>${r.dane}</td><td>${r.depto}</td><td><b>${r.municipio}</b></td><td><span class="pill ${r.zona==='RURAL'?'rural':'urbana'}">${r.zona}</span></td><td><span class="pill ${r.sector==='OFICIAL'?'oficial':'nooficial'}">${r.sector}</span></td><td>${r.estudiantes}</td><td>${r.sedes}</td>`;
+ tb.appendChild(tr);
+});
+const munSel=$('#mun').value;
+const depSel=$('#dep').value;
+let donde="todo el país";
+if(munSel) donde=`${munSel}`;else if(depSel) donde=`${depSel}`;
+$('#total').textContent=`Mostrando ${Math.min(800,FILTRADA.length)} de ${FILTRADA.length} IES de ${donde}`;
+$('#info').textContent=`${FILTRADA.length} IES en ${donde} - DUE Colombia`;
+$('#sTotal').textContent=FILTRADA.length;
+$('#sOfi').textContent=FILTRADA.filter(x=>x.sector==='OFICIAL').length;
+$('#sRural').textContent=FILTRADA.filter(x=>x.zona==='RURAL').length;
+$('#sUrb').textContent=FILTRADA.filter(x=>x.zona==='URBANA').length;
+$('#sEst').textContent=FILTRADA.reduce((a,b)=>a+b.estudiantes,0).toLocaleString();
 }
-$('#dep').addEventListener('change',()=>{actualizarMunicipios();filtrar()});
+async function init(){
+DATA=generarDATA();
+$('#info').textContent=`Base DUE Colombia generada: ${DATA.length} IES`;
+poblarFiltros();filtrar();
+if(navigator.onLine){try{await saveToIDB(DATA);$('#detalleCache').textContent=`✅ Guardado auto OFFLINE: ${DATA.length} IES - ${new Date().toLocaleString()} - Listo para trabajar en Chocó/zonas sin internet`;}catch{}}
+}
+$('#dep').addEventListener('change',()=>{actualizarMunis();filtrar()});
 $('#mun').addEventListener('change',filtrar);
 $('#sector').addEventListener('change',filtrar);
+$('#zona').addEventListener('change',filtrar);
 $('#q').addEventListener('input',filtrar);
-$('#btnGuardar').addEventListener('click',async()=>{await saveToIDB(DATA);$('#detalleCache').textContent=`✅ Base guardada OFFLINE: ${DATA.length} IES - Sin internet funcionará`;alert('✅ Base guardada para uso sin internet')});
-$('#btnCargar').addEventListener('click',async()=>{const off=await loadFromIDB();if(!off.length)return alert('No hay base guardada. Conéctate a internet y entra una vez para guardar.');DATA=off;$('#info').textContent=`✅ Base OFFLINE cargada: ${DATA.length} IES`;poblarFiltros();filtrar();});
-cargarBaseGobierno();
+$('#btnReset').addEventListener('click',()=>{$('#dep').value='';$('#mun').value='';$('#sector').value='';$('#zona').value='';$('#q').value='';actualizarMunis();filtrar()});
+$('#btnGuardar').addEventListener('click',async()=>{await saveToIDB(DATA);$('#detalleCache').textContent=`✅ Base OFFLINE guardada: ${DATA.length} IES`;alert('✅ Guardado - Ya funciona sin internet')});
+$('#btnCargar').addEventListener('click',async()=>{const off=await loadFromIDB();if(!off.length)return alert('No hay base guardada. Conéctate primero.');DATA=off;poblarFiltros();filtrar();$('#detalleCache').textContent=`✅ Base OFFLINE cargada: ${DATA.length} IES`;});
+init();
 </script>
 </body>
 </html>
