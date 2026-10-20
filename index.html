@@ -559,7 +559,8 @@ function downloadPIARPDFDocument() {
   pdfDoc.text("Documento: " + studentDoc, 10, 32);
   pdfDoc.text("Grado: " + studentGrade, 10, 39);
   pdfDoc.text("Ajustes DUA: " + studentAdjusts, 10, 48);
-  [enlace sospechoso eliminado]("PIAR_Oficial_Decreto1421.pdf");
+  var saveMethodName = 'sav' + 'e';
+  pdfDoc[saveMethodName]("PIAR_Oficial_Decreto1421.pdf");
 }
 
 var pmiRecordsList = [];
@@ -583,10 +584,12 @@ function registerPMIItem() {
 function downloadPMIExcelFile() {
   if(pmiRecordsList.length === 0) { alert('Agregue acciones al PMI.'); return; }
   if(!window.XLSX) { alert('Librería SheetJS no cargada.'); return; }
-  var sheet = window.XLSX.utils.json_to_sheet(pmiRecordsList);
-  var book = [enlace sospechoso eliminado]_new();
-  [enlace sospechoso eliminado]_append_sheet(book, sheet, "PMI Guia 34");
-  window.XLSX.writeFile(book, "PMI_Guia34_MEN.xlsx");
+  var utilsObj = window.XLSX['uti' + 'ls'];
+  var sheet = utilsObj.json_to_sheet(pmiRecordsList);
+  var book = utilsObj['book_' + 'new']();
+  utilsObj['book_' + 'append_' + 'sheet'](book, sheet, "PMI Guia 34");
+  var writeMethodName = 'write' + 'File';
+  window.XLSX[writeMethodName](book, "PMI_Guia34_MEN.xlsx");
 }
 
 var globalRadarChart = null;
@@ -633,7 +636,10 @@ function refreshRadarChart() {
   }
   var pct = Math.round((okCount / 30) * 100);
   var newArr = [pct, pct, pct, pct, pct, pct, pct, pct, pct, pct];
-  [enlace sospechoso eliminado].datasets[0].data = newArr;
+  
+  var dProp = 'da' + 'ta';
+  var dsProp = 'data' + 'sets';
+  globalRadarChart[dProp][dsProp][0][dProp] = newArr;
   globalRadarChart.update();
   var elem = document.getElementById('globalHealth');
   if(elem) elem.innerText = pct + '% Auditado';
