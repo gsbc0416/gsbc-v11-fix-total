@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#07111f" />
@@ -43,18 +42,41 @@
     </header>
 
     <main class="container app-shell">
-      <aside class="status-panel" id="statusPanel">
+      <div class="top-strip" aria-label="Estado del sistema">
         <div class="status-item online" id="connectionStatus">
           <span class="dot"></span>
           <span id="networkLabel">Conectado</span>
         </div>
-        <div class="status-item">
+        <div class="status-item compact">
+          <span>Total colegios</span>
+          <strong id="totalColegiosLabel">0</strong>
+        </div>
+        <div class="status-item compact">
           <span>Última sincronización</span>
           <strong id="lastSyncLabel">Nunca</strong>
+        </div>
+        <div class="status-item compact">
+          <span>Reportes pendientes</span>
+          <strong id="pendingReportsLabel">0</strong>
+        </div>
+      </div>
+
+      <aside class="status-panel" id="statusPanel">
+        <div class="status-item online" id="connectionStatusPanel">
+          <span class="dot"></span>
+          <span id="networkLabelPanel">Conectado</span>
+        </div>
+        <div class="status-item">
+          <span>Última sincronización</span>
+          <strong id="lastSyncLabelPanel">Nunca</strong>
         </div>
         <div class="status-item">
           <span>Base local</span>
           <strong>Activa</strong>
+        </div>
+        <div class="status-item">
+          <span>Modo</span>
+          <strong>100% Offline-first</strong>
         </div>
       </aside>
 
@@ -214,7 +236,7 @@
         <div class="panel big-panel">
           <h2>Búsqueda local</h2>
           <div class="search-box">
-            <input id="searchInput" type="search" placeholder="Buscar requisitos, PEI, convivencia, normas, informes o trazabilidad..." />
+            <input id="searchInput" type="search" placeholder="Buscar por DANE, nombre, departamento o municipio en toda Colombia" />
             <button id="searchBtn" class="primary-btn">Buscar</button>
           </div>
           <div id="searchResults"></div>
@@ -223,10 +245,9 @@
 
       <section class="view" id="view-asistente">
         <div class="panel big-panel assistant-panel">
-          <h2>Asistente local RIO</h2>
+          <h2>Asistente IA Local Offline</h2>
           <p class="muted">
-            Este asistente funciona offline con el contenido institucional local. Ayuda con orientaciones,
-            recomendaciones, redacción y verificación del marco pedagógico y normativo.
+            Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales.
           </p>
           <div class="assistant-row">
             <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debo orientar una falta de convivencia con base en el manual?" />
@@ -263,15 +284,26 @@
 
     <script src="./app.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script type="module" src="app.js"></script>
+    <script type="module" src="app.js"></script>
+
+    <div id="login-screen" class="login-screen">
+      <h2>GSBC Nacional - Ingreso Real</h2>
+      <input id="nombre_real" placeholder="Nombre real Ej: Carlos Ariza" />
+      <select id="rol">
+        <option>Estudiante</option>
+        <option>Docente</option>
+        <option>Rector</option>
+        <option>Admin</option>
+      </select>
+      <select id="departamento_real">
+        <option selected>Cesar</option>
+      </select>
+      <select id="municipio_real">
+        <option selected>Valledupar</option>
+      </select>
+      <button id="btnEntrar">Entrar</button>
+    </div>
+
+    <div id="app-header" class="app-header"></div>
   </body>
-  <div id="login-screen" style="display:none; flex-direction:column; gap:10px; padding:40px; max-width:400px; margin:30px auto; border:2px solid #0b5fff; border-radius:8px;">
-  <h2>GSBC Nacional - Ingreso Real</h2>
-  <input id="nombre_real" placeholder="Nombre real Ej: Carlos Ariza">
-  <select id="rol"><option>Docente</option><option>Rector</option><option>Admin</option></select>
-  <select id="departamento_real"><option selected>Cesar</option></select>
-  <select id="municipio_real"><option selected>Valledupar</option></select>
-  <button id="btnEntrar">Entrar</button>
-</div>
-<div id="app-header" style="display:none; justify-content:space-between; align-items:center;"></div>
 </html>
