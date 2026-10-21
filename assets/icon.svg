@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="RIO-CARIBE icon">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#3dd9a2"/>
+      <stop offset="100%" stop-color="#7ed4ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="#07111f"/>
+  <rect x="12" y="12" width="104" height="104" rx="20" fill="url(#g)" opacity="0.18"/>
+  <path d="M38 96V32h8l17 27 17-27h8v64h-8V52l-17 26-17-26v44z" fill="url(#g)"/>
+</svg>
