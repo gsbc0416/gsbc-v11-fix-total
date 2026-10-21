@@ -1,93 +1,100 @@
-# GSBC v11 FIX TOTAL - PLIEGO TÉCNICO DE IMPLEMENTACIÓN REAL
-## Cumplimiento 100% Marco RIO-CARIBE (C_ARIBE.pdf)
-**Autor Artículo:** Felipe Barroso Negrete - CUN
-**Proyecto:** gsbc-v11-fix-total
-**Regla de Oro:** PROHIBIDO INVENTAR DATOS - TODO REAL Y VERIFICABLE
+# GSBC v11 RIO-CARIBE - GUÍA FINAL NACIONAL OFFLINE-FIRST
+# Toda Colombia - Sin ejemplos de ciudades - Sincronización Inteligente
 
-### 1. OBJETIVO CONTRACTUAL
-Transformar el link actual de dashboard online con 0 colegios reales, a un Sistema de Aula Rural Offline-First que cumpla los 30 requisitos de C_ARIBE.pdf Tabla 3 y arquitectura L1/L2/L3.
+## OBJETIVO
+Plataforma educativa rural nacional, limpia, profesional, 100% offline-first.
+Cero ejemplos de ciudades. Todo dinámico por departamento y municipio reales del DUE oficial https://www.datos.gov.co/resource/6k5y-ir6r.json
 
-### 2. FUENTE DATOS REALES AUTORIZADA
-- Dataset: MEN - ESTABLECIMIENTOS EDUCATIVOS
-- URL: https://www.datos.gov.co/resource/6k5y-ir6r.json
-- Filtro: departamento=Cesar
-- Campo DANE: codigo_dane_sede / cod_dane_sede (12 dígitos)
-- PROHIBIDO usar faker, mock, ejemplos
+## 1. COMPORTAMIENTO INTERNET / OFFLINE - OBLIGATORIO
 
-CÓDIGO REAL FIX:
-async function syncDUEOnlineReal() {
-  const url = 'https://www.datos.gov.co/resource/6k5y-ir6r.json?$limit=5000&$where=departamento LIKE \'%CESAR%\'';
-  const res = await fetch(url);
-  const data = await res.json();
-  const getDane = (c) => c.codigo_dane_sede || c.cod_dane_sede || c.dane_sede || c.codigo_dane || '';
-  const reales = data.filter(c => {
-    const dane = getDane(c).toString();
-    return dane.length >= 8 && (c.departamento||'').toUpperCase().includes('CESAR');
-  }).map(c => ({
-    dane_real: getDane(c),
-    nombre_sede_real: c.nombre_sede || c.nombre_establecimiento || '',
-    municipio_real: c.municipio || '',
-    departamento_real: c.departamento || '',
-    origen: 'DUE-MEN-datos.gov.co'
-  }));
-  localStorage.setItem('rio_caribe_due_real_cache_v14_2', JSON.stringify({
-    fecha_sync: new Date().toISOString(),
-    total_reales: reales.length,
-    origen_verificable: url,
-    datos: reales
-  }));
-  return reales;
-}
+### CON INTERNET - Actualiza y guarda para offline:
+- Al abrir con internet, actualiza DUE Nacional en segundo plano sin bloquear.
+- Muestra: "Conectado - Actualizando DUE Nacional..." luego "Actualizado: X colegios - Guardado para offline - [fecha real]"
+- Guarda TODO en 3 capas:
+    1. IndexedDB - base local grande para colegios y reportes
+    2. Cache API - via Service Worker para abrir sin internet
+    3. localStorage - solo fecha última sincronización
+- Cada reporte generado o firma docente se guarda al instante en IndexedDB, no espera internet.
 
-### 3. ARQUITECTURA 3 CAPAS ARTÍCULO
-L1: PWA + Service Worker + IndexedDB (R-TEC, R-ENE, R-MAN)
-L2: Sin IA nube, preparar modulo local (R-IA)
-L3: RBAC docente + firma (R-PC, R-SP, R-GOB)
+### SIN INTERNET - Debe seguir funcionando (F-01):
+- La página DEBE abrir sin wifi ni datos. Si no abre, no cumple artículo.
+- Muestra: "Modo Offline - Trabajando con X colegios guardados el [fecha real última sync]"
+- Funciones que deben seguir sin internet: ver colegios, cambiar roles, generar PEI, Plan Estudio, PMI, Manual Convivencia, SIEE, exportar PDF/Word/JSON, usar IA local Phi-3 mini.
+- PDFs offline marcan: "Generado en modo offline - Fecha real - Sincronizará cuando haya internet"
 
-### 4. 7 BOTONES FUNCIONALES REALES
-1. Sincronizar DUE Cesar (Real) - btn-sync-due - syncDUEOnlineReal()
-2. Activar Modo Offline - btn-offline - serviceWorker.register()
-3. Ingresar como Docente - btn-login-docente - guarda rol
-4. Firmar Cierre Unidad - btn-firma-docente - solo rol docente, guarda firma ISO
-5. Ver Marco RIO-CARIBE - btn-ver-pdf - window.open('./C_aribe.pdf')
-6. Cuaderno Evidencias - btn-evidencias - tabla TRAZA-RIO
-7. Exportar Respaldo USB - btn-export-usb - descarga JSON real
+### CUANDO VUELVE INTERNET - Sincronización inteligente:
+- Detecta internet y muestra: "Internet detectado - Sincronizando X reportes pendientes..."
+- Sube reportes generados offline automáticamente.
+- Actualiza DUE Nacional si hay nuevos colegios, sin borrar reportes locales.
+- Mensaje final: "Sincronización completa - X colegios actualizados - X reportes guardados"
 
-### 5. TRAZABILIDAD TRAZA-RIO OBLIGATORIA
-Cada registro:
-{
-  C: 'C-01 Intermitencia Valledupar',
-  N: 'N-01 Continuidad sin internet',
-  R: 'R-TEC-01',
-  S: 'L1',
-  F: 'btn-sync-due',
-  A: 'Consulta DANE 20001000XXXX',
-  I: 'CT',
-  E: 'Evidencia ISO',
-  dane_real: '...',
-  origen_verificable: 'https://www.datos.gov.co/resource/6k5y-ir6r.json'
-}
+## 2. ACCESOS Y ROLES - Cómo deben funcionar
 
-### 6. ESTRUCTURA ARCHIVOS FINAL
-/index.html -> debe importar style.css y app.js
-/app.js -> logica real
-/style.css -> responsive
-/service-worker.js -> cache real
-/C_aribe.pdf -> visor
-/manifest.json -> PWA standalone
+### ESTUDIANTE:
+- Entrada sin clave, selecciona colegio por DANE real.
+- Puede: ver colegios, evidencias de su grado, manual convivencia (solo lectura).
+- No puede: generar PEI, firmar, exportar, borrar.
 
-### 7. CRITERIOS PASS/FAIL F-01 A F-12
-F-01 Offline: sin wifi debe abrir = PASS
-F-05 Datos menores: no envia a externo = PASS
-F-11 Evaluacion: pide firma docente = PASS
-F-12 Trazabilidad: >90% con C->E = PASS
+### DOCENTE / RECTOR (R-PC-03, R-SP-01, R-GOB-01):
+- Ingreso con nombre real + rol (Docente o Rector) guardado local.
+- Puede: generar todos los reportes, editar contexto local, dar visto bueno.
+- Obligatorio: todo documento queda "Pendiente de firma" hasta presionar "Firmar y Validar" - R-PC-03.
+- Botones: Generar PEI, Plan Estudio, PMI, Manual Convivencia, SIEE, Firmar Cierre Unidad.
 
-CT Meta = 100%
+### ADMIN:
+- Sincroniza DUE Nacional completo, activa modo offline, ve auditoría TRAZA-RIO, exporta respaldo nacional USB/JSON.
+- No genera contenido pedagógico, solo administra.
 
-### 8. PLAN 4 COMMITS
-Commit1: Fix DUE real
-Commit2: PWA offline
-Commit3: RBAC + firma
-Commit4: TRAZA + PDF + export
+Recomendación visual: borde distinto por rol. Estudiante azul claro, Docente azul fuerte, Admin azul oscuro.
 
-Deploy: GitHub Pages https://gsbc0416.github.io/gsbc-v11-fix-total/
+## 3. GENERADOR DE REPORTES - 5 obligatorios nacionales
+
+Cada reporte debe tener:
+- Portada: escudo, nombre real colegio, DANE real, departamento real, municipio real, fecha real generación.
+- Sección 1: Datos oficiales DUE (del registro seleccionado).
+- Sección 2: Contexto territorial (usa solo departamento_real y municipio_real reales, sin inventar ríos/veredas).
+- Sección 3: Contenido documento (borrador IA local) con marca "Borrador - Requiere aprobación docente R-PC-03".
+- Sección 4: Trazabilidad TRAZA-RIO C→N→R→S→F→A→I→E visible en pie.
+- Sección 5: Firma docente/rector (nombre, fecha, hash).
+
+Reportes: 
+1. PEI
+2. Plan de Estudio por grado y área
+3. PMI - Plan Mejoramiento Institucional
+4. Manual de Convivencia
+5. SIEE
+
+Exportación: 3 botones juntos siempre - PDF (oficial con jsPDF offline), Word (docx.js), JSON (respaldo con traza). Misma información en los 3.
+
+## 4. MÓDULO IA LOCAL OFFLINE
+
+- Ubicado panel derecho, como asistente, no buscador central.
+- Título: "Asistente IA Local Offline - Sin nube - Datos no salen del dispositivo - Phi-3 mini"
+- Mensaje inicial: "Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales."
+- Cada respuesta IA con etiqueta amarilla: "Requiere aprobación docente R-PC-03 - Validar antes de uso oficial"
+- Filtro R-IA-03 visible: "Contenido verificado por filtro local"
+- IA nunca genera documento final solo. Solo borrador que docente edita y firma. Si genera y exporta directo viola R-GOB-01.
+
+## 5. DISEÑO LIMPIO NACIONAL - Para que se vea genial
+
+- Sin mapas con pines inventados, sin fotos colegios falsos.
+- Tabla: Código DANE Real | Institución Real | Departamento Real | Municipio Real | Zona Real | Estado | Acción Ver
+- Buscador nacional: placeholder "Buscar por DANE, nombre, departamento o municipio en toda Colombia"
+- Contadores reales arriba: "X colegios sincronizados - Cobertura Nacional - DUE Oficial datos.gov.co - Actualizado: fecha real"
+- Barra superior siempre visible: Conectado/Offline + total colegios + última sync real + reportes pendientes.
+- Pie: "GSBC v11 RIO-CARIBE - Modo 100% Offline - Sin datos en la nube - Auditoría TRAZA-RIO Activa - Cumple MEN - Cobertura Nacional"
+
+## 6. PROHIBIDO
+
+- Botones "Próximamente"
+- Datos ejemplo tipo "I.E. Ejemplo" o "Colegio Demo"
+- Ciudades fijas hardcodeadas en código
+- Llamadas a servidores externos fuera de datos.gov.co y CDN de librerías
+- Inventar DANE, colegios, ríos, veredas
+
+## 7. ORDEN PARA COPILOT - Una tarea por mensaje
+
+1. "Implementa roles Estudiante/Docente-Rector/Admin con cambio de interfaz según rol. Usa esta guía"
+2. "Implementa sincronización DUE Nacional real + IndexedDB + Service Worker PWA para offline-first según sección 1 de guía"
+3. "Implementa generador 5 reportes con estructura portada y traza según sección 3"
+4. "Implementa asistente IA local offline panel derecho según sección 4, con etiqueta R-PC-03"
