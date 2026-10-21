@@ -30,13 +30,17 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at top, rgba(61, 217, 162, 0.18), transparent 25%),
+        linear-gradient(180deg, #07111f 0%, #0b1b2d 100%);
       color: var(--text);
       line-height: 1.6;
+      min-height: 100vh;
     }
 
     a { color: var(--accent-2); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    main { display: block; }
     img { max-width: 100%; display: block; }
     p, li { color: var(--text); }
     ul { padding-left: 1.2em; }
@@ -58,6 +62,15 @@
       font-size: clamp(1.8rem, 3vw, 2.8rem);
       margin: 0 0 12px;
       line-height: 1.15;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 88px;
+      height: 3px;
+      margin-top: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
     }
     .section-subtitle {
       margin-top: 0;
@@ -151,12 +164,17 @@
       color: var(--text);
       font-weight: 700;
       cursor: pointer;
-      transition: transform .15s ease, border-color .2s ease;
+      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
     }
     .btn:hover {
       transform: translateY(-1px);
       text-decoration: none;
       border-color: rgba(125, 212, 255, 0.5);
+      box-shadow: 0 8px 22px rgba(125, 212, 255, 0.12);
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 3px;
     }
     .btn.primary {
       background: linear-gradient(135deg, var(--accent), #6ce9b5);
@@ -340,6 +358,23 @@
         align-items: flex-start;
       }
     }
+    @media (max-width: 640px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+      }
+      .nav {
+        justify-content: flex-start;
+      }
+      .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -398,8 +433,8 @@
       tagline: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad',
       heroBadges: ['Educación rural · IA generativa · offline', 'Offline-first', 'Trazabilidad C→N→R→S→F→A→I→E', 'Educación rural', 'Gobernanza docente'],
       summary: {
-        intro: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad. Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de gobernanza en especificaciones verificables y auditables.',
-        executive: 'La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. En lugar de tratar esas condiciones como obstáculos, RIO-CARIBE propone traducirlas en requisitos verificables y auditables.',
+        intro: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad. Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de infraestructura en soluciones sostenibles y verificables.',
+        executive: 'La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. RIO-CARIBE propone un marco para transformar esas condiciones en requisitos explícitos, auditables y alineados con la práctica docente.',
         argument: 'RIO-CARIBE articula infraestructura local, IA en el borde y mediación docente para diseñar sistemas educativos resilientes y sostenibles.',
         keywords: ['computación en el borde', 'educación rural', 'IA generativa', 'ingeniería de requisitos', 'modelos de lenguaje pequeños', 'trazabilidad']
       },
@@ -539,7 +574,7 @@
         'Se identifican rupturas injustificadas en TRAZA-RIO superiores al 10%.'
       ],
       legal: {
-        intro: 'Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado especialista. Para implementación real en instituciones educativas, se recomienda incorporar aviso de privacidad, política de cookies, términos y condiciones, tratamiento de datos personales, consentimiento informado y gobernanza institucional.',
+        intro: 'Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado.',
         notices: [
           { title: 'Aviso de privacidad', text: 'La información que se reciba a través del sitio, si aplica, deberá tratarse conforme a la Ley 1581 de 2012, el Decreto 1377 de 2013 y demás normas vigentes en Colombia.' },
           { title: 'Política de cookies', text: 'El sitio puede utilizar cookies para mejorar la experiencia del usuario, medir tráfico y ofrecer personalización básica.' }
@@ -609,7 +644,7 @@
               <p class="lead">${articleData.summary.intro}</p>
               <div class="cta-row">
                 <a class="btn primary" href="#framework">Ver marco</a>
-                <a class="btn" href="./c_aribe.pdf" target="_blank" rel="noopener noreferrer">Ver artículo</a>
+                <a id="pdfLink" class="btn" href="/c_aribe.pdf" target="_blank" rel="noopener noreferrer">Ver artículo</a>
               </div>
               <div class="pill-row">
                 ${renderPills(articleData.heroBadges.slice(1))}
@@ -765,7 +800,7 @@
             <h2 class="section-title">Trazabilidad TRAZA-RIO</h2>
             <p class="section-subtitle">Cadena bidireccional ${articleData.traceability.chain} y retorno ${articleData.traceability.returnChain}.</p>
             <div class="card">
-              <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador de evaluación → Evidencia.</p>
+              <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador → Evidencia.</p>
               <div class="pill-row">
                 ${['C','N','R','S','F','A','I','E'].map(item => `<span class="pill">${item}</span>`).join('')}
               </div>
@@ -859,22 +894,48 @@
 
     renderApp();
 
+    const resolvePdfUrl = () => {
+      const base = window.location.origin;
+      const path = '/c_aribe.pdf';
+      return `${base}${path}`;
+    };
+
+    const pdfLink = document.getElementById('pdfLink');
+    if (pdfLink) {
+      pdfLink.href = resolvePdfUrl();
+    }
+
     const cookieBanner = document.getElementById('cookieBanner');
     const acceptBtn = document.getElementById('acceptCookies');
     const closeBtn = document.getElementById('closeCookies');
 
-    const storedConsent = localStorage.getItem('rioCookieConsent');
-    if (storedConsent === 'accepted') {
-      cookieBanner.classList.add('hidden');
-    }
-
-    const dismissBanner = () => {
-      cookieBanner.classList.add('hidden');
-      localStorage.setItem('rioCookieConsent', 'accepted');
+    const canUseLocalStorage = () => {
+      try {
+        const key = '__rio_storage_test__';
+        localStorage.setItem(key, '1');
+        localStorage.removeItem(key);
+        return true;
+      } catch {
+        return false;
+      }
     };
 
-    acceptBtn.addEventListener('click', dismissBanner);
-    closeBtn.addEventListener('click', dismissBanner);
+    if (cookieBanner && canUseLocalStorage()) {
+      const storedConsent = localStorage.getItem('rioCookieConsent');
+      if (storedConsent === 'accepted') {
+        cookieBanner.classList.add('hidden');
+      }
+
+      const dismissBanner = () => {
+        cookieBanner.classList.add('hidden');
+        localStorage.setItem('rioCookieConsent', 'accepted');
+      };
+
+      acceptBtn?.addEventListener('click', dismissBanner);
+      closeBtn?.addEventListener('click', dismissBanner);
+    } else if (cookieBanner) {
+      cookieBanner.classList.add('hidden');
+    }
   </script>
 </body>
 </html>
