@@ -1,30 +1,30 @@
 const appData = {
-  objective: 'Diseñar y fundamentar el marco conceptual RIO-CARIBE para transformar condiciones territoriales y educativas de escuelas rurales en especificaciones técnicas, pedagógicas y operativas verificables, con enfoque en autonomía, responsabilidad docente y uso ético de la IA.',
+  objective: 'Diseñar y fundamentar el marco conceptual RIO-CARIBE para apoyar a escuelas rurales con una estructura documental, pedagógica y técnica verificable que favorezca la continuidad escolar, la protección de datos y una práctica docente responsable.',
   specifics: [
-    'Caracterizar contextos rurales del Caribe colombiano y las restricciones de conectividad, energía y infraestructura.',
-    'Definir dominios, requisitos funcionales, no funcionales y sociopedagógicos alineados con el PEI y los procedimientos institucionales.',
+    'Caracterizar el contexto rural y las condiciones de conectividad, energía, infraestructura y organización escolar.',
+    'Definir dominios, requisitos funcionales, no funcionales y sociopedagógicos alineados con el PEI y con las decisiones institucionales.',
     'Diseñar una arquitectura local y offline-first para aprendizaje, apoyo docente y evidencias.',
     'Formalizar trazabilidad TRAZA-RIO para conectar condiciones, necesidades, requisitos, sistema, actividades y evidencias.',
-    'Establecer auditoría, verificación crítica y condiciones de falsación para evaluación del sistema.'
+    'Establecer auditoría, verificación crítica y condiciones de control para la gestión institucional.'
   ],
   principles: [
     'La mediación docente sigue siendo indispensable para orientar, validar y sostener el aprendizaje.',
-    'La IA no sustituye decisiones evaluativas ni disciplinarias sin la firma del docente.',
+    'La IA no sustituye decisiones evaluativas ni disciplinarias sin la revisión del docente.',
     'Se minimiza la recolección y tratamiento de datos de menores, con roles y permisos claros.',
-    'Se prioriza la alineación con el PEI, los proyectos curriculares y los procedimientos exigidos por la institución.',
+    'Se prioriza la alineación con el PEI, los proyectos curriculares y los procedimientos institucionales.',
     'La solución debe funcionar sin internet y sincronizarse de forma segura cuando vuelva la conectividad.'
   ],
   requirements: [
     { id: 'R-TEC-01', description: 'El sistema debe ejecutar las funciones esenciales del aula en la red local sin depender de Internet.', type: 'F' },
     { id: 'R-TEC-02', description: 'No debe depender de APIs externas o SaaS para las funciones básicas del proyecto.', type: 'NF' },
-    { id: 'R-TEC-03', description: 'Debe soportar almacenamiento local cifrado para datos autorizados y temporales.', type: 'F' },
+    { id: 'R-TEC-03', description: 'Debe soportar almacenamiento local para datos autorizados y temporales.', type: 'F' },
     { id: 'R-TEC-04', description: 'Debe permitir sincronización diferida y segura cuando haya conectividad estable.', type: 'F' },
     { id: 'R-IA-01', description: 'El modelo de IA debe seleccionarse según hardware disponible, memoria RAM y capacidad de cómputo.', type: 'NF' },
     { id: 'R-IA-02', description: 'El módulo debe generar recursos con alineación curricular y PEI.', type: 'F' },
     { id: 'R-IA-03', description: 'Las salidas deben pasar por validación local antes de mostrarse al usuario.', type: 'SP' },
     { id: 'R-PC-01', description: 'Debe diferenciar claramente entre texto generado por estudiante e IA.', type: 'SP' },
     { id: 'R-PC-02', description: 'Debe incorporar verificación crítica para contenidos generados.', type: 'SP' },
-    { id: 'R-PC-03', description: 'Se exige aprobación docente explícita para evaluaciones o cierres de actividad.', type: 'SP' },
+    { id: 'R-PC-03', description: 'Se exige revisión docente explícita para evaluaciones, decisiones institucionales o cierres de actividad.', type: 'SP' },
     { id: 'R-PC-04', description: 'Las actividades deben vincularse a competencias y objetivos del PEI.', type: 'SP' },
     { id: 'R-PC-05', description: 'El uso de IA debe justificarse por valor pedagógico y no como sustituto del pensamiento del estudiante.', type: 'SP' },
     { id: 'R-TLA-01', description: 'Los prompts deben incluir elementos socioculturales del Caribe colombiano.', type: 'SP' },
@@ -63,7 +63,7 @@ const appData = {
       { name: 'CE', formula: 'CE = (Re / R_evaluados) × 100', target: 'máxima evidencia' },
       { name: 'CV', formula: 'CV = (Rv / R_probados) × 100', target: 'verificación completa' },
       { name: 'CAP', formula: 'CAP = (Ac / A_totales) × 100', target: 'alineación curricular' },
-      { name: 'TCO', formula: 'C_adquisición + energía + mantenimiento', target: '≤ $600 USD/aula' }
+      { name: 'TCO', formula: 'C_adquisición + energía + mantenimiento', target: '≤ 600 USD/aula' }
     ]
   },
   procedures: [
@@ -91,13 +91,217 @@ const appData = {
       area: 'Seguridad',
       action: 'Usar roles, permisos, mínimos privilegios y registro de auditoría.'
     }
+  ],
+  institutional: {
+    pei: [
+      {
+        title: 'Propósito institucional',
+        summary: 'El PEI orienta la misión, la visión, la comunidad educativa y la forma como se concreta la práctica escolar en contexto rural.',
+        bullets: [
+          'Asegurar continuidad del aprendizaje con recursos disponibles, incluso sin internet.',
+          'Garantizar trato digno, pedagógico y seguro para estudiantes, docentes y familias.',
+          'Articular la práctica escolar con territorio, comunidad y objetivos de mejoramiento.'
+        ]
+      },
+      {
+        title: 'Plan de estudios',
+        summary: 'La estructura curricular debe responder a competencias, objetivos de aprendizaje y condiciones reales del contexto.',
+        bullets: [
+          'Relacionar contenidos con la vida campesina, cultural y comunitaria.',
+          'Definir evidencias observables y criterios de evaluación claros.',
+          'Incorporar trabajo interdisciplinar y mediación docente.'
+        ]
+      },
+      {
+        title: 'Criterios de calidad',
+        summary: 'El seguimiento debe centrarse en la relación entre aprendizaje, convivencia y mejoramiento institucional.',
+        bullets: [
+          'Verificar cumplimiento documental y pedagógico.',
+          'Usar evidencias para toma de decisiones y ajustes del plan.',
+          'Priorizar acciones sostenibles y contextualizadas.'
+        ]
+      }
+    ],
+    convivencia: [
+      {
+        title: 'Manual de convivencia',
+        summary: 'El manual orienta la convivencia escolar, la atención de situaciones y la mediación.',
+        bullets: [
+          'Definir roles de estudiantes, docentes y acudientes.',
+          'Establecer procedimientos claros para faltas, observaciones y acompañamiento.',
+          'Promover atención pedagógica antes de sanción, cuando sea posible.'
+        ]
+      },
+      {
+        title: 'Normas y acompañamiento',
+        summary: 'Las normas deben ser comprensibles, razonables y acompañadas de estrategias preventivas.',
+        bullets: [
+          'Relacionar la norma con el objetivo formativo y social.',
+          'Registrar hechos, acciones y decisiones con evidencia.',
+          'Usar lenguaje claro, respetuoso y propicio para la reparación.'
+        ]
+      },
+      {
+        title: 'Acción de intervención',
+        summary: 'Las intervenciones deben ser proporcionales y acompañadas por revisión docente.',
+        bullets: [
+          'Analizar la situación antes de cerrar un caso.',
+          'Definir responsabilidades, apoyo y seguimiento.',
+          'Guardar la evidencia en la bitácora institucional.'
+        ]
+      }
+    ],
+    academic: [
+      {
+        title: 'Guías académicas',
+        summary: 'Las guías permiten orientar estrategias, actividades, evaluación y seguimiento de aprendizaje.',
+        bullets: [
+          'Relacionar objetivos con competencias.',
+          'Proponer actividades factibles en condiciones rurales.',
+          'Establecer criterios para la observación y la valoración.'
+        ]
+      },
+      {
+        title: 'Plan de estudio',
+        summary: 'El plan de estudio debe priorizar continuidad, secuencia y relevancia contextual.',
+        bullets: [
+          'Estructurar unidades, tiempos y evidencias.',
+          'Ajustar estrategias a la disponibilidad tecnológica y social.',
+          'Definir pasos de refuerzo y profundización.'
+        ]
+      },
+      {
+        title: 'Evaluación y seguimiento',
+        summary: 'El sistema debe ayudar a documentar logros, dificultades y decisiones pedagógicas.',
+        bullets: [
+          'Usar rúbricas y observaciones.',
+          'Registrar continuidad del proceso.',
+          'Generar recomendaciones concretas para mejora.'
+        ]
+      }
+    ],
+    compliance: [
+      {
+        title: 'Cumplimiento documental',
+        summary: 'Verificar que el proceso tiene sustento institucional, revisión y evidencia suficiente.',
+        bullets: [
+          'PEI alineado',
+          'Manual de convivencia vigente',
+          'Registro de decisiones y responsables',
+          'Evidencias y fechas' 
+        ]
+      },
+      {
+        title: 'Cumplimiento pedagógico',
+        summary: 'Revise si la acción responde a criterios de calidad, evaluación y acompañamiento.',
+        bullets: [
+          'Objetivo claro',
+          'Competencia o estándar relacionado',
+          'Seguimiento de avances',
+          'Acompañamiento docente' 
+        ]
+      },
+      {
+        title: 'Cumplimiento normativo',
+        summary: 'Toda actuación debe adaptarse al marco institucional y a la protección de datos.',
+        bullets: [
+          'Roles definidos',
+          'Privacidad y mínimo privilegio',
+          'Registro institucional de decisiones',
+          'Aprobación de la autoridad correspondiente'
+        ]
+      }
+    ],
+    improvement: [
+      {
+        title: 'Diagnóstico',
+        summary: 'Reconocer fortalezas, necesidades y factores que afectan el aprendizaje y la convivencia.',
+        bullets: [
+          'Priorizar problemas observables y verificables.',
+          'Relacionar con evidencias y contexto.',
+          'Identificar responsables y tiempos.'
+        ]
+      },
+      {
+        title: 'Acciones de mejora',
+        summary: 'Diseñar estrategias concretas, medibles y viables en la realidad escolar.',
+        bullets: [
+          'Objetivo específico',
+          'Actividad o intervención',
+          'Indicador de avance',
+          'Responsables y seguimiento' 
+        ]
+      },
+      {
+        title: 'Seguimiento',
+        summary: 'La mejora requiere evidencia de implementación y resultados.',
+        bullets: [
+          'Reunión periódica',
+          'Registro de avance',
+          'Ajuste de estrategias',
+          'Cierre con evidencias' 
+        ]
+      }
+    ]
+  },
+  reportTemplates: [
+    {
+      id: 'informe-convivencia',
+      title: 'Informe de convivencia',
+      purpose: 'Apoyar la redacción de un informe sobre una situación de convivencia o conducta escolar.',
+      sections: [
+        { title: 'Contexto', content: 'Describa el contexto escolar, la comunidad, el curso, la situación observada y la fecha.' },
+        { title: 'Hechos', content: 'Relate de manera objetiva los hechos, sin juicios ni conclusiones prematuras.' },
+        { title: 'Norma y marco', content: 'Indique qué norma, manual o principio institucional se relaciona con la situación.' },
+        { title: 'Acción pedagógica', content: 'Describe la intervención, el acompañamiento y la valoración del caso.' },
+        { title: 'Compromisos', content: 'Incluya recomendaciones, apoyo del docente y seguimiento a realizar.' }
+      ]
+    },
+    {
+      id: 'informe-academico',
+      title: 'Informe académico',
+      purpose: 'Apoyar el seguimiento del proceso de aprendizaje, rendimiento y acompañamiento académico.',
+      sections: [
+        { title: 'Objetivo', content: 'Señale qué se quiere evidenciar o acompañar.' },
+        { title: 'Evidencias', content: 'Describa actividades, trabajos, observaciones y producciones del estudiante o grupo.' },
+        { title: 'Logros', content: 'Mencione aprendizajes evidenciados y fortalezas detectadas.' },
+        { title: 'Dificultades', content: 'Identifique barreras, factores contextuales o dificultades del proceso.' },
+        { title: 'Recomendaciones', content: 'Proponga estrategias, apoyo y seguimiento específico.' }
+      ]
+    },
+    {
+      id: 'cumplimiento-pei',
+      title: 'Cumplimiento PEI',
+      purpose: 'Documentar si una acción o proceso se alinea con el PEI y los procedimientos institucionales.',
+      sections: [
+        { title: 'Objetivo institucional', content: 'Relacione la acción con el objetivo institucional o pedagógico.' },
+        { title: 'Alineación', content: 'Explique en qué medida la acción responde a la misión, visión, competencias o lineamientos del PEI.' },
+        { title: 'Evidencia', content: 'Liste documentos, registros, observaciones o productos que respaldan la acción.' },
+        { title: 'Revisión', content: 'Indique quién revisó, validó y registró la decisión.' },
+        { title: 'Conclusión', content: 'Establezca si la acción cumple, requiere ajuste o necesita seguimiento.' }
+      ]
+    },
+    {
+      id: 'plan-mejora',
+      title: 'Plan de mejora',
+      purpose: 'Organizar una propuesta de mejoramiento con metas, responsables y seguimiento.',
+      sections: [
+        { title: 'Diagnóstico', content: 'Describa la necesidad, la brecha o la oportunidad de mejora.' },
+        { title: 'Meta', content: 'Defina la meta u objetivo general del plan.' },
+        { title: 'Acciones', content: 'Liste las acciones concretas, responsables y tiempos previstos.' },
+        { title: 'Indicadores', content: 'Señale cómo se medirán avances y resultados.' },
+        { title: 'Seguimiento', content: 'Establezca frecuencia de revisión, evidencias y ajustes.' }
+      ]
+    }
   ]
 };
 
 const state = {
   currentView: 'inicio',
   filter: 'all',
-  notes: JSON.parse(localStorage.getItem('rioNotes') || '[]')
+  notes: JSON.parse(localStorage.getItem('rioNotes') || '[]'),
+  reports: JSON.parse(localStorage.getItem('rioReports') || '[]'),
+  selectedTemplateId: appData.reportTemplates[0].id
 };
 
 const typeColors = { F: 'tag-F', NF: 'tag-NF', SP: 'tag-SP' };
@@ -111,6 +315,11 @@ function getViewEls() {
     specificObjectives: document.getElementById('specificObjectives'),
     principlesList: document.getElementById('principlesList'),
     requirementsContainer: document.getElementById('requirementsContainer'),
+    peiContent: document.getElementById('peiContent'),
+    convivenciaContent: document.getElementById('convivenciaContent'),
+    academicContent: document.getElementById('academicContent'),
+    cumplimientoContent: document.getElementById('cumplimientoContent'),
+    mejoramientoContent: document.getElementById('mejoramientoContent'),
     traceabilityChain: document.getElementById('traceabilityChain'),
     trailPills: document.getElementById('trailPills'),
     traceExample: document.getElementById('traceExample'),
@@ -122,7 +331,11 @@ function getViewEls() {
     notesList: document.getElementById('notesList'),
     noteInput: document.getElementById('noteInput'),
     networkLabel: document.getElementById('networkLabel'),
-    lastSyncLabel: document.getElementById('lastSyncLabel')
+    lastSyncLabel: document.getElementById('lastSyncLabel'),
+    reportTemplateSelect: document.getElementById('reportTemplateSelect'),
+    reportTemplates: document.getElementById('reportTemplates'),
+    reportContextInput: document.getElementById('reportContextInput'),
+    generatedReports: document.getElementById('generatedReports')
   };
 }
 
@@ -161,10 +374,31 @@ function renderRequirements() {
   `).join('');
 }
 
+function renderKnowledgeSection(container, items) {
+  container.innerHTML = items.map(item => `
+    <div class="info-card">
+      <h3>${item.title}</h3>
+      <p>${item.summary}</p>
+      <ul>
+        ${item.bullets.map(bullet => `<li>${bullet}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+function renderInstitutionalContent() {
+  const els = getViewEls();
+  renderKnowledgeSection(els.peiContent, appData.institutional.pei);
+  renderKnowledgeSection(els.convivenciaContent, appData.institutional.convivencia);
+  renderKnowledgeSection(els.academicContent, appData.institutional.academic);
+  renderKnowledgeSection(els.cumplimientoContent, appData.institutional.compliance);
+  renderKnowledgeSection(els.mejoramientoContent, appData.institutional.improvement);
+}
+
 function renderTraceability() {
   const els = getViewEls();
   els.traceabilityChain.textContent = `Cadena bidireccional: ${appData.traceability.chain} · retorno: ${appData.traceability.returnChain}`;
-  els.trailPills.innerHTML = ['C','N','R','S','F','A','I','E'].map(item => `<span>${item}</span>`).join('');
+  els.trailPills.innerHTML = ['C', 'N', 'R', 'S', 'F', 'A', 'I', 'E'].map(item => `<span>${item}</span>`).join('');
   els.traceExample.innerHTML = appData.traceability.example.map(item => `
     <div class="trace-item">
       <strong>${item.label}</strong>
@@ -185,7 +419,7 @@ function renderSearchResults(query) {
   const q = (query || '').trim().toLowerCase();
 
   if (!q) {
-    els.searchResults.innerHTML = '<div class="result-card">Escribe una palabra clave para buscar requisitos, procedimientos o temas del marco.</div>';
+    els.searchResults.innerHTML = '<div class="result-card">Escribe una palabra clave para buscar requisitos, normas, dudas, PEI o informes.</div>';
     return;
   }
 
@@ -207,11 +441,29 @@ function renderSearchResults(query) {
       title: item.label,
       description: item.text,
       text: `${item.label} ${item.text}`
-    }))
+    })),
+    ...appData.institutional.pei.flatMap(block => block.bullets.map(bullet => ({
+      type: 'PEI',
+      title: block.title,
+      description: bullet,
+      text: `${block.title} ${bullet}`
+    }))),
+    ...appData.institutional.convivencia.flatMap(block => block.bullets.map(bullet => ({
+      type: 'Convivencia',
+      title: block.title,
+      description: bullet,
+      text: `${block.title} ${bullet}`
+    }))),
+    ...appData.reportTemplates.flatMap(template => template.sections.map(section => ({
+      type: 'Informe',
+      title: `${template.title}: ${section.title}`,
+      description: section.content,
+      text: `${template.title} ${section.title} ${section.content}`
+    })))
   ].filter(entry => entry.text.toLowerCase().includes(q));
 
   if (!matched.length) {
-    els.searchResults.innerHTML = '<div class="result-card">No se encontraron coincidencias. Prueba palabras como "offline", "PEI", "docente", "requisito" o "trazabilidad".</div>';
+    els.searchResults.innerHTML = '<div class="result-card">No se encontraron coincidencias. Prueba palabras como "offline", "PEI", "docente", "convivencia", "norma" o "informe".</div>';
     return;
   }
 
@@ -255,34 +507,132 @@ function saveNote() {
   renderNotes();
 }
 
+function getTemplateById(templateId) {
+  return appData.reportTemplates.find(template => template.id === templateId) || appData.reportTemplates[0];
+}
+
+function buildReportFromTemplate(templateId, contextText) {
+  const template = getTemplateById(templateId);
+  const context = (contextText || '').trim();
+
+  const intro = `Este documento es una plantilla de apoyo institucional generada localmente y debe ser revisada por el docente o la autoridad responsable antes de usarse como evidencia oficial.\n\n`;
+  const contextLine = context
+    ? `Contexto aportado por el usuario: ${context}\n\n`
+    : 'Contexto: no se indicó información adicional. Se recomienda describir el curso, la situación, la fecha y la evidencia antes de usar el informe como documento formal.\n\n';
+
+  const body = template.sections.map(section => {
+    return `${section.title}:\n${section.content}${context ? ` En este caso: ${context}.` : ''}`;
+  }).join('\n\n');
+
+  return `${intro}${template.title}\n\n${contextLine}${body}`;
+}
+
+function renderReportTemplates() {
+  const els = getViewEls();
+  els.reportTemplateSelect.innerHTML = appData.reportTemplates
+    .map(template => `<option value="${template.id}">${template.title}</option>`)
+    .join('');
+  els.reportTemplateSelect.value = state.selectedTemplateId;
+
+  els.reportTemplates.innerHTML = appData.reportTemplates.map(template => `
+    <div class="info-card compact-card">
+      <h3>${template.title}</h3>
+      <p>${template.purpose}</p>
+      <button class="primary-btn small-btn" data-template="${template.id}">Usar plantilla</button>
+    </div>
+  `).join('');
+
+  els.reportTemplates.querySelectorAll('[data-template]').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.dataset.template;
+      state.selectedTemplateId = id;
+      els.reportTemplateSelect.value = id;
+      const context = els.reportContextInput.value.trim();
+      if (context) {
+        const generated = buildReportFromTemplate(id, context);
+        renderGeneratedReports(generated, id);
+      }
+    });
+  });
+}
+
+function renderGeneratedReports(reportText, templateId) {
+  const els = getViewEls();
+  const template = getTemplateById(templateId);
+  const report = {
+    id: Date.now(),
+    templateId,
+    title: template.title,
+    content: reportText,
+    createdAt: new Date().toISOString()
+  };
+
+  state.reports.unshift(report);
+  localStorage.setItem('rioReports', JSON.stringify(state.reports));
+
+  els.generatedReports.innerHTML = state.reports.map(item => `
+    <div class="report-card">
+      <div class="req-header">
+        <strong>${item.title}</strong>
+        <span>${new Date(item.createdAt).toLocaleString('es-CO')}</span>
+      </div>
+      <pre>${escapeHtml(item.content)}</pre>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function generateReport() {
+  const els = getViewEls();
+  const templateId = els.reportTemplateSelect.value || state.selectedTemplateId;
+  const context = (els.reportContextInput.value || '').trim();
+  const reportText = buildReportFromTemplate(templateId, context);
+  renderGeneratedReports(reportText, templateId);
+}
+
 function buildAssistantReply(query) {
   const q = query.toLowerCase();
 
-  if (q.includes('pei') || q.includes('proceso') || q.includes('procedimiento')) {
+  if (q.includes('pei') || q.includes('proyecto educativo') || q.includes('plan de estudio')) {
     return {
-      title: 'PEI y procedimientos docentes',
-      text: 'El marco exige que el uso de IA y herramientas digitales se alinee con el PEI, la política institucional y los procedimientos de convivencia, evaluación y protección de datos. El docente debe validar la pertinencia pedagógica, documentar la actividad y mantener trazabilidad de la evidencia.'
+      title: 'PEI y plan de estudio',
+      text: 'El PEI debe orientar la misión, la visión y la forma como el colegio materializa la práctica escolar. Para apoyar una decisión, debe relacionarse con competencias, objetivos, evidencias y condiciones reales del contexto. La IA puede ayudar a identificar lineamientos, pero la revisión docente sigue siendo indispensable.'
+    };
+  }
+
+  if (q.includes('manual') || q.includes('convivencia') || q.includes('norma') || q.includes('faltas')) {
+    return {
+      title: 'Convivencia y normas',
+      text: 'Para una situación de convivencia, la respuesta debe ser objetiva, pedagógica y documentada. Primero describa hechos, después relacione la situación con la norma o manual institucional, y luego proponga acompañamiento, mediación y seguimiento con evidencia. La sanción o decisión final debe ser revisada por la autoridad docente correspondiente.'
     };
   }
 
   if (q.includes('offline') || q.includes('sin internet') || q.includes('conexion')) {
     return {
       title: 'Modo offline',
-      text: 'El sistema debe operar en la red local del colegio, priorizar funciones esenciales y guardar evidencias localmente. Cuando haya internet, puede sincronizar registros y respaldos sin comprometer la continuidad del aprendizaje.'
+      text: 'El sistema debe funcionar localmente con acceso a la información, registro de notas, búsqueda y respaldos sin depender de internet. Cuando haya conexión, puede sincronizarse de forma segura y mantener trazabilidad.'
     };
   }
 
   if (q.includes('docente') || q.includes('mediacion') || q.includes('evaluacion')) {
     return {
       title: 'Rol del docente',
-      text: 'La mediación docente sigue siendo central: revisar, validar, orientar y aprobar decisiones relevantes. La IA puede apoyar la preparación de actividades, pero no sustituye la responsabilidad del docente en evaluación, disciplina ni diálogo pedagógico.'
+      text: 'La IA sirve como apoyo para organizar, redactar y sugerir recomendaciones, pero la responsabilidad final del análisis, la evaluación y la decisión pedagógica corresponde al docente. La evidencia, la validación y la firma institucional deben conservarse.'
     };
   }
 
   if (q.includes('seguridad') || q.includes('datos') || q.includes('privacidad')) {
     return {
-      title: 'Seguridad y privacidad',
-      text: 'Se debe aplicar mínimo privilegio, control por roles, almacenamiento local y bloqueo de recolección de datos personales de menores. La escuela debe mantener un registro de auditoría y restringir el acceso a información sensible.'
+      title: 'Seguridad y protección de datos',
+      text: 'El sistema debe aplicar mínimo privilegio, roles y permisos, limitar la recolección de información sensible y conservar trazabilidad de decisiones. La protección de menores exige cuidado, revisión del contenido y uso responsable de la tecnología.'
     };
   }
 
@@ -300,7 +650,7 @@ function buildAssistantReply(query) {
 
   return {
     title: 'Respuesta general',
-    text: 'RIO-CARIBE propone un enfoque social, técnico y pedagógico para escuelas rurales: offline-first, trazabilidad, PEI y procedimientos docentes, IA responsable, evidencia y verificación crítica. Para objetivos específicos, usa la búsqueda local o consulta por “offline”, “PEI”, “docente”, “evaluación” o “seguridad”.'
+    text: 'RIO-CARIBE propone un enfoque social, técnico y pedagógico para escuelas rurales: trabajo offline, trazabilidad, alineación con el PEI, atención a convivencia, acompañamiento docente, evidencias y mejoramiento institucional. Si compartes el caso concreto, el asistente puede ayudarte a redactar un informe, una recomendación o una guía de acción.'
   };
 }
 
@@ -374,6 +724,11 @@ function bindEvents() {
   document.getElementById('saveNoteBtn').addEventListener('click', saveNote);
   document.getElementById('syncBtn').addEventListener('click', syncPendingData);
 
+  document.getElementById('generateReportBtn').addEventListener('click', generateReport);
+  els.reportTemplateSelect.addEventListener('change', (event) => {
+    state.selectedTemplateId = event.target.value;
+  });
+
   document.querySelectorAll('[data-view]').forEach(button => {
     const target = button.dataset.view;
     if (target && !button.classList.contains('nav-btn') && !button.classList.contains('filter-btn')) {
@@ -388,9 +743,12 @@ function bindEvents() {
 function initApp() {
   renderOverview();
   renderRequirements();
+  renderInstitutionalContent();
   renderTraceability();
   renderSearchResults('');
   renderNotes();
+  renderReportTemplates();
+  renderGeneratedReports('Este es un informe de ejemplo generado localmente. Revisa antes de usarlo como evidencia institucional.', appData.reportTemplates[0].id);
   updateConnectionStatus();
   bindEvents();
 }

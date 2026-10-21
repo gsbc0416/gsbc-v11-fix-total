@@ -7,7 +7,7 @@
     <title>RIO-CARIBE | Proyecto educativo offline para escuelas rurales</title>
     <meta
       name="description"
-      content="RIO-CARIBE es un proyecto offline-first para escuelas rurales en Colombia: requisitos, trazabilidad, buscador local y asistente IA guiado por el marco educativo propuesto."
+      content="RIO-CARIBE es un proyecto offline-first para escuelas rurales en Colombia: requisitos, trazabilidad, asistente local, convivencia, PEI, cumplimiento y gestión de informes."
     />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
@@ -27,6 +27,12 @@
         <nav class="nav" aria-label="Navegación principal">
           <button class="nav-btn active" data-view="inicio">Inicio</button>
           <button class="nav-btn" data-view="requisitos">Requisitos</button>
+          <button class="nav-btn" data-view="pei">PEI</button>
+          <button class="nav-btn" data-view="convivencia">Convivencia</button>
+          <button class="nav-btn" data-view="academico">Académico</button>
+          <button class="nav-btn" data-view="cumplimiento">Cumplimiento</button>
+          <button class="nav-btn" data-view="mejoramiento">Mejoramiento</button>
+          <button class="nav-btn" data-view="informes">Informes</button>
           <button class="nav-btn" data-view="traza">Trazabilidad</button>
           <button class="nav-btn" data-view="busqueda">Búsqueda</button>
           <button class="nav-btn" data-view="asistente">Asistente</button>
@@ -58,11 +64,11 @@
             <h1>RIO-CARIBE</h1>
             <p class="lead">
               Plataforma educativa para escuelas rurales en Colombia que opera sin conexión,
-              guarda evidencias localmente, permite búsqueda y ofrece guía basada en el marco
-              RIO-CARIBE para requisitos, trazabilidad y uso responsable de IA.
+              guarda evidencias localmente, permite búsqueda y ofrece guía con base en el marco
+              institucional, pedagógico y de cumplimiento del PEI.
             </p>
             <div class="cta-row">
-              <button class="primary-btn" data-view="requisitos">Ver requisitos</button>
+              <button class="primary-btn" data-view="pei">Ver PEI</button>
               <button class="ghost-btn" data-view="asistente">Probar asistente</button>
             </div>
           </div>
@@ -125,6 +131,74 @@
         <div id="requirementsContainer"></div>
       </section>
 
+      <section class="view" id="view-pei">
+        <div class="panel big-panel">
+          <h2>PEI y documentos institucionales</h2>
+          <p class="muted">
+            Este espacio ayuda a consolidar la alineación con el Proyecto Educativo Institucional,
+            el plan de estudios, los objetivos institucionales y los procedimientos del colegio.
+          </p>
+          <div id="peiContent" class="content-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-convivencia">
+        <div class="panel big-panel">
+          <h2>Manuales de convivencia y normas</h2>
+          <p class="muted">
+            La IA y el sistema sirven como apoyo para orientaciones, decisiones pedagógicas y
+            recomendaciones formativas, pero siempre bajo revisión docente y conforme al marco institucional.
+          </p>
+          <div id="convivenciaContent" class="content-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-academico">
+        <div class="panel big-panel">
+          <h2>Guías académicas y plan de estudio</h2>
+          <p class="muted">
+            Base para planes de clase, seguimiento académico, criterios de evaluación y alineación con competencias.
+          </p>
+          <div id="academicContent" class="content-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-cumplimiento">
+        <div class="panel big-panel">
+          <h2>Cumplimiento de normas y procedimientos</h2>
+          <p class="muted">
+            Este módulo permite verificar qué documentos, procedimientos y evidencias deben acompañar
+            una acción institucional o educativa.
+          </p>
+          <div id="cumplimientoContent" class="content-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-mejoramiento">
+        <div class="panel big-panel">
+          <h2>Mejoramiento institucional</h2>
+          <p class="muted">
+            Planes de mejora, metas, responsables y seguimiento de resultados con evidencias y recomendaciones.
+          </p>
+          <div id="mejoramientoContent" class="content-grid"></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-informes">
+        <div class="panel big-panel">
+          <h2>Informes y plantillas institucionales</h2>
+          <div class="report-tools">
+            <label for="reportTemplateSelect">Tipo de informe</label>
+            <select id="reportTemplateSelect"></select>
+            <label for="reportContextInput">Contexto o situación</label>
+            <textarea id="reportContextInput" placeholder="Describe el caso, curso, contexto institucional o evidencia que desea apoyar:"></textarea>
+            <button id="generateReportBtn" class="primary-btn">Generar informe</button>
+          </div>
+          <div id="reportTemplates" class="content-grid compact-grid"></div>
+          <div id="generatedReports" class="report-output"></div>
+        </div>
+      </section>
+
       <section class="view" id="view-traza">
         <div class="panel big-panel">
           <h2>Trazabilidad TRAZA-RIO</h2>
@@ -151,7 +225,7 @@
         <div class="panel big-panel">
           <h2>Búsqueda local</h2>
           <div class="search-box">
-            <input id="searchInput" type="search" placeholder="Buscar requisitos, dominios, evidencia o trazabilidad..." />
+            <input id="searchInput" type="search" placeholder="Buscar requisitos, PEI, convivencia, normas, informes o trazabilidad..." />
             <button id="searchBtn" class="primary-btn">Buscar</button>
           </div>
           <div id="searchResults"></div>
@@ -162,11 +236,11 @@
         <div class="panel big-panel assistant-panel">
           <h2>Asistente local RIO</h2>
           <p class="muted">
-            Este asistente funciona offline con la base local del marco. Responde con contexto,
-            recomendaciones y requisitos relevantes para aulas rurales.
+            Este asistente funciona offline con el contenido institucional local. Ayuda con orientaciones,
+            recomendaciones, redacción y verificación del marco pedagógico y normativo.
           </p>
           <div class="assistant-row">
-            <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debería operar offline el sistema?" />
+            <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debo orientar una falta de convivencia con base en el manual?" />
             <button id="askAssistantBtn" class="primary-btn">Consultar</button>
           </div>
           <div id="assistantOutput" class="assistant-output"></div>
@@ -181,7 +255,7 @@
           </div>
 
           <div class="note-form">
-            <textarea id="noteInput" placeholder="Escribe una nota para la escuela, docente o evidencia de uso..."></textarea>
+            <textarea id="noteInput" placeholder="Escribe una nota, evidencia, seguimiento o registro para la escuela, docente o comunidad educativa..."></textarea>
             <button id="saveNoteBtn" class="primary-btn">Guardar nota</button>
           </div>
 

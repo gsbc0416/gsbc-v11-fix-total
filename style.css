@@ -6,7 +6,7 @@ body {
 }
 
 * { box-sizing: border-box; }
-button, input, textarea { font: inherit; }
+button, input, textarea, select { font: inherit; }
 
 a { color: #7ed4ff; text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -109,7 +109,13 @@ a:hover { text-decoration: underline; }
 }
 
 .status-item,
-.panel {
+.panel,
+.info-card,
+.requirement-card,
+.result-card,
+.note-item,
+.assistant-answer,
+.report-card {
   background: rgba(18, 34, 53, 0.7);
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 18px;
@@ -218,14 +224,25 @@ h1 {
   color: #b8cde5;
 }
 
-.section-grid {
+.section-grid,
+.content-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   margin-top: 14px;
 }
 
-.panel {
+.compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.panel,
+.info-card,
+.requirement-card,
+.result-card,
+.note-item,
+.assistant-answer,
+.report-card {
   padding: 18px 20px;
 }
 
@@ -234,7 +251,8 @@ h1 {
 }
 
 .panel h2,
-.panel h3 {
+.panel h3,
+.info-card h3 {
   margin-top: 0;
 }
 
@@ -340,7 +358,9 @@ ul {
 
 .search-box input,
 .assistant-row input,
-.note-form textarea {
+.note-form textarea,
+.report-tools textarea,
+.report-tools select {
   width: 100%;
   background: rgba(9, 19, 30, 0.8);
   border: 1px solid rgba(148, 163, 184, 0.2);
@@ -351,21 +371,24 @@ ul {
 
 .search-results,
 .note-list,
-.assistant-output {
+.assistant-output,
+.report-output {
   display: grid;
   gap: 12px;
 }
 
 .result-card,
 .note-item,
-.assistant-answer {
+.assistant-answer,
+.report-card {
   background: rgba(10, 20, 32, 0.6);
   border: 1px solid rgba(148, 163, 184, 0.16);
   border-radius: 12px;
   padding: 14px 16px;
 }
 
-.note-form {
+.note-form,
+.report-tools {
   display: grid;
   gap: 12px;
   margin-bottom: 18px;
@@ -389,6 +412,27 @@ textarea {
   margin-bottom: 8px;
 }
 
+.report-tools label {
+  color: #dfeaf9;
+  font-weight: 700;
+}
+
+.compact-card {
+  min-height: 190px;
+}
+
+.small-btn {
+  margin-top: 10px;
+}
+
+.report-card pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  color: #edf6ff;
+  margin: 10px 0 0;
+}
+
 @media (max-width: 980px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -400,7 +444,9 @@ textarea {
 
   .hero,
   .section-grid,
-  .trace-grid {
+  .trace-grid,
+  .content-grid,
+  .compact-grid {
     grid-template-columns: 1fr;
   }
 }
