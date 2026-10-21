@@ -1,941 +1,195 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RIO-CARIBE | Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad</title>
-  <meta name="description" content="RIO-CARIBE es un marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad, con enfoque educativo, sociotécnico y trazabilidad." />
-  <style>
-    :root {
-      --bg: #07111f;
-      --bg-soft: #0d1c2d;
-      --panel: #122235;
-      --panel-2: #1a2f46;
-      --card: #0f1e30;
-      --line: rgba(148, 163, 184, 0.18);
-      --text: #e6eefb;
-      --muted: #a6b7d0;
-      --accent: #3dd9a2;
-      --accent-2: #7ed4ff;
-      --warn: #f7b955;
-      --danger: #f87171;
-      --purple: #a78bfa;
-      --shadow: 0 18px 38px rgba(2, 6, 23, 0.28);
-      --radius: 18px;
-      --max: 1200px;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(61, 217, 162, 0.18), transparent 25%),
-        linear-gradient(180deg, #07111f 0%, #0b1b2d 100%);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    a { color: var(--accent-2); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    main { display: block; }
-    img { max-width: 100%; display: block; }
-    p, li { color: var(--text); }
-    ul { padding-left: 1.2em; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td {
-      border: 1px solid var(--line);
-      padding: 10px 12px;
-      vertical-align: top;
-      text-align: left;
-    }
-    th { background: rgba(148, 163, 184, 0.06); }
-
-    .container {
-      width: min(var(--max), calc(100% - 32px));
-      margin: 0 auto;
-    }
-    .section { padding: 54px 0; }
-    .section-title {
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      margin: 0 0 12px;
-      line-height: 1.15;
-    }
-    .section-title::after {
-      content: "";
-      display: block;
-      width: 88px;
-      height: 3px;
-      margin-top: 12px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    }
-    .section-subtitle {
-      margin-top: 0;
-      color: var(--muted);
-      max-width: 820px;
-    }
-    .badge {
-      display: inline-block;
-      border: 1px solid rgba(61, 217, 162, 0.35);
-      background: rgba(61, 217, 162, 0.08);
-      color: #c8f7df;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(7, 17, 31, 0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      min-height: 72px;
-    }
-    .brand {
-      font-weight: 700;
-      letter-spacing: .04em;
-      color: var(--text);
-    }
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 18px;
-      justify-content: flex-end;
-    }
-    .nav a {
-      color: var(--muted);
-      font-size: 0.96rem;
-      transition: color .2s ease;
-    }
-    .nav a:hover { color: var(--text); }
-
-    .hero {
-      padding: 70px 0 56px;
-      background: linear-gradient(135deg, rgba(12, 24, 41, .9), rgba(8, 18, 31, .8));
-      border-bottom: 1px solid var(--line);
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.4fr .8fr;
-      gap: 28px;
-      align-items: center;
-    }
-    h1 {
-      font-size: clamp(2.5rem, 5vw, 4.2rem);
-      line-height: 1.05;
-      margin: 18px 0 18px;
-      letter-spacing: -0.05em;
-    }
-    .lead {
-      color: var(--muted);
-      font-size: 1.08rem;
-      max-width: 720px;
-    }
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 48px;
-      padding: 0 18px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: rgba(15, 30, 48, 0.8);
-      color: var(--text);
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease;
-    }
-    .btn:hover {
-      transform: translateY(-1px);
-      text-decoration: none;
-      border-color: rgba(125, 212, 255, 0.5);
-      box-shadow: 0 8px 22px rgba(125, 212, 255, 0.12);
-    }
-    .btn:focus-visible {
-      outline: 2px solid var(--accent-2);
-      outline-offset: 3px;
-    }
-    .btn.primary {
-      background: linear-gradient(135deg, var(--accent), #6ce9b5);
-      color: #082113;
-      border: none;
-    }
-
-    .hero-card {
-      background: rgba(18, 34, 53, 0.9);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 18px;
-    }
-    .metric {
-      background: rgba(148, 163, 184, 0.05);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 14px;
-    }
-    .metric strong { display: block; font-size: 1.6rem; }
-    .metric span { color: var(--muted); font-size: .9rem; }
-
-    .grid-2, .grid-3 {
-      display: grid;
-      gap: 20px;
-    }
-    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-    .card {
-      background: rgba(18, 34, 53, 0.75);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-    .card h3 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 1.15rem;
-    }
-    .muted { color: var(--muted); }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-    .pill {
-      background: rgba(167, 139, 250, 0.1);
-      border: 1px solid rgba(167, 139, 250, 0.25);
-      border-radius: 999px;
-      padding: 7px 10px;
-      color: #e5dfff;
-      font-size: .8rem;
-      font-weight: 600;
-    }
-
-    .timeline {
-      display: grid;
-      gap: 16px;
-    }
-    .step {
-      display: grid;
-      grid-template-columns: 46px 1fr;
-      gap: 12px;
-      align-items: start;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-    .step:last-child { border-bottom: none; }
-    .step-index {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: rgba(61, 217, 162, 0.12);
-      border: 1px solid rgba(61, 217, 162, 0.25);
-      color: #c5f9e5;
-      font-weight: 700;
-    }
-
-    .requirements-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .filter-btn {
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: rgba(15, 30, 48, 0.7);
-      color: var(--text);
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .filter-btn.active {
-      background: linear-gradient(135deg, rgba(61, 217, 162, 0.2), rgba(125, 212, 255, 0.18));
-      border-color: rgba(125, 212, 255, 0.35);
-    }
-    .req-table-wrap {
-      overflow-x: auto;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(14, 24, 39, 0.6);
-    }
-    .req-card {
-      display: none;
-      padding: 0;
-    }
-    .req-card.active { display: block; }
-
-    .tipo-tag {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 8px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: .02em;
-      border: 1px solid transparent;
-    }
-    .tag-f { background: rgba(61, 217, 162, 0.08); border-color: rgba(61, 217, 162, 0.25); color: #d5fbe7; }
-    .tag-nf { background: rgba(125, 212, 255, 0.08); border-color: rgba(125, 212, 255, 0.25); color: #dff6ff; }
-    .tag-sp { background: rgba(167, 139, 250, 0.1); border-color: rgba(167, 139, 250, 0.25); color: #efe4ff; }
-
-    .legal-box {
-      background: linear-gradient(135deg, rgba(247, 185, 85, 0.08), rgba(255, 255, 255, 0.01));
-      border: 1px solid rgba(247, 185, 85, 0.3);
-      border-radius: var(--radius);
-      padding: 20px;
-      color: #f8e7b1;
-    }
-
-    .footer {
-      padding: 32px 0 68px;
-      border-top: 1px solid var(--line);
-      background: rgba(10, 19, 31, 0.72);
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.3fr .8fr .8fr;
-      gap: 20px;
-    }
-    .tiny { font-size: .88rem; color: var(--muted); }
-
-    .cookie-banner {
-      position: fixed;
-      left: 16px;
-      right: 16px;
-      bottom: 16px;
-      background: rgba(10, 19, 31, 0.96);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      box-shadow: var(--shadow);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      padding: 18px 18px;
-      z-index: 100;
-    }
-    .cookie-banner.hidden { display: none; }
-    .cookie-actions { display: flex; gap: 12px; }
-
-    @media (max-width: 980px) {
-      .hero-grid, .grid-2, .grid-3, .footer-grid {
-        grid-template-columns: 1fr;
-      }
-      .cookie-banner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-    @media (max-width: 640px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 16px 0;
-      }
-      .nav {
-        justify-content: flex-start;
-      }
-      .cta-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="container topbar">
-      <div class="brand">RIO-CARIBE</div>
-      <nav class="nav" aria-label="Navegación principal">
-        <a href="#inicio">Inicio</a>
-        <a href="#abstract">Resumen</a>
-        <a href="#objetivos">Objetivos</a>
-        <a href="#framework">Marco</a>
-        <a href="#arquitectura">Arquitectura</a>
-        <a href="#requisitos">Requisitos</a>
-        <a href="#traza">Trazabilidad</a>
-        <a href="#legal">Legal</a>
-      </nav>
-    </div>
-  </header>
-
-  <main id="app"></main>
-
-  <footer class="footer">
-    <div class="container footer-grid">
-      <div>
-        <div class="brand">RIO-CARIBE</div>
-        <p class="tiny">Marco de ingeniería de requisitos para IA generativa en educación rural.</p>
-      </div>
-      <div>
-        <h4>Secciones</h4>
-        <p class="tiny"><a href="#framework">Marco</a></p>
-        <p class="tiny"><a href="#requisitos">Requisitos</a></p>
-        <p class="tiny"><a href="#traza">Trazabilidad</a></p>
-      </div>
-      <div>
-        <h4>Documentación</h4>
-        <p class="tiny"><a href="#legal">Aviso legal</a></p>
-        <p class="tiny"><a href="#referencias">Referencias</a></p>
-      </div>
-    </div>
-  </footer>
-
-  <div class="cookie-banner" id="cookieBanner">
-    <div>
-      <strong>Uso de cookies</strong><br>
-      Este sitio puede utilizar cookies para mejorar la experiencia, medir uso y ofrecer una navegación más útil.
-    </div>
-    <div class="cookie-actions">
-      <button class="btn primary" id="acceptCookies">Aceptar</button>
-      <button class="btn" id="closeCookies">Cerrar</button>
-    </div>
-  </div>
-
-  <script>
-    const articleData = {
-      title: 'RIO-CARIBE',
-      tagline: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad',
-      heroBadges: ['Educación rural · IA generativa · offline', 'Offline-first', 'Trazabilidad C→N→R→S→F→A→I→E', 'Educación rural', 'Gobernanza docente'],
-      summary: {
-        intro: 'Marco de ingeniería de requisitos para IA generativa en escuelas rurales sin conectividad. Un enfoque sociotécnico para transformar las restricciones territoriales, energéticas, pedagógicas y de infraestructura en soluciones sostenibles y verificables.',
-        executive: 'La incorporación de la inteligencia artificial generativa (IAG) en contextos educativos rurales enfrenta restricciones severas de infraestructura, energía, conectividad y brecha digital. RIO-CARIBE propone un marco para transformar esas condiciones en requisitos explícitos, auditables y alineados con la práctica docente.',
-        argument: 'RIO-CARIBE articula infraestructura local, IA en el borde y mediación docente para diseñar sistemas educativos resilientes y sostenibles.',
-        keywords: ['computación en el borde', 'educación rural', 'IA generativa', 'ingeniería de requisitos', 'modelos de lenguaje pequeños', 'trazabilidad']
-      },
-      metrics: [
-        { value: '10', label: 'Dominios de diseño' },
-        { value: '30', label: 'Requisitos' },
-        { value: '3', label: 'Capas de arquitectura' },
-        { value: '12', label: 'Condiciones de falsación' }
-      ],
-      objectives: {
-        general: 'Diseñar y fundamentar el marco conceptual RIO-CARIBE para transformar condiciones territoriales y educativas en especificaciones técnicas y pedagógicas verificables.',
-        specifics: [
-          'Caracterizar contextos rurales del Caribe colombiano.',
-          'Definir dominios y requisitos.',
-          'Diseñar arquitectura offline/local.',
-          'Formalizar trazabilidad TRAZA-RIO.',
-          'Establecer esquema de auditoría RIO-QA.'
-        ],
-        question: '¿Cómo puede un marco de ingeniería de requisitos transformar condiciones territoriales y educativas de contextos rurales en especificaciones funcionales, no funcionales y sociopedagógicas verificables?'
-      },
-      domains: [
-        { code: 'R-TEC', name: 'Infraestructura y tecnología', description: 'Operación offline-first, almacenamiento local, sincronización diferida.' },
-        { code: 'R-IA', name: 'IA local', description: 'Selección de SLMs, adaptabilidad y verificación de salidas.' },
-        { code: 'R-PC', name: 'Pedagogía y currículo', description: 'Agencia docente, andamiaje curricular y cuestionamiento crítico.' },
-        { code: 'R-TLA', name: 'Territorio, lenguaje, accesibilidad', description: 'Contextualización sociocultural del Caribe y accesibilidad.' },
-        { code: 'R-ENE', name: 'Energía y resiliencia', description: 'Gestión energética y continuidad operativa.' },
-        { code: 'R-ECO', name: 'Economía y sostenibilidad', description: 'Coste total de propiedad y viabilidad financiera.' },
-        { code: 'R-MAN', name: 'Mantenimiento', description: 'Autodiagnóstico y restauración local.' },
-        { code: 'R-SP', name: 'Seguridad y privacidad', description: 'Minimización de datos, mínimo privilegio y aislamiento.' },
-        { code: 'R-GOB', name: 'Gobernanza', description: 'Rendición de cuentas y prohibición de decisiones IA autónomas.' },
-        { code: 'R-EVA', name: 'Evaluación y evidencia', description: 'Vínculo entre actividades y evidencia digital.' }
-      ],
-      sociopedagogicalPrinciples: [
-        'Preservación de la mediación del docente.',
-        'Verificación crítica de salidas generadas por IA.',
-        'Protección de menores y minimización de datos.',
-        'Alineación curricular explícita.',
-        'Contextualización regional y cultural.',
-        'Responsabilidad institucional y trazabilidad.'
-      ],
-      architecture: [
-        {
-          title: 'L1. Infraestructura local resiliente',
-          items: ['Servidor local de bajo consumo.', 'Almacenamiento local cifrado.', 'Red LAN y energía de respaldo.', 'Autodiagnóstico y restauración.']
-        },
-        {
-          title: 'L2. Inteligencia educativa local',
-          items: ['SLMs cuantizados y adaptados.', 'Motor de inferencia local.', 'RAG local con contenido curricular.', 'Filtros de contenido y validación.']
-        },
-        {
-          title: 'L3. Mediación pedagógico-territorial',
-          items: ['Interfaz adaptativa al contexto.', 'Aprobación docente RBAC.', 'Prompts contextualizados.', 'Cuaderno digital de evidencias.']
-        }
-      ],
-      methodology: [
-        {
-          title: 'Revisión documental',
-          text: 'Selección de fuentes sobre educación rural, IAG, SLMs, edge computing, ingeniería de requisitos y directrices éticas.'
-        },
-        {
-          title: 'Marco normativo',
-          text: 'Base en ISO/IEC/IEEE 29148 y 15288, además de principios educativos y de gobernanza.'
-        },
-        {
-          title: 'Modelado de requisitos',
-          text: 'Transformación de condiciones territoriales y pedagógicas en requisitos funcionales, no funcionales y sociopedagógicos.'
-        },
-        {
-          title: 'Validación futura',
-          text: 'Diseño de protocolo Delphi, auditoría RIO-QA y condiciones de falsación empírica para prueba en aula.'
-        }
-      ],
-      requirements: [
-        { id: 'R-TEC-01', description: 'El sistema debe ejecutar todas las funciones esenciales de aprendizaje en la red LAN local sin depender de Internet.', type: 'F' },
-        { id: 'R-TEC-02', description: 'El sistema no debe depender de APIs externas o SaaS para funcionar de forma básica.', type: 'NF' },
-        { id: 'R-TEC-03', description: 'Debe proporcionar almacenamiento local temporal cifrado para datos autorizados.', type: 'F' },
-        { id: 'R-TEC-04', description: 'Debe ejecutar sincronización diferida entre periodos de conectividad estable.', type: 'F' },
-        { id: 'R-IA-01', description: 'El modelo debe seleccionarse según cuantización, RAM y capacidad del hardware.', type: 'NF' },
-        { id: 'R-IA-02', description: 'El módulo debe generar recursos alineados con objetivos curriculares predefinidos.', type: 'F' },
-        { id: 'R-IA-03', description: 'Las salidas deben pasar por filtro local antes de mostrarse.', type: 'SP' },
-        { id: 'R-PC-01', description: 'Debe diferenciar claramente el texto generado por el estudiante y el generado por IA.', type: 'SP' },
-        { id: 'R-PC-02', description: 'Debe incorporar preguntas obligatorias de verificación crítica.', type: 'SP' },
-        { id: 'R-PC-03', description: 'Se exige aprobación y firma explícita del docente para evaluaciones o cierres de unidad.', type: 'SP' },
-        { id: 'R-PC-04', description: 'Las actividades deben vincularse a competencias curriculares oficiales.', type: 'SP' },
-        { id: 'R-PC-05', description: 'El uso de IA debe justificarse por valor pedagógico y no como fin en sí mismo.', type: 'SP' },
-        { id: 'R-TLA-01', description: 'Los prompts base deben incluir elementos socioculturales del Caribe colombiano.', type: 'SP' },
-        { id: 'R-TLA-02', description: 'El docente debe poder personalizar contextos específicos de la comunidad rural.', type: 'F' },
-        { id: 'R-TLA-03', description: 'La interfaz y el lenguaje deben adaptarse al nivel de lectoescritura y grado escolar.', type: 'F' },
-        { id: 'R-TLA-04', description: 'Debe cumplir con pautas de accesibilidad visual y cognitiva.', type: 'SP' },
-        { id: 'R-ENE-01', description: 'Debe monitorizar el consumo energético y ajustar potencia de cómputo.', type: 'NF' },
-        { id: 'R-ENE-02', description: 'Ante caídas del sistema eléctrico debe priorizar funciones esenciales y guardar evidencia.', type: 'NF' },
-        { id: 'R-ECO-01', description: 'La arquitectura debe mantener el TCO dentro de criterios sostenibles para escuelas rurales.', type: 'F' },
-        { id: 'R-ECO-02', description: 'Debe permitir comparar configuraciones de hardware/software con criterios económicos.', type: 'NF' },
-        { id: 'R-MAN-01', description: 'Debe incluir manuales e interfaces de autodiagnóstico ejecutables por docentes.', type: 'NF' },
-        { id: 'R-MAN-02', description: 'Debe incluir scripts de restauración rápida a partir de USB.', type: 'NF' },
-        { id: 'R-SP-01', description: 'Debe implementar autenticación y autorización basada en roles RBAC.', type: 'F' },
-        { id: 'R-SP-02', description: 'Debe aplicar mínimo privilegio sobre carpetas y bases de datos locales.', type: 'F' },
-        { id: 'R-SP-03', description: 'Debe prohibir recolección o transmisión de datos personales identificables de menores.', type: 'NF' },
-        { id: 'R-GOB-01', description: 'Debe bloquear funciones que deleguen decisiones disciplinarias o de reprobación a la IA.', type: 'SP' },
-        { id: 'R-GOB-02', description: 'Debe mantener registros de auditoría inalterables sobre interacciones con la IA.', type: 'SP' },
-        { id: 'R-EVA-01', description: 'Los instrumentos de evaluación deben alinearse directamente con indicadores de aprendizaje.', type: 'SP' },
-        { id: 'R-EVA-02', description: 'Las evidencias digitales deben guardar trazabilidad completa con los requisitos.', type: 'SP' },
-        { id: 'R-TRA-01', description: 'Debe garantizar la integridad bidireccional de la cadena de trazabilidad TRAZA-RIO.', type: 'SP' }
-      ],
-      traceability: {
-        chain: 'C→N→R→S→F→A→I→E',
-        returnChain: 'E→I→A→F→S→R→N→C',
-        example: [
-          { label: 'C-01', text: 'interrupción eléctrica y ausencia de conectividad.' },
-          { label: 'N-01', text: 'continuidad del aprendizaje sin depender de red pública.' },
-          { label: 'R-TEC-01', text: 'ejecución 100% offline en LAN local.' },
-          { label: 'F-01', text: 'microservicio de IA local ejecutándose offline.' },
-          { label: 'A-01', text: 'resolución cooperativa de un problema ambiental.' },
-          { label: 'E-01', text: 'registro digital del trabajo y evaluación.' }
-        ],
-        indicators: [
-          { name: 'CT', formula: 'CT = (Rt / R_total) × 100', target: '100%' },
-          { name: 'TI_r', formula: '1 si traza completa, 0 si hay ruptura', target: 'sin rupturas' },
-          { name: 'CE', formula: 'CE = (Re / R_evaluados) × 100', target: 'máxima evidencia' },
-          { name: 'CV', formula: 'CV = (Rv / R_probados) × 100', target: 'verificación completa' },
-          { name: 'CAP', formula: 'CAP = (Ac / A_totales) × 100', target: 'alineación curricular' },
-          { name: 'TCO', formula: 'C_adquisición + energía + mantenimiento', target: '≤ $600 USD/aula' }
-        ]
-      },
-      falsification: [
-        'El sistema pierde la capacidad de ejecutar funciones esenciales si se interrumpe la conexión a internet.',
-        'El consumo energético excede la capacidad del sistema de respaldo.',
-        'El modelo local genera alucinaciones o errores conceptuales superiores al umbral aceptable.',
-        'El sistema emite contenido inapropiado o violatorio de normas éticas.',
-        'Se demuestra filtración de datos personales identificables de menores.',
-        'El mantenimiento o restauración requiere intervención de un ingeniero especialista.',
-        'La IA no guarda correspondencia con los objetivos del currículo.',
-        'La contextualización territorial genera distracciones cognitivas o distorsiones conceptuales.',
-        'El Costo Total de Propiedad resulta inviable.',
-        'La latencia del modelo local supera 8 segundos por respuesta.',
-        'El sistema toma decisiones evaluativas o disciplinarias sin la firma explícita del docente.',
-        'Se identifican rupturas injustificadas en TRAZA-RIO superiores al 10%.'
-      ],
-      legal: {
-        intro: 'Este sitio presenta un marco conceptual y una propuesta de investigación aplicada a entornos educativos. No sustituye la asesoría jurídica profesional ni la revisión de un abogado.',
-        notices: [
-          { title: 'Aviso de privacidad', text: 'La información que se reciba a través del sitio, si aplica, deberá tratarse conforme a la Ley 1581 de 2012, el Decreto 1377 de 2013 y demás normas vigentes en Colombia.' },
-          { title: 'Política de cookies', text: 'El sitio puede utilizar cookies para mejorar la experiencia del usuario, medir tráfico y ofrecer personalización básica.' }
-        ]
-      },
-      references: [
-        'Marzano, D. (2026). Generative AI in teaching and learning processes at the K-12 level.',
-        'Yang, X. (2026). Rural high school zero-cost offline generative AI framework.',
-        'Aguilera et al. (2026). Offline technology for rural AI literacy.',
-        'Brito et al. (2026). Uso de la IAG para apoyar la enseñanza del Conafe.',
-        'Cheng et al. (2026). Generative AI for requirements engineering.',
-        'Tan et al. (2025). Aligning pedagogy with generative AI.',
-        'Ferreira-Santos & Pombo (2026). Requirements engineering and traceability.',
-        'Jaramillo Neira et al. (2025). Rural education in Colombia.',
-        'Serrano-Ardila et al. (2026). Digital integration in rural education.',
-        'UNESCO (2023). Guidance for generative AI in education and research.',
-        'ISO/IEC/IEEE 29148:2018.',
-        'ISO/IEC/IEEE 15288:2023.'
-      ]
-    };
-
-    const typeColors = { F: 'tag-f', NF: 'tag-nf', SP: 'tag-sp' };
-
-    function renderMetricCard(metric) {
-      return `
-        <div class="metric">
-          <strong>${metric.value}</strong>
-          <span>${metric.label}</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <title>RIO-CARIBE | Proyecto educativo offline para escuelas rurales</title>
+    <meta
+      name="description"
+      content="RIO-CARIBE es un proyecto offline-first para escuelas rurales en Colombia: requisitos, trazabilidad, buscador local y asistente IA guiado por el marco educativo propuesto."
+    />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand-wrap">
+          <div class="brand-mark">R</div>
+          <div>
+            <div class="brand">RIO-CARIBE</div>
+            <small>Proyecto offline para educación rural</small>
+          </div>
         </div>
-      `;
-    }
 
-    function renderPills(items) {
-      return items.map(item => `<span class="pill">${item}</span>`).join('');
-    }
+        <nav class="nav" aria-label="Navegación principal">
+          <button class="nav-btn active" data-view="inicio">Inicio</button>
+          <button class="nav-btn" data-view="requisitos">Requisitos</button>
+          <button class="nav-btn" data-view="traza">Trazabilidad</button>
+          <button class="nav-btn" data-view="busqueda">Búsqueda</button>
+          <button class="nav-btn" data-view="asistente">Asistente</button>
+          <button class="nav-btn" data-view="evidencias">Evidencias</button>
+        </nav>
+      </div>
+    </header>
 
-    function renderRequirementsTable(items) {
-      const rows = items.map(item => `
-        <tr>
-          <td>${item.id}</td>
-          <td>${item.description}</td>
-          <td><span class="tipo-tag ${typeColors[item.type]}">${item.type}</span></td>
-        </tr>
-      `).join('');
+    <main class="container app-shell">
+      <aside class="status-panel" id="statusPanel">
+        <div class="status-item online" id="connectionStatus">
+          <span class="dot"></span>
+          <span id="networkLabel">Conectado</span>
+        </div>
+        <div class="status-item">
+          <span>Última sincronización</span>
+          <strong id="lastSyncLabel">Nunca</strong>
+        </div>
+        <div class="status-item">
+          <span>Base local</span>
+          <strong>Activa</strong>
+        </div>
+      </aside>
 
-      return `
-        <div class="req-table-wrap">
+      <section class="view active" id="view-inicio">
+        <div class="hero">
+          <div>
+            <span class="badge">Educación rural · IA · Offline-first</span>
+            <h1>RIO-CARIBE</h1>
+            <p class="lead">
+              Plataforma educativa para escuelas rurales en Colombia que opera sin conexión,
+              guarda evidencias localmente, permite búsqueda y ofrece guía basada en el marco
+              RIO-CARIBE para requisitos, trazabilidad y uso responsable de IA.
+            </p>
+            <div class="cta-row">
+              <button class="primary-btn" data-view="requisitos">Ver requisitos</button>
+              <button class="ghost-btn" data-view="asistente">Probar asistente</button>
+            </div>
+          </div>
+
+          <div class="panel highlight">
+            <h3>Resumen del marco</h3>
+            <p>
+              El sistema organiza la problemática territorial, pedagógica y tecnológica en un
+              marco verificable, con trazabilidad, dominio de requisitos y evaluación continua.
+            </p>
+            <div class="metric-grid">
+              <div class="metric">
+                <strong>10</strong>
+                <span>Dominios</span>
+              </div>
+              <div class="metric">
+                <strong>30</strong>
+                <span>Requisitos</span>
+              </div>
+              <div class="metric">
+                <strong>3</strong>
+                <span>Capas</span>
+              </div>
+              <div class="metric">
+                <strong>12</strong>
+                <span>Falsaciones</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-grid">
+          <article class="panel">
+            <h3>Objetivo general</h3>
+            <p id="objectiveText"></p>
+          </article>
+
+          <article class="panel">
+            <h3>Objetivos específicos</h3>
+            <ul id="specificObjectives"></ul>
+          </article>
+
+          <article class="panel">
+            <h3>Principios pedagógicos</h3>
+            <ul id="principlesList"></ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="view" id="view-requisitos">
+        <div class="toolbar">
+          <h2>Requisitos</h2>
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="F">Funcionales</button>
+            <button class="filter-btn" data-filter="NF">No funcionales</button>
+            <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
+          </div>
+        </div>
+        <div id="requirementsContainer"></div>
+      </section>
+
+      <section class="view" id="view-traza">
+        <div class="panel big-panel">
+          <h2>Trazabilidad TRAZA-RIO</h2>
+          <p class="muted" id="traceabilityChain"></p>
+          <div class="trail-pills" id="trailPills"></div>
+          <div class="trace-grid" id="traceExample"></div>
+        </div>
+        <div class="panel big-panel">
+          <h3>Indicadores clave</h3>
           <table>
             <thead>
-              <tr><th>ID</th><th>Descripción</th><th>Tipo</th></tr>
+              <tr>
+                <th>Indicador</th>
+                <th>Fórmula</th>
+                <th>Meta</th>
+              </tr>
             </thead>
-            <tbody>${rows}</tbody>
+            <tbody id="indicatorsBody"></tbody>
           </table>
         </div>
-      `;
-    }
+      </section>
 
-    function renderApp() {
-      const app = document.getElementById('app');
-
-      app.innerHTML = `
-        <section id="inicio" class="hero">
-          <div class="container hero-grid">
-            <div>
-              <span class="badge">${articleData.heroBadges[0]}</span>
-              <h1>${articleData.title}</h1>
-              <p class="lead">${articleData.summary.intro}</p>
-              <div class="cta-row">
-                <a class="btn primary" href="#framework">Ver marco</a>
-                <a id="pdfLink" class="btn" href="/c_aribe.pdf" target="_blank" rel="noopener noreferrer">Ver artículo</a>
-              </div>
-              <div class="pill-row">
-                ${renderPills(articleData.heroBadges.slice(1))}
-              </div>
-            </div>
-
-            <aside class="hero-card" aria-label="Resumen de resultados">
-              <h3>Resumen del marco</h3>
-              <p class="muted">${articleData.summary.argument}</p>
-              <div class="metric-grid">
-                ${articleData.metrics.map(renderMetricCard).join('')}
-              </div>
-            </aside>
+      <section class="view" id="view-busqueda">
+        <div class="panel big-panel">
+          <h2>Búsqueda local</h2>
+          <div class="search-box">
+            <input id="searchInput" type="search" placeholder="Buscar requisitos, dominios, evidencia o trazabilidad..." />
+            <button id="searchBtn" class="primary-btn">Buscar</button>
           </div>
-        </section>
+          <div id="searchResults"></div>
+        </div>
+      </section>
 
-        <section id="abstract" class="section">
-          <div class="container">
-            <h2 class="section-title">Resumen</h2>
-            <div class="grid-2">
-              <div class="card">
-                <h3>Resumen ejecutivo</h3>
-                <p>${articleData.summary.executive}</p>
-                <p>${articleData.summary.argument}</p>
-              </div>
-              <div class="card">
-                <h3>Palabras clave</h3>
-                <div class="pill-row">${renderPills(articleData.summary.keywords)}</div>
-              </div>
-            </div>
+      <section class="view" id="view-asistente">
+        <div class="panel big-panel assistant-panel">
+          <h2>Asistente local RIO</h2>
+          <p class="muted">
+            Este asistente funciona offline con la base local del marco. Responde con contexto,
+            recomendaciones y requisitos relevantes para aulas rurales.
+          </p>
+          <div class="assistant-row">
+            <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debería operar offline el sistema?" />
+            <button id="askAssistantBtn" class="primary-btn">Consultar</button>
           </div>
-        </section>
+          <div id="assistantOutput" class="assistant-output"></div>
+        </div>
+      </section>
 
-        <section id="objetivos" class="section">
-          <div class="container">
-            <h2 class="section-title">Objetivos</h2>
-            <div class="grid-3">
-              <div class="card">
-                <h3>Objetivo general</h3>
-                <p>${articleData.objectives.general}</p>
-              </div>
-              <div class="card">
-                <h3>Objetivos específicos</h3>
-                <ul>
-                  ${articleData.objectives.specifics.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-              </div>
-              <div class="card">
-                <h3>Pregunta guía</h3>
-                <p>${articleData.objectives.question}</p>
-              </div>
-            </div>
+      <section class="view" id="view-evidencias">
+        <div class="panel big-panel">
+          <div class="toolbar evidence-toolbar">
+            <h2>Evidencias y notas</h2>
+            <button id="syncBtn" class="ghost-btn">Sincronizar</button>
           </div>
-        </section>
 
-        <section id="framework" class="section">
-          <div class="container">
-            <h2 class="section-title">Marco conceptual RIO-CARIBE</h2>
-            <p class="section-subtitle">El marco se fundamenta en cuatro pilares: taxonomía de dominios, arquitectura de tres capas, principio offline-first y trazabilidad bidireccional.</p>
-
-            <div class="grid-2">
-              <div class="card">
-                <h3>1. Taxonomía de dominios</h3>
-                <table>
-                  <thead>
-                    <tr><th>Código</th><th>Dominio</th><th>Descripción</th></tr>
-                  </thead>
-                  <tbody>
-                    ${articleData.domains.map(item => `
-                      <tr>
-                        <td>${item.code}</td>
-                        <td>${item.name}</td>
-                        <td>${item.description}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="card">
-                <h3>2. Requisitos sociopedagógicos</h3>
-                <p>Los requisitos SP codifican principios pedagógicos, éticos y comunitarios directamente en la especificación del sistema para que puedan ser verificados técnicamente.</p>
-                <ul>
-                  ${articleData.sociopedagogicalPrinciples.map(item => `<li>${item}</li>`).join('')}
-                </ul>
-              </div>
-            </div>
+          <div class="note-form">
+            <textarea id="noteInput" placeholder="Escribe una nota para la escuela, docente o evidencia de uso..."></textarea>
+            <button id="saveNoteBtn" class="primary-btn">Guardar nota</button>
           </div>
-        </section>
 
-        <section id="arquitectura" class="section">
-          <div class="container">
-            <h2 class="section-title">Arquitectura sociotécnica de tres capas</h2>
-            <div class="grid-3">
-              ${articleData.architecture.map(layer => `
-                <div class="card">
-                  <h3>${layer.title}</h3>
-                  <ul>
-                    ${layer.items.map(item => `<li>${item}</li>`).join('')}
-                  </ul>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </section>
+          <div id="notesList"></div>
+        </div>
+      </section>
+    </main>
 
-        <section id="metodologia" class="section">
-          <div class="container">
-            <h2 class="section-title">Metodología</h2>
-            <div class="timeline">
-              ${articleData.methodology.map((step, index) => `
-                <div class="step">
-                  <div class="step-index">${index + 1}</div>
-                  <div>
-                    <h3>${step.title}</h3>
-                    <p>${step.text}</p>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </section>
-
-        <section id="requisitos" class="section">
-          <div class="container">
-            <h2 class="section-title">Matriz de requisitos</h2>
-            <p class="section-subtitle">Se consolidan 30 requisitos en tres categorías: funcionales, no funcionales y sociopedagógicos.</p>
-
-            <div class="requirements-filters" aria-label="Filtros de requisitos">
-              <button class="filter-btn active" data-filter="all">Todos</button>
-              <button class="filter-btn" data-filter="F">Funcionales</button>
-              <button class="filter-btn" data-filter="NF">No funcionales</button>
-              <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
-            </div>
-
-            <div class="req-card active" data-card="all">
-              ${renderRequirementsTable(articleData.requirements)}
-            </div>
-            <div class="req-card" data-card="F">
-              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'F'))}
-            </div>
-            <div class="req-card" data-card="NF">
-              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'NF'))}
-            </div>
-            <div class="req-card" data-card="SP">
-              ${renderRequirementsTable(articleData.requirements.filter(item => item.type === 'SP'))}
-            </div>
-          </div>
-        </section>
-
-        <section id="traza" class="section">
-          <div class="container">
-            <h2 class="section-title">Trazabilidad TRAZA-RIO</h2>
-            <p class="section-subtitle">Cadena bidireccional ${articleData.traceability.chain} y retorno ${articleData.traceability.returnChain}.</p>
-            <div class="card">
-              <p><strong>TRAZA-RIO:</strong> Condición territorial → Necesidad educativa → Requisito especificado → Sistema / Capa → Función de software → Actividad pedagógica → Indicador → Evidencia.</p>
-              <div class="pill-row">
-                ${['C','N','R','S','F','A','I','E'].map(item => `<span class="pill">${item}</span>`).join('')}
-              </div>
-            </div>
-
-            <div class="grid-2" style="margin-top: 20px;">
-              <div class="card">
-                <h3>Ejemplo de trazabilidad</h3>
-                ${articleData.traceability.example.map(item => `<p><strong>${item.label}:</strong> ${item.text}</p>`).join('')}
-              </div>
-
-              <div class="card">
-                <h3>Indicadores</h3>
-                <table>
-                  <thead><tr><th>Indicador</th><th>Fórmula</th><th>Meta</th></tr></thead>
-                  <tbody>
-                    ${articleData.traceability.indicators.map(ind => `
-                      <tr>
-                        <td>${ind.name}</td>
-                        <td>${ind.formula}</td>
-                        <td>${ind.target}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="falsacion" class="section">
-          <div class="container">
-            <h2 class="section-title">Condiciones de falsación empírica</h2>
-            <div class="req-table-wrap">
-              <table>
-                <thead><tr><th>Código</th><th>Condición</th></tr></thead>
-                <tbody>
-                  ${articleData.falsification.map((condition, index) => `
-                    <tr><td>F-${String(index + 1).padStart(2, '0')}</td><td>${condition}</td></tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section id="legal" class="section">
-          <div class="container">
-            <h2 class="section-title">Aclaraciones legales y de uso</h2>
-            <div class="legal-box">
-              <p>${articleData.legal.intro}</p>
-            </div>
-
-            <div class="grid-2" style="margin-top: 20px;">
-              ${articleData.legal.notices.map(item => `
-                <div class="card">
-                  <h3>${item.title}</h3>
-                  <p>${item.text}</p>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </section>
-
-        <section id="referencias" class="section">
-          <div class="container">
-            <h2 class="section-title">Referencias</h2>
-            <div class="card">
-              <ol>
-                ${articleData.references.map(ref => `<li>${ref}</li>`).join('')}
-              </ol>
-            </div>
-          </div>
-        </section>
-      `;
-
-      const filterButtons = document.querySelectorAll('.filter-btn');
-      const reqCards = document.querySelectorAll('.req-card');
-
-      filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterButtons.forEach(b => b.classList.toggle('active', b === btn));
-          const filter = btn.dataset.filter;
-          reqCards.forEach(card => {
-            const show = filter === 'all' ? true : card.dataset.card === filter;
-            card.classList.toggle('active', show);
-          });
-        });
-      });
-    }
-
-    renderApp();
-
-    const resolvePdfUrl = () => {
-      const base = window.location.origin;
-      const path = '/c_aribe.pdf';
-      return `${base}${path}`;
-    };
-
-    const pdfLink = document.getElementById('pdfLink');
-    if (pdfLink) {
-      pdfLink.href = resolvePdfUrl();
-    }
-
-    const cookieBanner = document.getElementById('cookieBanner');
-    const acceptBtn = document.getElementById('acceptCookies');
-    const closeBtn = document.getElementById('closeCookies');
-
-    const canUseLocalStorage = () => {
-      try {
-        const key = '__rio_storage_test__';
-        localStorage.setItem(key, '1');
-        localStorage.removeItem(key);
-        return true;
-      } catch {
-        return false;
-      }
-    };
-
-    if (cookieBanner && canUseLocalStorage()) {
-      const storedConsent = localStorage.getItem('rioCookieConsent');
-      if (storedConsent === 'accepted') {
-        cookieBanner.classList.add('hidden');
-      }
-
-      const dismissBanner = () => {
-        cookieBanner.classList.add('hidden');
-        localStorage.setItem('rioCookieConsent', 'accepted');
-      };
-
-      acceptBtn?.addEventListener('click', dismissBanner);
-      closeBtn?.addEventListener('click', dismissBanner);
-    } else if (cookieBanner) {
-      cookieBanner.classList.add('hidden');
-    }
-  </script>
-</body>
+    <script src="./app.js"></script>
+  </body>
 </html>
