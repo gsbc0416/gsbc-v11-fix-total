@@ -14,6 +14,26 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
+    <div id="app-header" class="app-header"></div>
+
+    <div id="login-screen" class="login-screen" aria-label="Ingreso al sistema">
+      <h2>GSBC Nacional - Ingreso Real</h2>
+      <input id="nombre_real" placeholder="Nombre real Ej: Carlos Ariza" />
+      <select id="rol">
+        <option>Estudiante</option>
+        <option>Docente</option>
+        <option>Rector</option>
+        <option>Admin</option>
+      </select>
+      <select id="departamento_real">
+        <option selected>Cesar</option>
+      </select>
+      <select id="municipio_real">
+        <option selected>Valledupar</option>
+      </select>
+      <button id="btnEntrar">Entrar</button>
+    </div>
+
     <header class="topbar">
       <div class="container topbar-inner">
         <div class="brand-wrap">
@@ -284,26 +304,5 @@
 
     <script src="./app.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script type="module" src="app.js"></script>
-
-    <div id="login-screen" class="login-screen">
-      <h2>GSBC Nacional - Ingreso Real</h2>
-      <input id="nombre_real" placeholder="Nombre real Ej: Carlos Ariza" />
-      <select id="rol">
-        <option>Estudiante</option>
-        <option>Docente</option>
-        <option>Rector</option>
-        <option>Admin</option>
-      </select>
-      <select id="departamento_real">
-        <option selected>Cesar</option>
-      </select>
-      <select id="municipio_real">
-        <option selected>Valledupar</option>
-      </select>
-      <button id="btnEntrar">Entrar</button>
-    </div>
-
-    <div id="app-header" class="app-header"></div>
   </body>
 </html>
