@@ -1,0 +1,3 @@
+name = "gsbc-v11-fix-total"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
