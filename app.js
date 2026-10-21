@@ -14,6 +14,12 @@ const appData = {
     'Se prioriza la alineación con el PEI, los proyectos curriculares y los procedimientos institucionales.',
     'La solución debe funcionar sin internet y sincronizarse de forma segura cuando vuelva la conectividad.'
   ],
+  metrics: [
+    { value: '12', label: 'Normas clave' },
+    { value: '05', label: 'Módulos' },
+    { value: '04', label: 'Flujos docentes' },
+    { value: '100%', label: 'Offline base' }
+  ],
   requirements: [
     { id: 'R-TEC-01', description: 'El sistema debe ejecutar las funciones esenciales del aula en la red local sin depender de Internet.', type: 'F' },
     { id: 'R-TEC-02', description: 'No debe depender de APIs externas o SaaS para las funciones básicas del proyecto.', type: 'NF' },
@@ -188,7 +194,7 @@ const appData = {
           'PEI alineado',
           'Manual de convivencia vigente',
           'Registro de decisiones y responsables',
-          'Evidencias y fechas' 
+          'Evidencias y fechas'
         ]
       },
       {
@@ -198,7 +204,7 @@ const appData = {
           'Objetivo claro',
           'Competencia o estándar relacionado',
           'Seguimiento de avances',
-          'Acompañamiento docente' 
+          'Acompañamiento docente'
         ]
       },
       {
@@ -229,7 +235,7 @@ const appData = {
           'Objetivo específico',
           'Actividad o intervención',
           'Indicador de avance',
-          'Responsables y seguimiento' 
+          'Responsables y seguimiento'
         ]
       },
       {
@@ -239,11 +245,18 @@ const appData = {
           'Reunión periódica',
           'Registro de avance',
           'Ajuste de estrategias',
-          'Cierre con evidencias' 
+          'Cierre con evidencias'
         ]
       }
     ]
   },
+  operationalChecklist: [
+    'Verificar conectividad local y disponibilidad del equipo.',
+    'Confirmar que el PEI y el manual de convivencia están disponibles en la base local.',
+    'Documentar la evidencia y la fecha de la situación educativa.',
+    'Relacionar la acción con objetivos, competencias y responsables.',
+    'Guardar la decisión docente y la revisión de la evidencia.'
+  ],
   reportTemplates: [
     {
       id: 'informe-convivencia',
@@ -311,6 +324,8 @@ function getViewEls() {
     navButtons: [...document.querySelectorAll('.nav-btn')],
     filterButtons: [...document.querySelectorAll('.filter-btn')],
     views: [...document.querySelectorAll('.view')],
+    dashboardMetrics: document.getElementById('dashboardMetrics'),
+    operationalChecklist: document.getElementById('operationalChecklist'),
     objectiveText: document.getElementById('objectiveText'),
     specificObjectives: document.getElementById('specificObjectives'),
     principlesList: document.getElementById('principlesList'),
@@ -329,6 +344,8 @@ function getViewEls() {
     assistantInput: document.getElementById('assistantInput'),
     assistantOutput: document.getElementById('assistantOutput'),
     notesList: document.getElementById('notesList'),
+    noteTitle: document.getElementById('noteTitle'),
+    noteCategory: document.getElementById('noteCategory'),
     noteInput: document.getElementById('noteInput'),
     networkLabel: document.getElementById('networkLabel'),
     lastSyncLabel: document.getElementById('lastSyncLabel'),
@@ -348,6 +365,26 @@ function setView(viewName) {
   els.navButtons.forEach(btn => {
     btn.classList.toggle('active', btn.dataset.view === viewName);
   });
+}
+
+function renderDashboardMetrics() {
+  const els = getViewEls();
+  els.dashboardMetrics.innerHTML = appData.metrics.map(metric => `
+    <div class="metric">
+      <strong>${metric.value}</strong>
+      <span>${metric.label}</span>
+    </div>
+  `).join('');
+}
+
+function renderOperationalChecklist() {
+  const els = getViewEls();
+  els.operationalChecklist.innerHTML = appData.operationalChecklist.map(item => `
+    <div class="check-item">
+      <span class="check-dot">✓</span>
+      <span>${item}</span>
+    </div>
+  `).join('');
 }
 
 function renderOverview() {
@@ -484,7 +521,11 @@ function renderNotes() {
 
   els.notesList.innerHTML = state.notes.map(note => `
     <div class="note-item">
-      <strong>${new Date(note.createdAt).toLocaleString('es-CO')}</strong>
+      <div class="req-header">
+        <strong>${note.title}</strong>
+        <span>${note.category}</span>
+      </div>
+      <small>${new Date(note.createdAt).toLocaleString('es-CO')}</small>
       <p>${note.text}</p>
     </div>
   `).join('');
@@ -492,17 +533,22 @@ function renderNotes() {
 
 function saveNote() {
   const els = getViewEls();
+  const title = (els.noteTitle.value || '').trim();
+  const category = els.noteCategory.value || 'General';
   const text = (els.noteInput.value || '').trim();
-  if (!text) return;
+  if (!title || !text) return;
 
   const note = {
     id: Date.now(),
+    title,
+    category,
     text,
     createdAt: new Date().toISOString()
   };
 
   state.notes.unshift(note);
   localStorage.setItem('rioNotes', JSON.stringify(state.notes));
+  els.noteTitle.value = '';
   els.noteInput.value = '';
   renderNotes();
 }
@@ -515,7 +561,7 @@ function buildReportFromTemplate(templateId, contextText) {
   const template = getTemplateById(templateId);
   const context = (contextText || '').trim();
 
-  const intro = `Este documento es una plantilla de apoyo institucional generada localmente y debe ser revisada por el docente o la autoridad responsable antes de usarse como evidencia oficial.\n\n`;
+  const intro = 'Este documento es una plantilla de apoyo institucional generada localmente y debe ser revisada por el docente o la autoridad responsable antes de usarse como evidencia oficial.\n\n';
   const contextLine = context
     ? `Contexto aportado por el usuario: ${context}\n\n`
     : 'Contexto: no se indicó información adicional. Se recomienda describir el curso, la situación, la fecha y la evidencia antes de usar el informe como documento formal.\n\n';
@@ -556,6 +602,15 @@ function renderReportTemplates() {
   });
 }
 
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function renderGeneratedReports(reportText, templateId) {
   const els = getViewEls();
   const template = getTemplateById(templateId);
@@ -579,15 +634,6 @@ function renderGeneratedReports(reportText, templateId) {
       <pre>${escapeHtml(item.content)}</pre>
     </div>
   `).join('');
-}
-
-function escapeHtml(value) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }
 
 function generateReport() {
@@ -741,6 +787,8 @@ function bindEvents() {
 }
 
 function initApp() {
+  renderDashboardMetrics();
+  renderOperationalChecklist();
   renderOverview();
   renderRequirements();
   renderInstitutionalContent();
@@ -748,7 +796,21 @@ function initApp() {
   renderSearchResults('');
   renderNotes();
   renderReportTemplates();
-  renderGeneratedReports('Este es un informe de ejemplo generado localmente. Revisa antes de usarlo como evidencia institucional.', appData.reportTemplates[0].id);
+  if (!state.reports.length) {
+    renderGeneratedReports('Este es un informe de ejemplo generado localmente. Revisa antes de usarlo como evidencia institucional.', appData.reportTemplates[0].id);
+  } else {
+    const first = state.reports[0];
+    const container = document.getElementById('generatedReports');
+    container.innerHTML = state.reports.map(item => `
+      <div class="report-card">
+        <div class="req-header">
+          <strong>${item.title}</strong>
+          <span>${new Date(item.createdAt).toLocaleString('es-CO')}</span>
+        </div>
+        <pre>${escapeHtml(item.content)}</pre>
+      </div>
+    `).join('');
+  }
   updateConnectionStatus();
   bindEvents();
 }

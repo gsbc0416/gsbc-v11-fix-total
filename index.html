@@ -79,24 +79,7 @@
               El sistema organiza la problemática territorial, pedagógica y tecnológica en un
               marco verificable, con trazabilidad, dominio de requisitos y evaluación continua.
             </p>
-            <div class="metric-grid">
-              <div class="metric">
-                <strong>10</strong>
-                <span>Dominios</span>
-              </div>
-              <div class="metric">
-                <strong>30</strong>
-                <span>Requisitos</span>
-              </div>
-              <div class="metric">
-                <strong>3</strong>
-                <span>Capas</span>
-              </div>
-              <div class="metric">
-                <strong>12</strong>
-                <span>Falsaciones</span>
-              </div>
-            </div>
+            <div class="metric-grid" id="dashboardMetrics"></div>
           </div>
         </div>
 
@@ -115,6 +98,11 @@
             <h3>Principios pedagógicos</h3>
             <ul id="principlesList"></ul>
           </article>
+        </div>
+
+        <div class="panel big-panel">
+          <h3>Checklist operativo del colegio</h3>
+          <div id="operationalChecklist" class="checklist-grid"></div>
         </div>
       </section>
 
@@ -255,6 +243,14 @@
           </div>
 
           <div class="note-form">
+            <input id="noteTitle" type="text" placeholder="Título de la evidencia o nota" />
+            <select id="noteCategory">
+              <option value="Convivencia">Convivencia</option>
+              <option value="Académico">Académico</option>
+              <option value="PEI">PEI</option>
+              <option value="Cumplimiento">Cumplimiento</option>
+              <option value="Mejoramiento">Mejoramiento</option>
+            </select>
             <textarea id="noteInput" placeholder="Escribe una nota, evidencia, seguimiento o registro para la escuela, docente o comunidad educativa..."></textarea>
             <button id="saveNoteBtn" class="primary-btn">Guardar nota</button>
           </div>
