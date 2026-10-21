@@ -122,6 +122,9 @@
               El sistema organiza la problemática territorial, pedagógica y tecnológica en un
               marco verificable, con trazabilidad, dominio de requisitos y evaluación continua.
             </p>
+            <div class="mini-chart-wrap">
+              <canvas id="overviewChart" width="320" height="170"></canvas>
+            </div>
             <div class="metric-grid" id="dashboardMetrics"></div>
           </div>
         </div>
@@ -223,7 +226,14 @@
             <select id="reportTemplateSelect"></select>
             <label for="reportContextInput">Contexto o situación</label>
             <textarea id="reportContextInput" placeholder="Describe el caso, curso, contexto institucional o evidencia que desea apoyar:"></textarea>
-            <button id="generateReportBtn" class="primary-btn">Generar informe</button>
+            <div class="report-actions">
+              <button id="generateReportBtn" class="primary-btn">Generar informe</button>
+              <button id="exportPdfBtn" class="ghost-btn">Exportar PDF</button>
+              <button id="exportJsonBtn" class="ghost-btn">Exportar JSON</button>
+            </div>
+          </div>
+          <div class="mini-chart-wrap report-chart-wrap">
+            <canvas id="reportChart" width="420" height="180"></canvas>
           </div>
           <div id="reportTemplates" class="content-grid compact-grid"></div>
           <div id="generatedReports" class="report-output"></div>
