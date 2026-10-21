@@ -4,315 +4,256 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#07111f" />
-    <title>RIO-CARIBE | Proyecto educativo offline para escuelas rurales</title>
+    <title>RIO-CARIBE | Plataforma institucional offline</title>
     <meta
       name="description"
-      content="RIO-CARIBE es un proyecto offline-first para escuelas rurales en Colombia: requisitos, trazabilidad, asistente local, convivencia, PEI, cumplimiento y gestión de informes."
+      content="RIO-CARIBE es una plataforma educativa institucional offline-first para escuelas rurales, con trazabilidad, PEI, evidencias y generación de informes."
     />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div id="app-header" class="app-header"></div>
-
     <div id="login-screen" class="login-screen" aria-label="Ingreso al sistema">
-      <h2>GSBC Nacional - Ingreso Real</h2>
-      <input id="nombre_real" placeholder="Nombre real Ej: Carlos Ariza" />
+      <h2>GSBC Nacional - Ingreso</h2>
+      <input id="nombre_real" type="text" placeholder="Nombre real" />
       <select id="rol">
-        <option>Estudiante</option>
-        <option>Docente</option>
-        <option>Rector</option>
-        <option>Admin</option>
+        <option value="Estudiante">Estudiante</option>
+        <option value="Docente">Docente</option>
+        <option value="Rector">Rector</option>
+        <option value="Admin">Admin</option>
       </select>
-      <select id="departamento_real">
-        <option selected>Cesar</option>
-      </select>
-      <select id="municipio_real">
-        <option selected>Valledupar</option>
-      </select>
-      <button id="btnEntrar">Entrar</button>
+      <input id="departamento_real" type="text" placeholder="Departamento" />
+      <input id="municipio_real" type="text" placeholder="Municipio" />
+      <button id="btnEntrar" type="button">Entrar</button>
     </div>
 
-    <header class="topbar">
-      <div class="container topbar-inner">
-        <div class="brand-wrap">
-          <div class="brand-mark">R</div>
-          <div>
-            <div class="brand">RIO-CARIBE</div>
-            <small>Proyecto offline para educación rural</small>
+    <div id="app-shell" class="hidden">
+      <header class="topbar">
+        <div class="container topbar-inner">
+          <div class="brand-wrap">
+            <div class="brand-mark">R</div>
+            <div>
+              <div class="brand">RIO-CARIBE</div>
+              <small>Plataforma institucional offline</small>
+            </div>
           </div>
+          <nav class="nav" aria-label="Navegación principal">
+            <button class="nav-btn active" type="button" data-view="inicio">Inicio</button>
+            <button class="nav-btn" type="button" data-view="requisitos">Requisitos</button>
+            <button class="nav-btn" type="button" data-view="pei">PEI</button>
+            <button class="nav-btn" type="button" data-view="convivencia">Convivencia</button>
+            <button class="nav-btn" type="button" data-view="academico">Académico</button>
+            <button class="nav-btn" type="button" data-view="cumplimiento">Cumplimiento</button>
+            <button class="nav-btn" type="button" data-view="informes">Informes</button>
+            <button class="nav-btn" type="button" data-view="traza">Trazabilidad</button>
+            <button class="nav-btn" type="button" data-view="busqueda">Búsqueda</button>
+            <button class="nav-btn" type="button" data-view="asistente">Asistente</button>
+            <button class="nav-btn" type="button" data-view="evidencias">Evidencias</button>
+          </nav>
         </div>
+      </header>
 
-        <nav class="nav" aria-label="Navegación principal">
-          <button class="nav-btn active" data-view="inicio">Inicio</button>
-          <button class="nav-btn" data-view="requisitos">Requisitos</button>
-          <button class="nav-btn" data-view="pei">PEI</button>
-          <button class="nav-btn" data-view="convivencia">Convivencia</button>
-          <button class="nav-btn" data-view="academico">Académico</button>
-          <button class="nav-btn" data-view="cumplimiento">Cumplimiento</button>
-          <button class="nav-btn" data-view="mejoramiento">Mejoramiento</button>
-          <button class="nav-btn" data-view="informes">Informes</button>
-          <button class="nav-btn" data-view="traza">Trazabilidad</button>
-          <button class="nav-btn" data-view="busqueda">Búsqueda</button>
-          <button class="nav-btn" data-view="asistente">Asistente</button>
-          <button class="nav-btn" data-view="evidencias">Evidencias</button>
-        </nav>
+      <div class="container main-layout">
+        <aside class="status-panel" aria-label="Estado del sistema">
+          <div class="status-item online" id="connectionStatus">
+            <span class="dot"></span>
+            <span id="networkLabel">Conectado</span>
+          </div>
+          <div class="status-item">
+            <span>Última sincronización</span>
+            <strong id="lastSyncLabel">Nunca</strong>
+          </div>
+          <div class="status-item">
+            <span>Base local</span>
+            <strong>Activa</strong>
+          </div>
+          <div class="status-item">
+            <span>Reportes</span>
+            <strong id="reportCountLabel">0</strong>
+          </div>
+        </aside>
+
+        <main class="content-panel">
+          <div id="app-header" class="app-header" aria-live="polite"></div>
+
+          <section class="view active" id="view-inicio">
+            <div class="hero">
+              <div>
+                <span class="badge">Educación rural · IA · Offline-first</span>
+                <h1>RIO-CARIBE</h1>
+                <p class="lead">
+                  Plataforma institucional para apoyar la gestión pedagógica, documental y de trazabilidad en contextos rurales,
+                  funcionando localmente y sincronizando cuando haya conectividad.
+                </p>
+                <div class="cta-row">
+                  <button class="primary-btn" type="button" data-view="pei">Ver PEI</button>
+                  <button class="ghost-btn" type="button" data-view="asistente">Probar asistente</button>
+                </div>
+              </div>
+              <div class="panel highlight">
+                <h3>Resumen de la plataforma</h3>
+                <p>Organiza requisitos, evidencias, trazabilidad y acompañamiento docente con enfoque institucional y local.</p>
+                <div class="metric-grid" id="dashboardMetrics"></div>
+              </div>
+            </div>
+
+            <div class="section-grid">
+              <article class="panel">
+                <h3>Objetivo general</h3>
+                <p id="objectiveText"></p>
+              </article>
+              <article class="panel">
+                <h3>Objetivos específicos</h3>
+                <ul id="specificObjectives"></ul>
+              </article>
+              <article class="panel">
+                <h3>Principios clave</h3>
+                <ul id="principlesList"></ul>
+              </article>
+            </div>
+
+            <div class="panel big-panel">
+              <h3>Checklist operativo</h3>
+              <div id="operationalChecklist" class="checklist-grid"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-requisitos">
+            <div class="toolbar">
+              <h2>Requisitos</h2>
+              <div class="filter-group">
+                <button class="filter-btn active" type="button" data-filter="all">Todos</button>
+                <button class="filter-btn" type="button" data-filter="F">Funcionales</button>
+                <button class="filter-btn" type="button" data-filter="NF">No funcionales</button>
+                <button class="filter-btn" type="button" data-filter="SP">Sociopedagógicos</button>
+              </div>
+            </div>
+            <div id="requirementsContainer"></div>
+          </section>
+
+          <section class="view" id="view-pei">
+            <div class="panel big-panel">
+              <h2>PEI y documentos institucionales</h2>
+              <div id="peiContent" class="content-grid"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-convivencia">
+            <div class="panel big-panel">
+              <h2>Convivencia y normas</h2>
+              <div id="convivenciaContent" class="content-grid"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-academico">
+            <div class="panel big-panel">
+              <h2>Académico y plan de estudio</h2>
+              <div id="academicContent" class="content-grid"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-cumplimiento">
+            <div class="panel big-panel">
+              <h2>Cumplimiento y procedimientos</h2>
+              <div id="cumplimientoContent" class="content-grid"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-informes">
+            <div class="panel big-panel">
+              <h2>Informes y plantillas</h2>
+              <div class="report-tools">
+                <label for="reportTemplateSelect">Tipo de informe</label>
+                <select id="reportTemplateSelect"></select>
+                <label for="reportContextInput">Contexto o situación</label>
+                <textarea id="reportContextInput" placeholder="Describe la situación, el curso, la evidencia y la fecha."></textarea>
+                <div class="report-actions">
+                  <button id="generateReportBtn" class="primary-btn" type="button">Generar informe</button>
+                  <button id="exportPdfBtn" class="ghost-btn" type="button">Exportar PDF</button>
+                  <button id="exportJsonBtn" class="ghost-btn" type="button">Exportar JSON</button>
+                </div>
+              </div>
+              <div class="chart-box">
+                <canvas id="reportChart" width="420" height="180"></canvas>
+              </div>
+              <div id="reportTemplates" class="content-grid compact-grid"></div>
+              <div id="generatedReports" class="report-output"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-traza">
+            <div class="panel big-panel">
+              <h2>Trazabilidad TRAZA-RIO</h2>
+              <p class="muted" id="traceabilityChain"></p>
+              <div class="trail-pills" id="trailPills"></div>
+              <div class="trace-grid" id="traceExample"></div>
+            </div>
+            <div class="panel big-panel">
+              <h3>Indicadores clave</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Indicador</th>
+                    <th>Fórmula</th>
+                    <th>Meta</th>
+                  </tr>
+                </thead>
+                <tbody id="indicatorsBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="view" id="view-busqueda">
+            <div class="panel big-panel">
+              <h2>Búsqueda local</h2>
+              <div class="search-box">
+                <input id="searchInput" type="search" placeholder="Buscar requisitos, PEI, convivencia, trazabilidad, informes..." />
+                <button id="searchBtn" class="primary-btn" type="button">Buscar</button>
+              </div>
+              <div id="searchResults"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-asistente">
+            <div class="panel big-panel assistant-panel">
+              <h2>Asistente IA local</h2>
+              <p class="muted">Consulta segura, local y auditable. La revisión docente sigue siendo obligatoria.</p>
+              <div class="assistant-row">
+                <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debo orientar una situación de convivencia con base en el manual?" />
+                <button id="askAssistantBtn" class="primary-btn" type="button">Consultar</button>
+              </div>
+              <div id="assistantOutput" class="assistant-output"></div>
+            </div>
+          </section>
+
+          <section class="view" id="view-evidencias">
+            <div class="panel big-panel">
+              <div class="toolbar evidence-toolbar">
+                <h2>Evidencias y notas</h2>
+                <button id="syncBtn" class="ghost-btn" type="button">Sincronizar</button>
+              </div>
+
+              <div class="note-form">
+                <input id="noteTitle" type="text" placeholder="Título de la evidencia" />
+                <select id="noteCategory">
+                  <option value="Convivencia">Convivencia</option>
+                  <option value="Académico">Académico</option>
+                  <option value="PEI">PEI</option>
+                  <option value="Cumplimiento">Cumplimiento</option>
+                  <option value="Mejoramiento">Mejoramiento</option>
+                </select>
+                <textarea id="noteInput" placeholder="Escribe la evidencia, la observación o el seguimiento institucional..."></textarea>
+                <button id="saveNoteBtn" class="primary-btn" type="button">Guardar nota</button>
+              </div>
+              <div id="notesList"></div>
+            </div>
+          </section>
+        </main>
       </div>
-    </header>
+    </div>
 
-    <main class="container app-shell">
-      <div class="top-strip" aria-label="Estado del sistema">
-        <div class="status-item online" id="connectionStatus">
-          <span class="dot"></span>
-          <span id="networkLabel">Conectado</span>
-        </div>
-        <div class="status-item compact">
-          <span>Total colegios</span>
-          <strong id="totalColegiosLabel">0</strong>
-        </div>
-        <div class="status-item compact">
-          <span>Última sincronización</span>
-          <strong id="lastSyncLabel">Nunca</strong>
-        </div>
-        <div class="status-item compact">
-          <span>Reportes pendientes</span>
-          <strong id="pendingReportsLabel">0</strong>
-        </div>
-      </div>
-
-      <aside class="status-panel" id="statusPanel">
-        <div class="status-item online" id="connectionStatusPanel">
-          <span class="dot"></span>
-          <span id="networkLabelPanel">Conectado</span>
-        </div>
-        <div class="status-item">
-          <span>Última sincronización</span>
-          <strong id="lastSyncLabelPanel">Nunca</strong>
-        </div>
-        <div class="status-item">
-          <span>Base local</span>
-          <strong>Activa</strong>
-        </div>
-        <div class="status-item">
-          <span>Modo</span>
-          <strong>100% Offline-first</strong>
-        </div>
-      </aside>
-
-      <section class="view active" id="view-inicio">
-        <div class="hero">
-          <div>
-            <span class="badge">Educación rural · IA · Offline-first</span>
-            <h1>RIO-CARIBE</h1>
-            <p class="lead">
-              Plataforma educativa para escuelas rurales en Colombia que opera sin conexión,
-              guarda evidencias localmente, permite búsqueda y ofrece guía con base en el marco
-              institucional, pedagógico y de cumplimiento del PEI.
-            </p>
-            <div class="cta-row">
-              <button class="primary-btn" data-view="pei">Ver PEI</button>
-              <button class="ghost-btn" data-view="asistente">Probar asistente</button>
-            </div>
-          </div>
-
-          <div class="panel highlight">
-            <h3>Resumen del marco</h3>
-            <p>
-              El sistema organiza la problemática territorial, pedagógica y tecnológica en un
-              marco verificable, con trazabilidad, dominio de requisitos y evaluación continua.
-            </p>
-            <div class="mini-chart-wrap">
-              <canvas id="overviewChart" width="320" height="170"></canvas>
-            </div>
-            <div class="metric-grid" id="dashboardMetrics"></div>
-          </div>
-        </div>
-
-        <div class="section-grid">
-          <article class="panel">
-            <h3>Objetivo general</h3>
-            <p id="objectiveText"></p>
-          </article>
-
-          <article class="panel">
-            <h3>Objetivos específicos</h3>
-            <ul id="specificObjectives"></ul>
-          </article>
-
-          <article class="panel">
-            <h3>Principios pedagógicos</h3>
-            <ul id="principlesList"></ul>
-          </article>
-        </div>
-
-        <div class="panel big-panel">
-          <h3>Checklist operativo del colegio</h3>
-          <div id="operationalChecklist" class="checklist-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-requisitos">
-        <div class="toolbar">
-          <h2>Requisitos</h2>
-          <div class="filter-group">
-            <button class="filter-btn active" data-filter="all">Todos</button>
-            <button class="filter-btn" data-filter="F">Funcionales</button>
-            <button class="filter-btn" data-filter="NF">No funcionales</button>
-            <button class="filter-btn" data-filter="SP">Sociopedagógicos</button>
-          </div>
-        </div>
-        <div id="requirementsContainer"></div>
-      </section>
-
-      <section class="view" id="view-pei">
-        <div class="panel big-panel">
-          <h2>PEI y documentos institucionales</h2>
-          <p class="muted">
-            Este espacio ayuda a consolidar la alineación con el Proyecto Educativo Institucional,
-            el plan de estudios, los objetivos institucionales y los procedimientos del colegio.
-          </p>
-          <div id="peiContent" class="content-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-convivencia">
-        <div class="panel big-panel">
-          <h2>Manuales de convivencia y normas</h2>
-          <p class="muted">
-            La IA y el sistema sirven como apoyo para orientaciones, decisiones pedagógicas y
-            recomendaciones formativas, pero siempre bajo revisión docente y conforme al marco institucional.
-          </p>
-          <div id="convivenciaContent" class="content-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-academico">
-        <div class="panel big-panel">
-          <h2>Guías académicas y plan de estudio</h2>
-          <p class="muted">
-            Base para planes de clase, seguimiento académico, criterios de evaluación y alineación con competencias.
-          </p>
-          <div id="academicContent" class="content-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-cumplimiento">
-        <div class="panel big-panel">
-          <h2>Cumplimiento de normas y procedimientos</h2>
-          <p class="muted">
-            Este módulo permite verificar qué documentos, procedimientos y evidencias deben acompañar
-            una acción institucional o educativa.
-          </p>
-          <div id="cumplimientoContent" class="content-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-mejoramiento">
-        <div class="panel big-panel">
-          <h2>Mejoramiento institucional</h2>
-          <p class="muted">
-            Planes de mejora, metas, responsables y seguimiento de resultados con evidencias y recomendaciones.
-          </p>
-          <div id="mejoramientoContent" class="content-grid"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-informes">
-        <div class="panel big-panel">
-          <h2>Informes y plantillas institucionales</h2>
-          <div class="report-tools">
-            <label for="reportTemplateSelect">Tipo de informe</label>
-            <select id="reportTemplateSelect"></select>
-            <label for="reportContextInput">Contexto o situación</label>
-            <textarea id="reportContextInput" placeholder="Describe el caso, curso, contexto institucional o evidencia que desea apoyar:"></textarea>
-            <div class="report-actions">
-              <button id="generateReportBtn" class="primary-btn">Generar informe</button>
-              <button id="exportPdfBtn" class="ghost-btn">Exportar PDF</button>
-              <button id="exportJsonBtn" class="ghost-btn">Exportar JSON</button>
-            </div>
-          </div>
-          <div class="mini-chart-wrap report-chart-wrap">
-            <canvas id="reportChart" width="420" height="180"></canvas>
-          </div>
-          <div id="reportTemplates" class="content-grid compact-grid"></div>
-          <div id="generatedReports" class="report-output"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-traza">
-        <div class="panel big-panel">
-          <h2>Trazabilidad TRAZA-RIO</h2>
-          <p class="muted" id="traceabilityChain"></p>
-          <div class="trail-pills" id="trailPills"></div>
-          <div class="trace-grid" id="traceExample"></div>
-        </div>
-        <div class="panel big-panel">
-          <h3>Indicadores clave</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Indicador</th>
-                <th>Fórmula</th>
-                <th>Meta</th>
-              </tr>
-            </thead>
-            <tbody id="indicatorsBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="view" id="view-busqueda">
-        <div class="panel big-panel">
-          <h2>Búsqueda local</h2>
-          <div class="search-box">
-            <input id="searchInput" type="search" placeholder="Buscar por DANE, nombre, departamento o municipio en toda Colombia" />
-            <button id="searchBtn" class="primary-btn">Buscar</button>
-          </div>
-          <div id="searchResults"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-asistente">
-        <div class="panel big-panel assistant-panel">
-          <h2>Asistente IA Local Offline</h2>
-          <p class="muted">
-            Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales.
-          </p>
-          <div class="assistant-row">
-            <input id="assistantInput" type="text" placeholder="Ej.: ¿Cómo debo orientar una falta de convivencia con base en el manual?" />
-            <button id="askAssistantBtn" class="primary-btn">Consultar</button>
-          </div>
-          <div id="assistantOutput" class="assistant-output"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-evidencias">
-        <div class="panel big-panel">
-          <div class="toolbar evidence-toolbar">
-            <h2>Evidencias y notas</h2>
-            <button id="syncBtn" class="ghost-btn">Sincronizar</button>
-          </div>
-
-          <div class="note-form">
-            <input id="noteTitle" type="text" placeholder="Título de la evidencia o nota" />
-            <select id="noteCategory">
-              <option value="Convivencia">Convivencia</option>
-              <option value="Académico">Académico</option>
-              <option value="PEI">PEI</option>
-              <option value="Cumplimiento">Cumplimiento</option>
-              <option value="Mejoramiento">Mejoramiento</option>
-            </select>
-            <textarea id="noteInput" placeholder="Escribe una nota, evidencia, seguimiento o registro para la escuela, docente o comunidad educativa..."></textarea>
-            <button id="saveNoteBtn" class="primary-btn">Guardar nota</button>
-          </div>
-
-          <div id="notesList"></div>
-        </div>
-      </section>
-    </main>
-
-    <script src="./app.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./app.js"></script>
   </body>
 </html>
