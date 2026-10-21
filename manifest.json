@@ -1,0 +1,16 @@
+{
+  "short_name": "GSBC v11",
+  "name": "GSBC v11 RIO-CARIBE - Plataforma Educativa Rural",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2231/2231605.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "display": "standalone",
+  "orientation": "any"
+}
