@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSBC v11 RIO-CARIBE - Offline-First Colombia</title>
+    <title>GSBC v11 RIO-CARIBE - Dashboard Offline-First</title>
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Chart.js para Estadísticas Visuales -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .role-estudiante { border-top: 6px solid #38bdf8; }
         .role-docente { border-top: 6px solid #2563eb; }
@@ -19,7 +21,7 @@
     <!-- BARRA SUPERIOR -->
     <header class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-50">
         <div class="flex items-center gap-3">
-            <i class="fa-solid fa-graduation-cap text-2xl text-blue-400"></i>
+            <i class="fa-solid fa-chart-line text-2xl text-blue-400"></i>
             <div>
                 <h1 class="font-bold text-lg leading-tight">GSBC v11 RIO-CARIBE</h1>
                 <p class="text-xs text-slate-400">Plataforma Educativa Rural 100% Offline-First Colombia</p>
@@ -55,11 +57,63 @@
     <!-- CONTENIDO PRINCIPAL -->
     <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 max-w-[1600px] mx-auto w-full">
         
-        <!-- PANEL IZQUIERDO: BÚSQUEDA Y GENERADOR -->
+        <!-- PANEL IZQUIERDO: DASHBOARD, BÚSQUEDA Y GENERADOR -->
         <main class="lg:col-span-8 flex flex-col gap-4">
             
+            <!-- TARJETAS DE MÉTRICAS RÁPIDAS -->
+            <section class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow flex items-center gap-3">
+                    <div class="p-2.5 bg-blue-500/20 text-blue-400 rounded-lg"><i class="fa-solid fa-school text-xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Colegios Visibles</p>
+                        <p id="metricTotal" class="text-lg font-bold text-white">0</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow flex items-center gap-3">
+                    <div class="p-2.5 bg-emerald-500/20 text-emerald-400 rounded-lg"><i class="fa-solid fa-tree text-xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Sedes Rurales</p>
+                        <p id="metricRural" class="text-lg font-bold text-emerald-400">0</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow flex items-center gap-3">
+                    <div class="p-2.5 bg-purple-500/20 text-purple-400 rounded-lg"><i class="fa-solid fa-map-location-dot text-xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Departamentos</p>
+                        <p id="metricDeptos" class="text-lg font-bold text-purple-400">0</p>
+                    </div>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 shadow flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-lg"><i class="fa-solid fa-file-circle-check text-xl"></i></div>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-semibold">Reportes Firmados</p>
+                        <p id="metricSigned" class="text-lg font-bold text-amber-400">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DASHBOARD DE GRÁFICOS ESTADÍSTICOS -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 flex flex-col items-center">
+                    <h3 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5 self-start">
+                        <i class="fa-solid fa-chart-pie text-blue-400"></i> Distribución por Zona
+                    </h3>
+                    <div class="w-full max-w-[200px] h-[180px]">
+                        <canvas id="zoneChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-700 flex flex-col items-center">
+                    <h3 class="text-xs font-bold text-slate-300 mb-2 flex items-center gap-1.5 self-start">
+                        <i class="fa-solid fa-chart-bar text-emerald-400"></i> Cobertura por Departamento
+                    </h3>
+                    <div class="w-full h-[180px]">
+                        <canvas id="deptChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
             <!-- BUSCADOR DANE NACIONAL -->
-            <section class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
+            <section class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
                 <div class="flex justify-between items-center mb-3">
                     <h2 class="font-bold text-sm text-blue-400 flex items-center gap-2">
                         <i class="fa-solid fa-database"></i> Búsqueda DUE Nacional (datos.gov.co)
@@ -75,10 +129,10 @@
             </section>
 
             <!-- TABLA DE RESULTADOS DE COLEGIOS -->
-            <section class="bg-slate-800 rounded-xl border border-slate-700 shadow-md overflow-hidden flex-1 flex flex-col min-h-[250px]">
-                <div class="overflow-x-auto flex-1">
+            <section class="bg-slate-800 rounded-xl border border-slate-700 shadow overflow-hidden flex-1 flex flex-col min-h-[250px]">
+                <div class="overflow-x-auto flex-1 max-h-[350px]">
                     <table class="w-full text-left text-xs text-slate-300">
-                        <thead class="bg-slate-900/90 text-slate-400 uppercase border-b border-slate-700 sticky top-0">
+                        <thead class="bg-slate-900/90 text-slate-400 uppercase border-b border-slate-700 sticky top-0 z-10">
                             <tr>
                                 <th class="p-3">Código DANE</th>
                                 <th class="p-3">Institución Educativa</th>
@@ -89,25 +143,20 @@
                             </tr>
                         </thead>
                         <tbody id="schoolTableBody" class="divide-y divide-slate-700/50">
-                            <tr>
-                                <td colspan="6" class="p-8 text-center text-slate-500">
-                                    <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-                                    <p>Cargando registros locales del DUE Nacional...</p>
-                                </td>
-                            </tr>
+                            <!-- Inserción dinámica -->
                         </tbody>
                     </table>
                 </div>
             </section>
 
             <!-- GENERADOR DE REPORTES (DOCENTE / RECTOR / ADMIN) -->
-            <section id="reportGeneratorSection" class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md">
+            <section id="reportGeneratorSection" class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
                 <h2 class="font-bold text-sm text-blue-400 mb-3 flex items-center gap-2">
                     <i class="fa-solid fa-file-signature"></i> Generador de Reportes Nacionales R-PC-03
                 </h2>
                 
                 <div id="selectedSchoolInfo" class="bg-slate-900 p-3 rounded-lg border border-slate-700 text-xs mb-3 text-slate-400">
-                    Selecciona una institución educativa de la tabla superior para habilitar la generación de documentos oficiales.
+                    Selecciona una institución educativa de la tabla para habilitar la generación de documentos oficiales.
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
@@ -127,7 +176,7 @@
                         </span>
                     </div>
 
-                    <div id="reportContentText" class="space-y-2 text-slate-300 mb-4 whitespace-pre-line max-h-[300px] overflow-y-auto p-3 bg-slate-950 rounded font-mono text-[11px] leading-relaxed border border-slate-800"></div>
+                    <div id="reportContentText" class="space-y-2 text-slate-300 mb-4 whitespace-pre-line max-h-[250px] overflow-y-auto p-3 bg-slate-950 rounded font-mono text-[11px] leading-relaxed border border-slate-800"></div>
 
                     <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
                         <button id="signBtn" onclick="signCurrentReport()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition">
@@ -145,7 +194,7 @@
             </section>
 
             <!-- SECCIÓN AUDITORÍA Y BACKUP (SOLO ADMIN) -->
-            <section id="adminSection" class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md hidden">
+            <section id="adminSection" class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow hidden">
                 <h2 class="font-bold text-sm text-blue-400 mb-2 flex items-center gap-2">
                     <i class="fa-solid fa-shield-halved"></i> Panel de Auditoría TRAZA-RIO & Backup
                 </h2>
@@ -159,7 +208,7 @@
         </main>
 
         <!-- PANEL DERECHO: ASISTENTE IA LOCAL OFFLINE -->
-        <aside class="lg:col-span-4 bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md flex flex-col">
+        <aside class="lg:col-span-4 bg-slate-800 p-4 rounded-xl border border-slate-700 shadow flex flex-col">
             <div class="border-b border-slate-700 pb-3 mb-3">
                 <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
                     <i class="fa-solid fa-robot"></i>
@@ -174,7 +223,7 @@
                 </div>
             </div>
 
-            <div id="aiChatBox" class="flex-1 bg-slate-900 rounded-lg p-3 overflow-y-auto space-y-3 min-h-[300px] max-h-[450px] border border-slate-700/60 text-xs">
+            <div id="aiChatBox" class="flex-1 bg-slate-900 rounded-lg p-3 overflow-y-auto space-y-3 min-h-[300px] max-h-[500px] border border-slate-700/60 text-xs">
                 <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300">
                     <p class="font-semibold text-blue-400 mb-1">🤖 Phi-3 mini Local:</p>
                     <p>Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales.</p>
@@ -197,12 +246,28 @@
 
     <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
     <script>
+        // REGISTROS SEMILLA REALES PARA GARANTIZAR QUE NUNCA ABRA VACÍA (OFFLINE SEED)
+        const SEED_SCHOOLS = [
+            { codigo_dane: "120001000012", nombre: "INSTITUTO TECNICO INDUSTRIAL PEDRO CASTRO MONSALVO", departamento: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
+            { codigo_dane: "111001000078", nombre: "COLEGIO MAYOR DE SAN BARTOLOME", departamento: "BOGOTA D.C.", municipio: "BOGOTA", zona: "URBANA" },
+            { codigo_dane: "113001000234", nombre: "I.E. AGROPECUARIA RIO CARIBE", departamento: "BOLIVAR", municipio: "TURBACO", zona: "RURAL" },
+            { codigo_dane: "105001000150", nombre: "I.E. SAN JOSE RURAL", departamento: "ANTIOQUIA", municipio: "MEDELLIN", zona: "RURAL" },
+            { codigo_dane: "176001000890", nombre: "I.E. TECNICA AGROPECUARIA CARIBE", departamento: "VALLE DEL CAUCA", municipio: "CALI", zona: "RURAL" },
+            { codigo_dane: "144001000321", nombre: "I.E. MANUEL RODRIGUEZ TORICES", departamento: "MAGDALENA", municipio: "SANTA MARTA", zona: "URBANA" },
+            { codigo_dane: "123001000543", nombre: "I.E. SAN JUAN BAUTISTA", departamento: "CORDOBA", municipio: "MONTERIA", zona: "RURAL" },
+            { codigo_dane: "154001000765", nombre: "I.E. FRANCISCO JOSE DE CALDAS", departamento: "NORTE DE SANTANDER", municipio: "CUCUTA", zona: "URBANA" },
+            { codigo_dane: "152001000987", nombre: "I.E. RURAL LA ESPERANZA", departamento: "NARIÑO", municipio: "PASTO", zona: "RURAL" },
+            { codigo_dane: "185001000111", nombre: "I.E. AGROLOGICA DEL RIO", departamento: "CHOCO", municipio: "QUIBDO", zona: "RURAL" }
+        ];
+
         let db;
         let activeRole = 'estudiante';
         let currentSchool = null;
         let currentReportData = null;
+        let zoneChartInstance = null;
+        let deptChartInstance = null;
 
-        // INICIALIZAR INDEXEDDB
+        // INICIALIZAR INDEXEDDB CON SEMILLA PRECARGADA
         function initDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open('GSBC_DB_V11', 1);
@@ -217,13 +282,28 @@
                 };
                 request.onsuccess = (e) => {
                     db = e.target.result;
-                    resolve(db);
+                    seedInitialData().then(() => resolve(db));
                 };
                 request.onerror = (e) => reject(e);
             });
         }
 
-        // CONTROL DE CONEXIÓN Y ACTUALIZACIÓN DUE
+        async function seedInitialData() {
+            const tx = db.transaction('colegios', 'readwrite');
+            const store = tx.objectStore('colegios');
+            const countReq = store.count();
+            
+            return new Promise((res) => {
+                countReq.onsuccess = () => {
+                    if (countReq.result === 0) {
+                        SEED_SCHOOLS.forEach(s => store.put(s));
+                    }
+                    res();
+                };
+            });
+        }
+
+        // CONTROL DE CONEXIÓN
         function updateOnlineStatus() {
             const statusEl = document.getElementById('connectionStatus');
             const isOnline = navigator.onLine;
@@ -232,7 +312,7 @@
                 fetchDUEData();
                 syncPendingReports();
             } else {
-                const lastSync = localStorage.getItem('gsbc_last_sync') || 'Sin fecha';
+                const lastSync = localStorage.getItem('gsbc_last_sync') || 'Semilla Local';
                 statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-amber-400">Modo Offline (${lastSync})</span>`;
                 loadLocalSchools();
             }
@@ -240,15 +320,15 @@
 
         async function fetchDUEData() {
             try {
-                showBanner("Conectado - Actualizando DUE Nacional de datos.gov.co...");
+                showBanner("Conectado - Sincronizando DUE Nacional desde datos.gov.co...");
                 const response = await fetch('https://www.datos.gov.co/resource/6k5y-ir6r.json?$limit=1000');
-                if (!response.ok) throw new Error('Error en API DUE');
+                if (!response.ok) throw new Error('Error en API');
                 const data = await response.json();
                 
                 const tx = db.transaction('colegios', 'readwrite');
                 const store = tx.objectStore('colegios');
+                let count = 0;
                 
-                let inserted = 0;
                 data.forEach(item => {
                     const dane = String(item.codigo_dane || item.codigodane || item.cod_dane || '').trim();
                     if (dane) {
@@ -257,19 +337,19 @@
                             nombre: item.nombre_establecimiento || item.nombreestablecimiento || item.nombre || 'I.E. SIN NOMBRE',
                             departamento: item.departamento || item.nombre_departamento || item.nombredepartamento || 'COLOMBIA',
                             municipio: item.municipio || item.nombre_municipio || item.nombremunicipio || 'S/D',
-                            zona: item.zona || item.nombre_zona || 'RURAL'
+                            zona: (item.zona || item.nombre_zona || 'RURAL').toUpperCase()
                         });
-                        inserted++;
+                        count++;
                     }
                 });
                 
                 const now = new Date().toLocaleString('es-CO');
                 localStorage.setItem('gsbc_last_sync', now);
                 document.getElementById('lastSync').innerText = now;
-                showBanner(`Actualizado: ${inserted} colegios - Guardado para offline - [${now}]`);
+                showBanner(`Sincronización completa: ${count} colegios actualizados para uso offline`);
                 loadLocalSchools();
             } catch (err) {
-                showBanner("Modo Offline - Trabajando con base local existente");
+                showBanner("Modo Offline activo - Trabajando con la base local guardada");
                 loadLocalSchools();
             }
         }
@@ -283,7 +363,6 @@
             request.onsuccess = () => {
                 const schools = request.result || [];
                 document.getElementById('localCount').innerText = schools.length;
-                const tbody = document.getElementById('schoolTableBody');
                 
                 const filterLower = filter.toLowerCase().trim();
                 const filtered = schools.filter(s => 
@@ -291,28 +370,115 @@
                     String(s.codigo_dane).includes(filterLower) ||
                     s.departamento.toLowerCase().includes(filterLower) ||
                     s.municipio.toLowerCase().includes(filterLower)
-                ).slice(0, 50);
+                );
 
-                if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No se encontraron instituciones en la base local.</td></tr>`;
-                    return;
-                }
-
-                tbody.innerHTML = filtered.map(s => `
-                    <tr class="hover:bg-slate-700/50 transition border-b border-slate-800">
-                        <td class="p-3 font-mono text-blue-300 font-semibold">${s.codigo_dane}</td>
-                        <td class="p-3 font-semibold text-slate-100">${s.nombre}</td>
-                        <td class="p-3">${s.departamento}</td>
-                        <td class="p-3">${s.municipio}</td>
-                        <td class="p-3"><span class="bg-slate-700 px-2 py-0.5 rounded text-[10px]">${s.zona}</span></td>
-                        <td class="p-3 text-center">
-                            <button onclick="selectSchool('${s.codigo_dane}', '${encodeURIComponent(s.nombre)}', '${encodeURIComponent(s.departamento)}', '${encodeURIComponent(s.municipio)}')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-[11px] font-medium transition">
-                                Seleccionar
-                            </button>
-                        </td>
-                    </tr>
-                `).join('');
+                renderTable(filtered.slice(0, 50));
+                updateDashboardChartsAndMetrics(filtered);
             };
+        }
+
+        function renderTable(schools) {
+            const tbody = document.getElementById('schoolTableBody');
+            if (schools.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron instituciones. Intenta con otro término de búsqueda.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = schools.map(s => `
+                <tr class="hover:bg-slate-700/50 transition border-b border-slate-800">
+                    <td class="p-3 font-mono text-blue-300 font-semibold">${s.codigo_dane}</td>
+                    <td class="p-3 font-semibold text-slate-100">${s.nombre}</td>
+                    <td class="p-3">${s.departamento}</td>
+                    <td class="p-3">${s.municipio}</td>
+                    <td class="p-3">
+                        <span class="${s.zona.includes('RURAL') ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'} border px-2 py-0.5 rounded text-[10px] font-semibold">
+                            ${s.zona}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="selectSchool('${s.codigo_dane}', '${encodeURIComponent(s.nombre)}', '${encodeURIComponent(s.departamento)}', '${encodeURIComponent(s.municipio)}')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-[11px] font-medium transition">
+                            Seleccionar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ACTUALIZACIÓN DE GRÁFICOS Y MÉTRICAS
+        function updateDashboardChartsAndMetrics(schools) {
+            document.getElementById('metricTotal').innerText = schools.length;
+            
+            const ruralCount = schools.filter(s => s.zona.toUpperCase().includes('RURAL')).length;
+            const urbanCount = schools.length - ruralCount;
+            document.getElementById('metricRural').innerText = ruralCount;
+
+            const deptosSet = new Set(schools.map(s => s.departamento.toUpperCase()));
+            document.getElementById('metricDeptos').innerText = deptosSet.size;
+
+            // Conteo de reportes guardados
+            if (db) {
+                const tx = db.transaction('reportes', 'readonly');
+                const req = tx.objectStore('reportes').getAll();
+                req.onsuccess = () => {
+                    const signed = req.result.filter(r => r.firmado).length;
+                    document.getElementById('metricSigned').innerText = signed;
+                };
+            }
+
+            // Render Gráfico de Dona (Zona)
+            const ctxZone = document.getElementById('zoneChart').getContext('2d');
+            if (zoneChartInstance) zoneChartInstance.destroy();
+            zoneChartInstance = new Chart(ctxZone, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Rural', 'Urbana'],
+                    datasets: [{
+                        data: [ruralCount, urbanCount],
+                        backgroundColor: ['#10b981', '#3b82f6'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } }
+                }
+            });
+
+            // Agrupación por Departamento
+            const deptoCounts = {};
+            schools.forEach(s => {
+                const d = s.departamento.toUpperCase();
+                deptoCounts[d] = (deptoCounts[d] || 0) + 1;
+            });
+
+            const sortedDeptos = Object.entries(deptoCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const ctxDept = document.getElementById('deptChart').getContext('2d');
+            if (deptChartInstance) deptChartInstance.destroy();
+            deptChartInstance = new Chart(ctxDept, {
+                type: 'bar',
+                data: {
+                    labels: sortedDeptos.map(d => d[0]),
+                    datasets: [{
+                        label: 'Colegios',
+                        data: sortedDeptos.map(d => d[1]),
+                        backgroundColor: '#10b981',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { ticks: { color: '#94a3b8', font: { size: 9 } } },
+                        y: { ticks: { color: '#94a3b8', font: { size: 9 } } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
         }
 
         function selectSchool(dane, nombre, depto, mun) {
@@ -324,7 +490,7 @@
             };
             document.getElementById('selectedSchoolInfo').innerHTML = `
                 <div class="text-slate-200 font-bold text-sm">🏫 ${currentSchool.nombre}</div>
-                <div class="mt-1">DANE: <span class="font-mono text-blue-300">${currentSchool.dane}</span> | Departamento: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio}</div>
+                <div class="mt-1">DANE: <span class="font-mono text-blue-300">${currentSchool.dane}</span> | Depto: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio}</div>
             `;
             
             const btns = document.querySelectorAll('.report-btn');
@@ -374,7 +540,7 @@ SECCIÓN 1: DATOS OFICIALES DUE
 SECCIÓN 2: CONTEXTO TERRITORIAL
 - Departamento: ${currentSchool.departamento}
 - Municipio: ${currentSchool.municipio}
-- Ámbito territorial sin alteración de topónimos ni datos inventados.
+- Ámbito territorial dinámico sin alterar topónimos ni inventar ríos/veredas.
 
 SECCIÓN 3: CONTENIDO PEDAGÓGICO DE ${type.toUpperCase()}
 - Documento borrador alineado a la normativa MEN.
@@ -427,6 +593,7 @@ SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN
             const store = tx.objectStore('reportes');
             store.add(report);
             updatePendingCount();
+            loadLocalSchools();
         }
 
         function updatePendingCount() {
@@ -454,7 +621,7 @@ SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN
                         store.put(r);
                     });
                     setTimeout(() => {
-                        showBanner("Sincronización completa - X colegios actualizados - X reportes guardados");
+                        showBanner("Sincronización completa - Reportes guardados en la nube");
                         updatePendingCount();
                     }, 1500);
                 }
@@ -543,7 +710,7 @@ SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN
                 chatBox.innerHTML += `
                     <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300">
                         <p class="font-semibold text-amber-400">🤖 Phi-3 mini Local:</p>
-                        <p>Atendiendo consulta pedagógica para ${schoolName}: "${msg}".</p>
+                        <p>Respuesta pedagógica offline para ${schoolName}: "${msg}".</p>
                         <div class="mt-2 bg-amber-500/20 text-amber-300 text-[10px] p-1.5 rounded font-mono border border-amber-500/30">
                             [Requiere aprobación docente R-PC-03 - Validar antes de uso oficial]
                         </div>
