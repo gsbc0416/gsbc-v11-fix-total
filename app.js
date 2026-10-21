@@ -1,540 +1,69 @@
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(61, 217, 162, 0.18), transparent 22%),
-    linear-gradient(180deg, #06111d 0%, #0c1d2f 100%);
-  color: #edf6ff;
-}
-
-* { box-sizing: border-box; }
-button, input, textarea, select { font: inherit; }
-
-a { color: #7ed4ff; text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-.container {
-  width: min(1200px, calc(100% - 32px));
-  margin: 0 auto;
-}
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: rgba(7, 17, 31, 0.8);
-  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-  backdrop-filter: blur(10px);
-}
-
-.topbar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 74px;
-}
-
-.brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand-mark {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #3dd9a2, #7ed4ff);
-  color: #07111f;
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  box-shadow: 0 12px 26px rgba(61, 217, 162, 0.35);
-}
-
-.brand {
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
-
-.brand-wrap small {
-  color: #a6b7d0;
-}
-
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.nav-btn, .filter-btn, .primary-btn, .ghost-btn {
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(18, 34, 53, 0.7);
-  color: #edf6ff;
-  border-radius: 10px;
-  padding: 10px 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.nav-btn.active,
-.filter-btn.active,
-.primary-btn {
-  background: linear-gradient(135deg, #3dd9a2, #7ed4ff);
-  border: none;
-  color: #082113;
-  font-weight: 700;
-  box-shadow: 0 12px 26px rgba(61, 217, 162, 0.25);
-}
-
-.nav-btn:hover,
-.filter-btn:hover,
-.primary-btn:hover,
-.ghost-btn:hover {
-  transform: translateY(-1px);
-}
-
-.app-shell {
-  padding: 28px 0 48px;
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 24px;
-}
-
-.status-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-self: start;
-  position: sticky;
-  top: 92px;
-}
-
-.status-item,
-.panel,
-.info-card,
-.requirement-card,
-.result-card,
-.note-item,
-.assistant-answer,
-.report-card,
-.check-item {
-  background: rgba(18, 34, 53, 0.7);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 18px;
-  box-shadow: 0 18px 38px rgba(2, 6, 23, 0.22);
-}
-
-.status-item {
-  padding: 14px 16px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  align-items: center;
-  color: #dfeaf9;
-}
-
-.status-item .dot {
-  width: 10px;
-  height: 10px;
-  background: #3dd9a2;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 14px rgba(61, 217, 162, 0.8);
-}
-
-.status-item.offline .dot {
-  background: #f7b955;
-  box-shadow: 0 0 14px rgba(247, 185, 85, 0.8);
-}
-
-.status-item strong {
-  color: #edf6ff;
-}
-
-.view {
-  display: none;
-}
-
-.view.active {
-  display: block;
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: 1.3fr .9fr;
-  gap: 20px;
-  align-items: center;
-  padding: 18px 0 10px;
-}
-
-.badge,
-.mini-kicker,
-.tiny-pill {
-  display: inline-block;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(61, 217, 162, 0.08);
-  border: 1px solid rgba(61, 217, 162, 0.3);
-  color: #c5f9e5;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  margin: 18px 0 10px;
-  letter-spacing: -0.05em;
-}
-
-.lead {
-  font-size: 1.08rem;
-  color: #bfd0ea;
-  max-width: 700px;
-  line-height: 1.65;
-}
-
-.cta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 22px;
-}
-
-.highlight {
-  padding: 20px 22px;
-  background: linear-gradient(180deg, rgba(22, 39, 60, 0.96), rgba(16, 27, 42, 0.78));
-}
-
-.metric-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.metric {
-  background: rgba(148, 163, 184, 0.05);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 12px;
-  padding: 14px;
-}
-
-.metric strong {
-  display: block;
-  font-size: 1.7rem;
-}
-
-.metric span {
-  color: #b8cde5;
-}
-
-.section-grid,
-.content-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 14px;
-}
-
-.compact-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.panel,
-.info-card,
-.requirement-card,
-.result-card,
-.note-item,
-.assistant-answer,
-.report-card {
-  padding: 18px 20px;
-}
-
-.big-panel {
-  margin-top: 20px;
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.panel h2,
-.panel h3,
-.info-card h3 {
-  margin-top: 0;
-}
-
-ul {
-  padding-left: 18px;
-  color: #edf6ff;
-  line-height: 1.7;
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.requirement-card {
-  background: rgba(10, 20, 32, 0.55);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 16px;
-  padding: 16px;
-  margin-top: 14px;
-}
-
-.req-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.req-id {
-  font-weight: 700;
-  color: #9be9c7;
-}
-
-.req-tag {
-  display: inline-block;
-  padding: 6px 9px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  border: 1px solid transparent;
-  font-weight: 700;
-}
-
-.tag-F { background: rgba(61, 217, 162, 0.08); border-color: rgba(61, 217, 162, 0.25); color: #d7fbe8; }
-.tag-NF { background: rgba(125, 212, 255, 0.08); border-color: rgba(125, 212, 255, 0.25); color: #dff6ff; }
-.tag-SP { background: rgba(167, 139, 250, 0.1); border-color: rgba(167, 139, 250, 0.25); color: #efe4ff; }
-
-.muted {
-  color: #a6b7d0;
-}
-
-.checklist-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 12px;
-}
-
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-}
-
-.check-dot {
-  display: inline-grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(61, 217, 162, 0.12);
-  color: #9be9c7;
-  font-weight: 800;
-}
-
-.trail-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 18px 0;
-}
-
-.trail-pills span {
-  background: rgba(167, 139, 250, 0.1);
-  border: 1px solid rgba(167, 139, 250, 0.25);
-  color: #e5dfff;
-  padding: 7px 10px;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.trace-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.trace-item {
-  background: rgba(148, 163, 184, 0.04);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 12px;
-  padding: 12px 14px;
-}
-
-.trace-item strong {
-  display: inline-block;
-  margin-bottom: 6px;
-}
-
-.search-box,
-.assistant-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.search-box input,
-.assistant-row input,
-.note-form input,
-.note-form textarea,
-.note-form select,
-.report-tools textarea,
-.report-tools select {
-  width: 100%;
-  background: rgba(9, 19, 30, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 12px;
-  color: #edf6ff;
-  padding: 12px 14px;
-}
-
-.search-results,
-.note-list,
-.assistant-output,
-.report-output {
-  display: grid;
-  gap: 12px;
-}
-
-.result-card,
-.note-item,
-.assistant-answer,
-.report-card {
-  background: rgba(10, 20, 32, 0.6);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  border-radius: 12px;
-  padding: 14px 16px;
-}
-
-.note-form,
-.report-tools {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-
-textarea {
-  min-height: 110px;
-  resize: vertical;
-}
-
-.evidence-toolbar {
-  margin-top: 0;
-}
-
-.assistant-output {
-  margin-top: 12px;
-}
-
-.assistant-answer strong {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.report-tools label {
-  color: #dfeaf9;
-  font-weight: 700;
-}
-
-.compact-card {
-  min-height: 190px;
-}
-
-.small-btn {
-  margin-top: 10px;
-}
-
-.report-card pre {
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-family: inherit;
-  color: #edf6ff;
-  margin: 10px 0 0;
-}
-
-.note-item small {
-  color: #a6b7d0;
-}
-
-.site-footer {
-  border-top: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(7, 17, 31, 0.9);
-  padding: 20px 0 28px;
-}
-
-.footer-inner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  color: #bfd0ea;
-}
-
-.footer-inner strong {
-  display: block;
-  color: #edf6ff;
-}
-
-.footer-meta {
-  color: #a6b7d0;
-}
-
-@media (max-width: 980px) {
-  .app-shell {
-    grid-template-columns: 1fr;
+// GSBC V11 - Sistema Nacional Real con Roles
+import { guardarConInternet, sincronizarPendientes } from './src/lib/idb.js';
+
+const USUARIOS_KEY = 'usuario_gsbc';
+
+function initUsuarios(){
+  const usuario = JSON.parse(localStorage.getItem(USUARIOS_KEY)||'null');
+  const loginScreen = document.getElementById('login-screen');
+  const header = document.getElementById('app-header');
+  
+  if(!usuario && loginScreen){
+    loginScreen.style.display='flex';
+    if(header) header.style.display='none';
+    return false;
   }
-
-  .status-panel {
-    position: static;
+  if(usuario && loginScreen) loginScreen.style.display='none';
+  if(usuario && header){
+    header.style.display='flex';
+    header.innerHTML = `<b>Usuario: ${usuario.nombre_real} - Rol: ${usuario.rol} - ${usuario.municipio_real}, ${usuario.departamento_real}</b> <button onclick="cerrarSesion()">Cerrar Sesion</button>`;
+    let color = '#0b5fff';
+    if(usuario.rol==='Rector') color='#3b82f6';
+    if(usuario.rol==='Admin') color='#1e3a8a';
+    header.style.borderLeft=`8px solid ${color}`;
+    header.style.padding='10px';
+    header.style.background='#eee';
+    document.body.dataset.rol = usuario.rol;
   }
-
-  .hero,
-  .section-grid,
-  .trace-grid,
-  .content-grid,
-  .compact-grid,
-  .checklist-grid {
-    grid-template-columns: 1fr;
-  }
+  return true;
 }
 
-@media (max-width: 640px) {
-  .topbar-inner,
-  .toolbar,
-  .search-box,
-  .assistant-row,
-  .footer-inner {
-    flex-direction: column;
-    align-items: stretch;
-  }
+window.cerrarSesion = () => { localStorage.removeItem(USUARIOS_KEY); location.reload(); };
 
-  .nav {
-    justify-content: flex-start;
+document.addEventListener('DOMContentLoaded', ()=>{
+  initUsuarios();
+  const btn = document.getElementById('btnEntrar');
+  if(btn){
+    btn.addEventListener('click', async ()=>{
+      const u = {
+        nombre_real: document.getElementById('nombre_real').value.trim(),
+        rol: document.getElementById('rol').value,
+        departamento_real: document.getElementById('departamento_real').value,
+        municipio_real: document.getElementById('municipio_real').value,
+        fecha_login: new Date().toISOString()
+      };
+      if(!u.nombre_real) return alert('Escribe tu nombre real');
+      localStorage.setItem(USUARIOS_KEY, JSON.stringify(u));
+      await guardarConInternet('usuarios', u);
+      location.reload();
+    });
   }
-}
+  window.addEventListener('online', sincronizarPendientes);
+  console.log('GSBC V11 listo - Valledupar Cesar - Nacional Real Offline-First');
+});
+
+// TRAZA-RIO C->N->R->S->F->A->I->E
+window.generarReporte = async (tipo) => {
+  const usuario = JSON.parse(localStorage.getItem(USUARIOS_KEY));
+  if(!usuario) return alert('Inicia sesion');
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text(`${tipo} - ${usuario.municipio_real}, ${usuario.departamento_real}`, 10, 10);
+  doc.text(`Usuario: ${usuario.nombre_real} Rol: ${usuario.rol}`, 10, 20);
+  doc.text(`Contexto territorial real: ${usuario.departamento_real} - ${usuario.municipio_real}`, 10, 30);
+  doc.text(`Borrador - Requiere aprobacion docente R-PC-03`, 10, 40);
+  doc.text(`TRAZA-RIO: C->N->R->S->F->A->I->E`, 10, 50);
+  doc.text(`Pendiente de firma`, 10, 60);
+  doc.save(`${tipo}_${usuario.municipio_real}.pdf`);
+  await guardarConInternet('pendientes_sync', {tipo, usuario, estado:'Pendiente de firma'});
+};
