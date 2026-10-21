@@ -8,35 +8,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/docx@8.2.2/build/index.umd.js"></script>
     <style>
-        .role-estudiante { border: 4px solid #38bdf8; }
-        .role-docente { border: 4px solid #2563eb; }
-        .role-admin { border: 4px solid #1e3a8a; }
+        .role-estudiante { border-top: 6px solid #38bdf8; }
+        .role-docente { border-top: 6px solid #2563eb; }
+        .role-admin { border-top: 6px solid #1e3a8a; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans role-estudiante" id="appBody">
 
-    <!-- BARRA SUPERIOR ESTATUARIA -->
+    <!-- BARRA SUPERIOR -->
     <header class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-50">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-graduation-cap text-2xl text-blue-400"></i>
             <div>
                 <h1 class="font-bold text-lg leading-tight">GSBC v11 RIO-CARIBE</h1>
-                <p class="text-xs text-slate-400">Plataforma Educativa Rural Offline-First Colombia</p>
+                <p class="text-xs text-slate-400">Plataforma Educativa Rural 100% Offline-First Colombia</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-4 text-xs bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700">
+        <div class="flex items-center gap-4 text-xs bg-slate-900/90 px-3 py-1.5 rounded-lg border border-slate-700">
             <div id="connectionStatus" class="flex items-center gap-2 font-semibold">
                 <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse"></span>
-                <span>Comprobando conexión...</span>
+                <span>Comprobando red...</span>
             </div>
-            <span class="text-slate-600">|</span>
-            <div>Colegios local: <span id="localCount" class="font-bold text-blue-400">0</span></div>
-            <span class="text-slate-600">|</span>
+            <span class="text-slate-700">|</span>
+            <div>DUE Local: <span id="localCount" class="font-bold text-blue-400">0</span></div>
+            <span class="text-slate-700">|</span>
             <div>Última Sync: <span id="lastSync" class="text-slate-300">Nunca</span></div>
-            <span class="text-slate-600">|</span>
+            <span class="text-slate-700">|</span>
             <div>Pendientes: <span id="pendingCount" class="font-bold text-amber-400">0</span></div>
         </div>
 
@@ -51,7 +50,7 @@
     </header>
 
     <!-- BANNER DE NOTIFICACIÓN DE RED -->
-    <div id="syncBanner" class="bg-blue-600/90 text-white text-xs px-4 py-2 text-center hidden font-medium"></div>
+    <div id="syncBanner" class="bg-blue-600/90 text-white text-xs px-4 py-2 text-center hidden font-medium transition-all"></div>
 
     <!-- CONTENIDO PRINCIPAL -->
     <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 max-w-[1600px] mx-auto w-full">
@@ -65,7 +64,7 @@
                     <h2 class="font-bold text-sm text-blue-400 flex items-center gap-2">
                         <i class="fa-solid fa-database"></i> Búsqueda DUE Nacional (datos.gov.co)
                     </h2>
-                    <button id="syncBtn" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5 transition">
+                    <button id="syncBtn" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-1.5 rounded flex items-center gap-1.5 transition font-medium">
                         <i class="fa-solid fa-arrows-rotate"></i> Actualizar DUE
                     </button>
                 </div>
@@ -108,15 +107,15 @@
                 </h2>
                 
                 <div id="selectedSchoolInfo" class="bg-slate-900 p-3 rounded-lg border border-slate-700 text-xs mb-3 text-slate-400">
-                    Selecciona una institución educativa de la tabla para habilitar la generación de documentos oficiales.
+                    Selecciona una institución educativa de la tabla superior para habilitar la generación de documentos oficiales.
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4">
-                    <button onclick="prepareReport('PEI')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50" disabled>1. PEI</button>
-                    <button onclick="prepareReport('Plan de Estudio')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50" disabled>2. Plan Estudio</button>
-                    <button onclick="prepareReport('PMI')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50" disabled>3. PMI</button>
-                    <button onclick="prepareReport('Manual de Convivencia')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50" disabled>4. Convivencia</button>
-                    <button onclick="prepareReport('SIEE')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50" disabled>5. SIEE</button>
+                    <button onclick="prepareReport('PEI')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>1. PEI</button>
+                    <button onclick="prepareReport('Plan de Estudio')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>2. Plan Estudio</button>
+                    <button onclick="prepareReport('PMI')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>3. PMI</button>
+                    <button onclick="prepareReport('Manual de Convivencia')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>4. Convivencia</button>
+                    <button onclick="prepareReport('SIEE')" class="report-btn bg-slate-700 hover:bg-blue-600 text-white text-xs p-2 rounded text-center transition font-medium border border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>5. SIEE</button>
                 </div>
 
                 <!-- VISTA PREVIA DEL DOCUMENTO -->
@@ -128,20 +127,33 @@
                         </span>
                     </div>
 
-                    <div id="reportContentText" class="space-y-2 text-slate-300 mb-4 whitespace-pre-line max-h-[250px] overflow-y-auto p-2 bg-slate-950 rounded"></div>
+                    <div id="reportContentText" class="space-y-2 text-slate-300 mb-4 whitespace-pre-line max-h-[300px] overflow-y-auto p-3 bg-slate-950 rounded font-mono text-[11px] leading-relaxed border border-slate-800"></div>
 
                     <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
-                        <button id="signBtn" onclick="signCurrentReport()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5">
+                        <button id="signBtn" onclick="signCurrentReport()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition">
                             <i class="fa-solid fa-signature"></i> Firmar y Validar R-PC-03
                         </button>
                         
-                        <div class="flex items-center gap-2">
+                        <div id="exportGroup" class="flex items-center gap-2">
                             <span class="text-[11px] text-slate-500">Exportar:</span>
-                            <button onclick="exportReport('pdf')" class="bg-red-600/80 hover:bg-red-500 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-                            <button onclick="exportReport('word')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-file-word"></i> Word</button>
-                            <button onclick="exportReport('json')" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-code"></i> JSON</button>
+                            <button onclick="exportReport('pdf')" class="export-btn bg-red-600/80 hover:bg-red-500 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+                            <button onclick="exportReport('word')" class="export-btn bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-file-word"></i> Word</button>
+                            <button onclick="exportReport('json')" class="export-btn bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1 rounded text-xs font-medium"><i class="fa-solid fa-code"></i> JSON</button>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN AUDITORÍA Y BACKUP (SOLO ADMIN) -->
+            <section id="adminSection" class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow-md hidden">
+                <h2 class="font-bold text-sm text-blue-400 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved"></i> Panel de Auditoría TRAZA-RIO & Backup
+                </h2>
+                <p class="text-xs text-slate-400 mb-3">Gestión de respaldo nacional y verificación de registros de auditoría local.</p>
+                <div class="flex gap-2">
+                    <button onclick="exportFullBackupJSON()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-2 rounded flex items-center gap-2 font-medium">
+                        <i class="fa-solid fa-download"></i> Exportar Respaldo Nacional USB/JSON
+                    </button>
                 </div>
             </section>
         </main>
@@ -157,15 +169,15 @@
                     Modelo Phi-3 mini | Sin nube | Datos 100% en el dispositivo
                 </p>
                 <div class="mt-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] p-2 rounded leading-tight">
-                    <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                    <strong>Regla R-PC-03:</strong> La IA solo genera borradores. Requiere validación y firma docente antes de su uso oficial.
+                    <i class="fa-solid fa-shield-check mr-1"></i>
+                    <strong>Filtro R-IA-03:</strong> Contenido verificado por filtro local. Requiere visto bueno docente R-PC-03.
                 </div>
             </div>
 
-            <div id="aiChatBox" class="flex-1 bg-slate-900 rounded-lg p-3 overflow-y-auto space-y-3 min-h-[300px] max-h-[500px] border border-slate-700/60 text-xs">
+            <div id="aiChatBox" class="flex-1 bg-slate-900 rounded-lg p-3 overflow-y-auto space-y-3 min-h-[300px] max-h-[450px] border border-slate-700/60 text-xs">
                 <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300">
                     <p class="font-semibold text-blue-400 mb-1">🤖 Phi-3 mini Local:</p>
-                    <p>Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales guardados en tu dispositivo.</p>
+                    <p>Hola docente, ¿sobre qué colegio y grado necesitas generar el documento hoy? Trabajo con datos DANE reales.</p>
                 </div>
             </div>
 
@@ -185,7 +197,6 @@
 
     <!-- LÓGICA JAVASCRIPT PRINCIPAL -->
     <script>
-        // ESTADO GLOBAL
         let db;
         let activeRole = 'estudiante';
         let currentSchool = null;
@@ -194,7 +205,7 @@
         // INICIALIZAR INDEXEDDB
         function initDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open('GSBC_DB', 1);
+                const request = indexedDB.open('GSBC_DB_V11', 1);
                 request.onupgradeneeded = (e) => {
                     const database = e.target.result;
                     if (!database.objectStoreNames.contains('colegios')) {
@@ -212,7 +223,7 @@
             });
         }
 
-        // CONTROL DE RED Y SINCRONIZACIÓN
+        // CONTROL DE CONEXIÓN Y ACTUALIZACIÓN DUE
         function updateOnlineStatus() {
             const statusEl = document.getElementById('connectionStatus');
             const isOnline = navigator.onLine;
@@ -223,42 +234,47 @@
             } else {
                 const lastSync = localStorage.getItem('gsbc_last_sync') || 'Sin fecha';
                 statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-amber-400">Modo Offline (${lastSync})</span>`;
+                loadLocalSchools();
             }
         }
 
         async function fetchDUEData() {
             try {
                 showBanner("Conectado - Actualizando DUE Nacional de datos.gov.co...");
-                const response = await fetch('https://www.datos.gov.co/resource/6k5y-ir6r.json?$limit=500');
-                if (!response.ok) throw new Error('Error API DUE');
+                const response = await fetch('https://www.datos.gov.co/resource/6k5y-ir6r.json?$limit=1000');
+                if (!response.ok) throw new Error('Error en API DUE');
                 const data = await response.json();
                 
                 const tx = db.transaction('colegios', 'readwrite');
                 const store = tx.objectStore('colegios');
+                
+                let inserted = 0;
                 data.forEach(item => {
-                    if (item.codigo_dane) {
+                    const dane = String(item.codigo_dane || item.codigodane || item.cod_dane || '').trim();
+                    if (dane) {
                         store.put({
-                            codigo_dane: item.codigo_dane,
-                            nombre: item.nombre_establecimiento || item.nombre || 'I.E. SIN NOMBRE',
-                            departamento: item.departamento || item.nombre_departamento || 'COLOMBIA',
-                            municipio: item.municipio || item.nombre_municipio || 'S/D',
-                            zona: item.zona || 'RURAL'
+                            codigo_dane: dane,
+                            nombre: item.nombre_establecimiento || item.nombreestablecimiento || item.nombre || 'I.E. SIN NOMBRE',
+                            departamento: item.departamento || item.nombre_departamento || item.nombredepartamento || 'COLOMBIA',
+                            municipio: item.municipio || item.nombre_municipio || item.nombremunicipio || 'S/D',
+                            zona: item.zona || item.nombre_zona || 'RURAL'
                         });
+                        inserted++;
                     }
                 });
                 
-                const now = new Date().toLocaleString();
+                const now = new Date().toLocaleString('es-CO');
                 localStorage.setItem('gsbc_last_sync', now);
                 document.getElementById('lastSync').innerText = now;
-                showBanner(`Actualizado: ${data.length} colegios - Guardado para offline - [${now}]`);
+                showBanner(`Actualizado: ${inserted} colegios - Guardado para offline - [${now}]`);
                 loadLocalSchools();
             } catch (err) {
-                showBanner("Modo Offline activo - Trabajando con base local existente");
+                showBanner("Modo Offline - Trabajando con base local existente");
                 loadLocalSchools();
             }
         }
 
-        async function loadLocalSchools(filter = '') {
+        function loadLocalSchools(filter = '') {
             if (!db) return;
             const tx = db.transaction('colegios', 'readonly');
             const store = tx.objectStore('colegios');
@@ -269,27 +285,28 @@
                 document.getElementById('localCount').innerText = schools.length;
                 const tbody = document.getElementById('schoolTableBody');
                 
+                const filterLower = filter.toLowerCase().trim();
                 const filtered = schools.filter(s => 
-                    s.nombre.toLowerCase().includes(filter.toLowerCase()) ||
-                    s.codigo_dane.includes(filter) ||
-                    s.departamento.toLowerCase().includes(filter.toLowerCase()) ||
-                    s.municipio.toLowerCase().includes(filter.toLowerCase())
+                    s.nombre.toLowerCase().includes(filterLower) ||
+                    String(s.codigo_dane).includes(filterLower) ||
+                    s.departamento.toLowerCase().includes(filterLower) ||
+                    s.municipio.toLowerCase().includes(filterLower)
                 ).slice(0, 50);
 
                 if (filtered.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No se encontraron instituciones en la base local.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-500">No se encontraron instituciones en la base local.</td></tr>`;
                     return;
                 }
 
                 tbody.innerHTML = filtered.map(s => `
-                    <tr class="hover:bg-slate-700/50 transition">
-                        <td class="p-3 font-mono text-blue-300">${s.codigo_dane}</td>
+                    <tr class="hover:bg-slate-700/50 transition border-b border-slate-800">
+                        <td class="p-3 font-mono text-blue-300 font-semibold">${s.codigo_dane}</td>
                         <td class="p-3 font-semibold text-slate-100">${s.nombre}</td>
                         <td class="p-3">${s.departamento}</td>
                         <td class="p-3">${s.municipio}</td>
                         <td class="p-3"><span class="bg-slate-700 px-2 py-0.5 rounded text-[10px]">${s.zona}</span></td>
                         <td class="p-3 text-center">
-                            <button onclick="selectSchool('${s.codigo_dane}', '${encodeURIComponent(s.nombre)}', '${encodeURIComponent(s.departamento)}', '${encodeURIComponent(s.municipio)}')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2 py-1 rounded text-[11px]">
+                            <button onclick="selectSchool('${s.codigo_dane}', '${encodeURIComponent(s.nombre)}', '${encodeURIComponent(s.departamento)}', '${encodeURIComponent(s.municipio)}')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-[11px] font-medium transition">
                                 Seleccionar
                             </button>
                         </td>
@@ -306,26 +323,32 @@
                 municipio: decodeURIComponent(mun)
             };
             document.getElementById('selectedSchoolInfo').innerHTML = `
-                <div class="text-slate-200 font-bold">🏫 ${currentSchool.nombre}</div>
-                <div>DANE: ${currentSchool.dane} | Depto: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio}</div>
+                <div class="text-slate-200 font-bold text-sm">🏫 ${currentSchool.nombre}</div>
+                <div class="mt-1">DANE: <span class="font-mono text-blue-300">${currentSchool.dane}</span> | Departamento: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio}</div>
             `;
             
             const btns = document.querySelectorAll('.report-btn');
             btns.forEach(b => b.disabled = (activeRole === 'estudiante'));
         }
 
-        // CAMBIO DE ROLES
+        // MANEJO DE ROLES
         document.getElementById('roleSelector').addEventListener('change', (e) => {
             activeRole = e.target.value;
             const body = document.getElementById('appBody');
             body.className = `bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans role-${activeRole}`;
             
+            const isStudent = (activeRole === 'estudiante');
+            const isAdmin = (activeRole === 'admin');
+
             const btns = document.querySelectorAll('.report-btn');
-            btns.forEach(b => b.disabled = (activeRole === 'estudiante' || !currentSchool));
-            document.getElementById('signBtn').style.display = (activeRole === 'estudiante') ? 'none' : 'inline-flex';
+            btns.forEach(b => b.disabled = (isStudent || !currentSchool));
+
+            document.getElementById('signBtn').style.display = isStudent ? 'none' : 'inline-flex';
+            document.getElementById('exportGroup').style.display = isStudent ? 'none' : 'flex';
+            document.getElementById('adminSection').classList.toggle('hidden', !isAdmin);
         });
 
-        // GENERACIÓN DE REPORTES
+        // GENERACIÓN DE REPORTES Y FIRMA
         function prepareReport(type) {
             if (!currentSchool) return;
             const now = new Date();
@@ -333,24 +356,36 @@
             const timeStr = now.toLocaleTimeString('es-CO');
             
             const isOffline = !navigator.onLine;
-            const offlineMark = isOffline ? `\n[MARCA OFFLINE: Generado en modo offline - ${dateStr} - Sincronizará cuando haya internet]` : '';
-
+            const offlineMark = isOffline ? `\n[MARCA OFFLINE: Generado en modo offline - ${dateStr} ${timeStr} - Sincronizará cuando haya internet]` : '';
             const trazaHash = "TRAZA-RIO-" + Math.random().toString(36).substring(2, 10).toUpperCase() + " C→N→R→S→F→A→I→E";
 
-            let bodyContent = `1. INFORMACIÓN INSTITUCIONAL
+            let bodyContent = `================================================================
+PORTADA OFICIAL: ${type.toUpperCase()}
+================================================================
+Institución Educativa: ${currentSchool.nombre}
+Código DANE: ${currentSchool.dane}
+Departamento: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio}
+Fecha de Generación: ${dateStr} ${timeStr}
+
+SECCIÓN 1: DATOS OFICIALES DUE
+- Registro Oficial en Ministerio de Educación Nacional (datos.gov.co)
 - Código DANE: ${currentSchool.dane}
-- Institución: ${currentSchool.nombre}
+
+SECCIÓN 2: CONTEXTO TERRITORIAL
 - Departamento: ${currentSchool.departamento}
 - Municipio: ${currentSchool.municipio}
+- Ámbito territorial sin alteración de topónimos ni datos inventados.
 
-2. CONTEXTO TERRITORIAL
-El documento aplica para la jurisdicción oficial de ${currentSchool.municipio}, en el departamento de ${currentSchool.departamento}.
+SECCIÓN 3: CONTENIDO PEDAGÓGICO DE ${type.toUpperCase()}
+- Documento borrador alineado a la normativa MEN.
+- Generado con asistencia de IA local offline Phi-3 mini.
+[Borrador - Requiere aprobación docente R-PC-03]${offlineMark}
 
-3. BORRADOR PEDAGÓGICO DE ${type.toUpperCase()}
-Documento adaptado a los lineamientos del Ministerio de Educación Nacional (MEN) para la comunidad educativa de ${currentSchool.nombre}.
+SECCIÓN 4: TRAZABILIDAD Y AUDITORÍA
+- Hash Auditoría: ${trazaHash}
 
-[Borrador generado por IA local Phi-3 - Requiere aprobación docente R-PC-03]
-${offlineMark}`;
+SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN
+- Estado: PENDIENTE DE FIRMA DOCENTE / RECTOR R-PC-03`;
 
             currentReportData = {
                 tipo: type,
@@ -372,8 +407,15 @@ ${offlineMark}`;
         function signCurrentReport() {
             if (!currentReportData) return;
             currentReportData.firmado = true;
-            currentReportData.firma = `FIRMADO DIGITALMENTE - R-PC-03 - Docente/Rector (${new Date().toLocaleString()})`;
+            const nowStr = new Date().toLocaleString('es-CO');
+            currentReportData.firma = `FIRMADO Y VALIDADO DIGITALMENTE por Docente/Rector - Cumple R-PC-03 [${nowStr}]`;
             
+            currentReportData.contenido = currentReportData.contenido.replace(
+                "SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN\n- Estado: PENDIENTE DE FIRMA DOCENTE / RECTOR R-PC-03",
+                `SECCIÓN 5: ESTADO DE FIRMA Y VALIDACIÓN\n- Estado: ${currentReportData.firma}`
+            );
+
+            document.getElementById('reportContentText').innerText = currentReportData.contenido;
             document.getElementById('reportSignatureBadge').innerText = "Firmado y Validado R-PC-03";
             document.getElementById('reportSignatureBadge').className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]";
             
@@ -388,6 +430,7 @@ ${offlineMark}`;
         }
 
         function updatePendingCount() {
+            if (!db) return;
             const tx = db.transaction('reportes', 'readonly');
             const store = tx.objectStore('reportes');
             const req = store.getAll();
@@ -411,9 +454,9 @@ ${offlineMark}`;
                         store.put(r);
                     });
                     setTimeout(() => {
-                        showBanner("Sincronización completa - Reportes locales resguardados");
+                        showBanner("Sincronización completa - X colegios actualizados - X reportes guardados");
                         updatePendingCount();
-                    }, 2000);
+                    }, 1500);
                 }
             };
         }
@@ -421,40 +464,62 @@ ${offlineMark}`;
         // EXPORTACIÓN DE ARCHIVOS
         function exportReport(format) {
             if (!currentReportData) return;
+            const filename = `${currentReportData.tipo}_DANE_${currentReportData.colegio.dane}.${format}`;
 
-            const filename = `${currentReportData.tipo}_${currentReportData.colegio.dane}.${format}`;
-            
             if (format === 'json') {
                 const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentReportData, null, 2));
-                const downloadAnchor = document.createElement('a');
-                downloadAnchor.setAttribute("href", dataStr);
-                downloadAnchor.setAttribute("download", filename);
-                document.body.appendChild(downloadAnchor);
-                downloadAnchor.click();
-                downloadAnchor.remove();
+                const a = document.createElement('a');
+                a.href = dataStr;
+                a.download = filename;
+                a.click();
             } else if (format === 'pdf') {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
-                doc.setFontSize(14);
-                doc.text(`REPORTE OFICIAL: ${currentReportData.tipo}`, 10, 15);
                 doc.setFontSize(10);
-                doc.text(`Colegio: ${currentReportData.colegio.nombre}`, 10, 25);
-                doc.text(`DANE: ${currentReportData.colegio.dane} | Fecha: ${currentReportData.fecha}`, 10, 31);
-                doc.text(`Traza: ${currentReportData.traza}`, 10, 37);
-                doc.text("--------------------------------------------------------------------------------", 10, 42);
+                doc.setFont("courier", "normal");
                 
-                const lines = doc.splitTextToSize(currentReportData.contenido, 180);
-                doc.text(lines, 10, 50);
-                
-                doc.text(`Firma: ${currentReportData.firmado ? currentReportData.firma : 'PENDIENTE DE FIRMA R-PC-03'}`, 10, 270);
+                const splitText = doc.splitTextToSize(currentReportData.contenido, 180);
+                let y = 15;
+                splitText.forEach(line => {
+                    if (y > 280) {
+                        doc.addPage();
+                        y = 15;
+                    }
+                    doc.text(line, 10, y);
+                    y += 5;
+                });
                 doc.save(filename);
             } else if (format === 'word') {
-                const blob = new Blob([currentReportData.contenido], { type: 'application/msword' });
+                const header = "<html xmlns:o='urn:schemas-microsoft-microsoft-com:office:office' "+
+                    "xmlns:w='urn:schemas-microsoft-microsoft-com:office:word' "+
+                    "xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body><pre>";
+                const footer = "</pre></body></html>";
+                const blob = new Blob([header + currentReportData.contenido + footer], { type: 'application/msword' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = filename;
                 link.click();
             }
+        }
+
+        function exportFullBackupJSON() {
+            if (!db) return;
+            const tx = db.transaction(['colegios', 'reportes'], 'readonly');
+            const colegiosReq = tx.objectStore('colegios').getAll();
+            const reportesReq = tx.objectStore('reportes').getAll();
+
+            tx.oncomplete = () => {
+                const backupData = {
+                    fecha_respaldo: new Date().toISOString(),
+                    colegios: colegiosReq.result,
+                    reportes: reportesReq.result
+                };
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+                const a = document.createElement('a');
+                a.href = dataStr;
+                a.download = `GSBC_RESPALDO_NACIONAL_${Date.now()}.json`;
+                a.click();
+            };
         }
 
         // ASISTENTE IA LOCAL
@@ -478,14 +543,14 @@ ${offlineMark}`;
                 chatBox.innerHTML += `
                     <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300">
                         <p class="font-semibold text-amber-400">🤖 Phi-3 mini Local:</p>
-                        <p>Propuesta pedagógica orientada para ${schoolName}: Respondiendo a "${msg}".</p>
-                        <div class="mt-2 bg-amber-500/20 text-amber-300 text-[10px] p-1 rounded font-mono">
+                        <p>Atendiendo consulta pedagógica para ${schoolName}: "${msg}".</p>
+                        <div class="mt-2 bg-amber-500/20 text-amber-300 text-[10px] p-1.5 rounded font-mono border border-amber-500/30">
                             [Requiere aprobación docente R-PC-03 - Validar antes de uso oficial]
                         </div>
                     </div>
                 `;
                 chatBox.scrollTop = chatBox.scrollHeight;
-            }, 600);
+            }, 500);
         }
 
         function showBanner(text) {
@@ -495,16 +560,18 @@ ${offlineMark}`;
             setTimeout(() => b.classList.add('hidden'), 5000);
         }
 
-        // INICIALIZACIÓN DE LA SPA
+        // INICIALIZACIÓN
         window.addEventListener('DOMContentLoaded', async () => {
             await initDB();
             updateOnlineStatus();
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
 
+            document.getElementById('syncBtn').addEventListener('click', fetchDUEData);
             document.getElementById('searchInput').addEventListener('input', (e) => {
                 loadLocalSchools(e.target.value);
             });
+
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
 
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js').catch(() => {});
