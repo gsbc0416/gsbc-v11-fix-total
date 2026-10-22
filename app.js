@@ -110,7 +110,7 @@ function changeRole(role) {
     }
 }
 
-// 4. BÚSQUEDA (API real con Token y búsqueda por DANE)
+// 4. BÚSQUEDA (API real, Token, DANE y texto, Dataset MEN x5ay-984n)
 async function executeNationalSearch() {
     const query = (document.getElementById('searchInput').value || "").trim();
     const sourceBadge = document.getElementById('searchSourceBadge');
@@ -121,11 +121,11 @@ async function executeNationalSearch() {
             let url = "";
             // Si el usuario escribe solo números, buscamos por código DANE exacto
             if (/^\d+$/.test(query)) {
-                url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=codigo_dane='${query}'`;
+                url = `https://www.datos.gov.co/resource/x5ay-984n.json?$where=codigo_dane='${query}'`;
             } else {
                 // Si es texto, buscamos por nombre o departamento (límite 1000)
                 const upperQuery = query.toUpperCase();
-                url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=lower(nombre_establecimiento) like lower('%25${upperQuery}%25') OR lower(departamento) like lower('%25${upperQuery}%25')&$limit=1000`;
+                url = `https://www.datos.gov.co/resource/x5ay-984n.json?$where=lower(nombre_establecimiento) like lower('%25${upperQuery}%25') OR lower(departamento) like lower('%25${upperQuery}%25')&$limit=1000`;
             }
 
             const response = await fetch(url, {
@@ -136,13 +136,13 @@ async function executeNationalSearch() {
                 const apiData = await response.json();
                 if (apiData && apiData.length > 0) {
                     results = apiData.map(item => ({
-                        dane: item.codigo_dane || item.cod_dane || "N/A",
-                        nombre: item.nombre_establecimiento || item.nombreinstitucion || "I.E. SIN NOMBRE",
+                        dane: item.codigo_dane || "N/A",
+                        nombre: item.nombre_establecimiento || "I.E. SIN NOMBRE",
                         depto: item.departamento || "N/A",
                         municipio: item.municipio || "N/A",
                         zona: item.zona || "RURAL"
                     }));
-                    sourceBadge.textContent = "Origen: API Datos Abiertos";
+                    sourceBadge.textContent = "Origen: API Datos Abiertos (MEN)";
                     saveSchoolsToDB(results);
                 }
             }
