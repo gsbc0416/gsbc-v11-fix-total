@@ -10,8 +10,6 @@ let isSigned = false;
 let zoneChartInstance = null;
 let deptChartInstance = null;
 
-// SEMILLA DE DATOS (Eliminar cuando la API de datos.gov.co funcione 100% en tu entorno)
-// Se usa solo si la API falla y la base IndexedDB está vacía.
 const SEED_DATA = [
     { dane: "113001000123", nombre: "I.E. TECNICA AGROPECUARIA EL SALADO", depto: "BOLIVAR", municipio: "CARMEN DE BOLIVAR", zona: "RURAL" },
     { dane: "120001000456", nombre: "INSTITUCION EDUCATIVA RIO SECO", depto: "CESAR", municipio: "VALLEDUPAR", zona: "RURAL" }
@@ -21,16 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initIndexedDB();
     initChartsSafely();
     checkNetworkStatus();
-    await executeNationalSearch(); // Carga inicial
+    await executeNationalSearch();
     window.addEventListener('online', checkNetworkStatus);
     window.addEventListener('offline', checkNetworkStatus);
 });
 
-// 1. INDEXEDDB
+// 1. INDEXEDDB (Versión 2 para forzar actualización de estructura)
 function initIndexedDB() {
     return new Promise((resolve) => {
         try {
-            const request = indexedDB.open("GSBC_DB_v11", 1);
+            // CAMBIO AQUÍ: Versión 2
+            const request = indexedDB.open("GSBC_DB_v11", 2);
             request.onupgradeneeded = (e) => {
                 const database = e.target.result;
                 if (!database.objectStoreNames.contains("schools")) {
@@ -69,14 +68,18 @@ function checkNetworkStatus() {
     if (navigator.onLine) {
         statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-emerald-400">En línea</span>`;
         syncBanner.classList.add('hidden');
-        offlineStatusText.textContent = "Sincronizado";
-        offlineStatusText.className = "font-mono text-emerald-400";
+        if (offlineStatusText) {
+            offlineStatusText.textContent = "Sincronizado";
+            offlineStatusText.className = "font-mono text-emerald-400";
+        }
     } else {
         statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-amber-400">Modo Offline</span>`;
         syncBanner.textContent = "⚡ Operando en Modo 100% Offline. Todos los reportes se guardarán en la memoria local.";
         syncBanner.classList.remove('hidden');
-        offlineStatusText.textContent = "Totalmente Funcional (Local)";
-        offlineStatusText.className = "font-mono text-blue-400";
+        if (offlineStatusText) {
+            offlineStatusText.textContent = "Totalmente Funcional (Local)";
+            offlineStatusText.className = "font-mono text-blue-400";
+        }
     }
 }
 
@@ -105,16 +108,16 @@ function changeRole(role) {
     }
 }
 
-// 4. BÚSQUEDA (API real con fallback a IndexedDB)
+// 4. BÚSQUEDA (API real corregida)
 async function executeNationalSearch() {
     const query = (document.getElementById('searchInput').value || "").trim().toUpperCase();
     const sourceBadge = document.getElementById('searchSourceBadge');
     let results = [];
 
-    // Intentar API si hay internet
     if (navigator.onLine && query.length >= 3) {
         try {
-            const url = `https://www.datos.gov.co/resource/23ew-ty2e.json?$where=lower(nombreinstitucion) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25')&$limit=20`;
+            // CAMBIO AQUÍ: ID del recurso corregido a 6k5y-ir6r
+            const url = `https://www.datos.gov.co/resource/6k5y-ir6r.json?$where=lower(nombreinstitucion) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25')&$limit=20`;
             const response = await fetch(url);
             if (response.ok) {
                 const apiData = await response.json();
@@ -127,7 +130,6 @@ async function executeNationalSearch() {
                         zona: item.zona || "RURAL"
                     }));
                     sourceBadge.textContent = "Origen: API Datos Abiertos";
-                    // Guardar en IndexedDB para offline
                     saveSchoolsToDB(results);
                 }
             }
@@ -136,7 +138,6 @@ async function executeNationalSearch() {
         }
     }
 
-    // Fallback a IndexedDB o Seed
     if (results.length === 0) {
         if (!query) {
             results = await getSchoolsFromDB();
@@ -235,7 +236,6 @@ function prepareReport(type) {
     sigBadge.textContent = "Pendiente de Firma R-PC-03";
     sigBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
 
-    // Plantillas simplificadas (puedes expandirlas)
     const templates = {
         'PEI': `DOCUMENTO INSTITUCIONAL PEI\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\nUBICACIÓN: ${currentSchool.municipio}, ${currentSchool.depto}\n\n1. COMPONENTE DIRECTIVO\n...`,
         'Plan de Estudio': `PLAN DE ESTUDIOS\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\n\nEstructura curricular...`,
@@ -280,7 +280,6 @@ async function generateSHA256(str) {
     } catch (e) {
         console.warn("Fallback JS Hash");
     }
-    // Fallback simple (no criptográfico, solo para demo si falla crypto.subtle)
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = ((hash << 5) - hash) + str.charCodeAt(i);
@@ -289,7 +288,7 @@ async function generateSHA256(str) {
     return `fallback_${Math.abs(hash).toString(16)}`;
 }
 
-// 8. INDEXEDDB HELPERS
+// 8. INDEXEDDB HELPERS (AQUÍ ESTÁ LA FUNCIÓN QUE FALTABA)
 function saveReportToDB() {
     if (!db) return;
     try {
@@ -319,19 +318,175 @@ function saveReportToDB() {
 
 function saveSchoolsToDB(schools) {
     if (!db) return;
-    const tx = db.transaction(["schools"], "readwrite");
-    const store = tx.objectStore("schools");
-    schools.forEach(s => store.put(s));
+    try {
+        const tx = db.transaction(["schools"], "readwrite");
+        const store = tx.objectStore("schools");
+        schools.forEach(s => store.put(s));
+    } catch(e) { console.error("Error guardando escuelas:", e); }
 }
 
 function getSchoolsFromDB() {
     return new Promise((resolve) => {
         if (!db) return resolve([]);
-        const tx = db.transaction(["schools"], "readonly");
-        const req = tx.objectStore("schools").getAll();
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => resolve([]);
+        try {
+            const tx = db.transaction(["schools"], "readonly");
+            const req = tx.objectStore("schools").getAll();
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => resolve([]);
+        } catch(e) {
+            resolve([]);
+        }
     });
 }
 
-// ... (El resto de funciones de gráficos, auditoría, exportación y AI se mantienen igual que en tu código original, solo asegúrate de que los IDs coincidan) ...
+// --- FUNCIONES RESTAURADAS QUE FALTABAN ---
+function updateCounts() {
+    if (!db) return;
+    try {
+        const tx = db.transaction(["reports"], "readonly");
+        const store = tx.objectStore("reports");
+        const countReq = store.count();
+        countReq.onsuccess = () => {
+            const localCount = document.getElementById('localCount');
+            const metricSigned = document.getElementById('metricSigned');
+            if (localCount) localCount.textContent = countReq.result;
+            if (metricSigned) metricSigned.textContent = countReq.result;
+        };
+    } catch (e) { console.warn("Error en updateCounts", e); }
+}
+
+function updateMetrics(schools, ruralCount, deptosCount) {
+    const elTotal = document.getElementById('metricTotal');
+    const elRural = document.getElementById('metricRural');
+    const elDeptos = document.getElementById('metricDeptos');
+    if (elTotal) elTotal.textContent = schools.length;
+    if (elRural) elRural.textContent = ruralCount;
+    if (elDeptos) elDeptos.textContent = deptosCount;
+}
+
+function loadAuditLogs() {
+    if (!db) return;
+    try {
+        const tx = db.transaction(["audit"], "readonly");
+        const store = tx.objectStore("audit");
+        const req = store.getAll();
+
+        req.onsuccess = () => {
+            const logs = req.result;
+            const tbody = document.getElementById('auditTableBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-slate-500 italic">No hay firmas guardadas en la base local.</td></tr>`;
+                return;
+            }
+
+            logs.slice(-5).reverse().forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-1.5">${log.dane}</td>
+                    <td class="p-1.5 text-sky-400">${log.tipo}</td>
+                    <td class="p-1.5 text-slate-400">${log.fecha}</td>
+                    <td class="p-1.5 font-mono text-amber-400 text-[10px]">${log.hash.substring(0, 10)}...</td>
+                    <td class="p-1.5 text-center"><span class="text-emerald-400 font-semibold">${log.estado}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        };
+    } catch(e) { console.warn(e); }
+}
+
+function initChartsSafely() {
+    if (typeof Chart === 'undefined') return;
+    try {
+        const ctxZone = document.getElementById('zoneChart');
+        if (ctxZone) {
+            zoneChartInstance = new Chart(ctxZone.getContext('2d'), {
+                type: 'doughnut',
+                data: { labels: ['Rural', 'Urbana'], datasets: [{ data: [0, 0], backgroundColor: ['#10b981', '#3b82f6'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+        }
+
+        const ctxDept = document.getElementById('deptChart');
+        if (ctxDept) {
+            deptChartInstance = new Chart(ctxDept.getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Sedes', data: [], backgroundColor: '#8b5cf6' }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
+            });
+        }
+    } catch(e) { console.warn("Chart.js error:", e); }
+}
+
+function updateChartsSafely(schools) {
+    if (!zoneChartInstance || !deptChartInstance) return;
+    try {
+        let rural = 0, urbana = 0;
+        const deptCounts = {};
+
+        schools.forEach(s => {
+            if (s.zona.toUpperCase().includes('RURAL')) rural++;
+            else urbana++;
+            deptCounts[s.depto] = (deptCounts[s.depto] || 0) + 1;
+        });
+
+        zoneChartInstance.data.datasets[0].data = [rural, urbana];
+        zoneChartInstance.update();
+
+        deptChartInstance.data.labels = Object.keys(deptCounts);
+        deptChartInstance.data.datasets[0].data = Object.values(deptCounts);
+        deptChartInstance.update();
+    } catch(e) { console.warn(e); }
+}
+
+function exportFullBackupJSON() {
+    if (!db) return;
+    try {
+        const tx = db.transaction(["reports", "audit"], "readonly");
+        const reportsReq = tx.objectStore("reports").getAll();
+        const auditReq = tx.objectStore("audit").getAll();
+
+        tx.oncomplete = () => {
+            const backupData = {
+                version: "GSBC_v11_RIO_CARIBE",
+                fechaRespaldo: new Date().toISOString(),
+                reportesFirmados: reportsReq.result,
+                bitacoraAuditoria: auditReq.result
+            };
+            const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `GSBC_RESPALDO_USB_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        };
+    } catch(e) { alert("Error al exportar."); }
+}
+
+function toggleAboutModal(show) {
+    document.getElementById('aboutModal').classList.toggle('hidden', !show);
+}
+
+function askLocalAI() {
+    const input = document.getElementById('aiInput');
+    const chatBox = document.getElementById('aiChatBox');
+    const query = input.value.trim();
+    if (!query) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = "bg-blue-900/60 p-2.5 rounded-lg border border-blue-700/80 text-slate-100 text-right font-medium";
+    userMsg.textContent = query;
+    chatBox.appendChild(userMsg);
+    input.value = '';
+
+    setTimeout(() => {
+        const aiMsg = document.createElement('div');
+        aiMsg.className = "bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300";
+        aiMsg.innerHTML = `<p class="font-semibold text-sky-400 mb-1"><i class="fa-solid fa-sparkles"></i> Asistente Pedagógico:</p>Sugerencia respecto a "${query.substring(0, 35)}...": Recuerda adaptar la escala de evaluación al Decreto 1290 e incorporar proyectos pedagógicos productivos en el PEI institucional.`;
+        chatBox.appendChild(aiMsg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
+}
