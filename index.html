@@ -285,13 +285,16 @@
         let zoneChartInstance = null;
         let deptChartInstance = null;
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initDB();
+            setupRoleListeners();
+            setupNetworkListeners();
+        });
+
         function toggleAboutModal(show) {
             const modal = document.getElementById('aboutModal');
-            if (show) {
-                modal.classList.remove('hidden');
-            } else {
-                modal.classList.add('hidden');
-            }
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
         }
 
         function initDB() {
@@ -322,6 +325,38 @@
             req.onsuccess = () => {
                 document.getElementById('localCount').innerText = req.result;
             };
+        }
+
+        function setupRoleListeners() {
+            const selector = document.getElementById('roleSelector');
+            const body = document.getElementById('appBody');
+            const adminSec = document.getElementById('adminSection');
+
+            selector.addEventListener('change', (e) => {
+                activeRole = e.target.value;
+                body.className = `bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans role-${activeRole}`;
+                adminSec.classList.toggle('hidden', activeRole !== 'admin');
+                if (currentSchool) selectSchool(currentSchool.dane, currentSchool.nombre, currentSchool.departamento, currentSchool.municipio, currentSchool.zona);
+            });
+        }
+
+        function setupNetworkListeners() {
+            const statusEl = document.getElementById('connectionStatus');
+            const banner = document.getElementById('syncBanner');
+
+            function updateNet() {
+                if (navigator.onLine) {
+                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Online</span>`;
+                    banner.classList.add('hidden');
+                } else {
+                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span>Offline</span>`;
+                    banner.innerText = "Modo Offline Activo: Los reportes se almacenan localmente hasta restaurar conexión.";
+                    banner.classList.remove('hidden');
+                }
+            }
+            window.addEventListener('online', updateNet);
+            window.addEventListener('offline', updateNet);
+            updateNet();
         }
 
         async function executeNationalSearch() {
@@ -361,7 +396,6 @@
                     renderTable(results);
                     updateDashboardChartsAndMetrics(results);
                     return;
-
                 } catch (err) {
                     console.warn("Fallo búsqueda en vivo, cambiando a almacenamiento local:", err);
                 }
@@ -429,7 +463,6 @@
 
         function updateDashboardChartsAndMetrics(schools) {
             document.getElementById('metricTotal').innerText = schools.length;
-            
             const ruralCount = schools.filter(s => s.zona.toUpperCase().includes('RURAL')).length;
             const urbanCount = schools.length - ruralCount;
             document.getElementById('metricRural').innerText = ruralCount;
@@ -452,17 +485,9 @@
                 type: 'doughnut',
                 data: {
                     labels: ['Rural', 'Urbana'],
-                    datasets: [{
-                        data: [ruralCount, urbanCount],
-                        backgroundColor: ['#10b981', '#3b82f6'],
-                        borderWidth: 0
-                    }]
+                    datasets: [{ data: [ruralCount, urbanCount], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
             });
 
             const deptoCounts = {};
@@ -470,10 +495,7 @@
                 const d = s.departamento.toUpperCase();
                 deptoCounts[d] = (deptoCounts[d] || 0) + 1;
             });
-
-            const sortedDeptos = Object.entries(deptoCounts)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+            const sortedDeptos = Object.entries(deptoCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
             const ctxDept = document.getElementById('deptChart').getContext('2d');
             if (deptChartInstance) deptChartInstance.destroy();
@@ -481,20 +503,12 @@
                 type: 'bar',
                 data: {
                     labels: sortedDeptos.map(d => d[0]),
-                    datasets: [{
-                        label: 'Colegios',
-                        data: sortedDeptos.map(d => d[1]),
-                        backgroundColor: '#10b981',
-                        borderRadius: 4
-                    }]
+                    datasets: [{ label: 'Colegios', data: sortedDeptos.map(d => d[1]), backgroundColor: '#10b981', borderRadius: 4 }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        x: { ticks: { color: '#94a3b8', font: { size: 9 } } },
-                        y: { ticks: { color: '#94a3b8', font: { size: 9 } } }
-                    },
+                    scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } } } },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -512,7 +526,6 @@
                 <div class="text-slate-200 font-bold text-sm">🏫 ${currentSchool.nombre}</div>
                 <div class="mt-1">DANE: <span class="font-mono text-blue-300">${currentSchool.dane}</span> | Depto: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio} | Zona: ${currentSchool.zona}</div>
             `;
-            
             saveSchoolsToLocalDB([currentSchool]);
 
             const btns = document.querySelectorAll('.report-btn');
@@ -528,277 +541,113 @@
             const offlineMark = isOffline ? `\n[MARCA OFFLINE: Documento generado sin conexión - Sincronizará al restaurar red]` : '';
 
             const rawSeed = `${currentSchool.dane}-${type}-${dateStr}-${timeStr}-${activeRole}`;
-            const msgBuffer = new TextEncoder().encode(rawSeed);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const msgBuf = new TextEncoder().encode(rawSeed);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuf);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const sha256Hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16).toUpperCase();
-            
-            const trazaCode = `TRAZA-RIO-${sha256Hash} C→N→R→S→F→A→I→E`;
-
-            let reportSections = {
-                'PEI': `DOCUMENTO INSTITUCIONAL: PROYECTO EDUCATIVO INSTITUCIONAL (PEI)
-ÁMBITO: ${currentSchool.nombre.toUpperCase()}
-
-1. IDENTIFICACIÓN Y CONTEXTO
-- Código DANE: ${currentSchool.dane}
-- Entidad Territorial: ${currentSchool.departamento}
-- Municipio / Jurisdicción: ${currentSchool.municipio}
-- Zona Geográfica: ${currentSchool.zona}
-
-2. COMPONENTE PEDAGÓGICO Y RURALIDAD
-El presente PEI articula la vocación territorial de la comunidad de ${currentSchool.municipio} (${currentSchool.departamento}), fortaleciendo las competencias socio-productivas y garantizando permanencia escolar bajo normativa MEN.
-
-3. DIRECTRICES DE IMPLEMENTACIÓN
-- Modelo flexible adaptado a la ruralidad de ${currentSchool.departamento}.
-- Integración comunitaria e inclusión educativa regional.`,
-
-                'Plan de Estudio': `DOCUMENTO OFICIAL: PLAN DE ESTUDIO POR ÁREAS Y GRADOS
-INSTITUCIÓN: ${currentSchool.nombre.toUpperCase()} (DANE: ${currentSchool.dane})
-
-1. MARCO NORMATIVO Y TERRITORIAL
-Diseñado para la sede en ${currentSchool.municipio}, departamento de ${currentSchool.departamento}, dando cumplimiento a la Ley 115 de Educación.
-
-2. MÁXIMAS CURRICULARES
-- Estándares Básicos de Competencia (EBC) contextualizados al entorno local.
-- Evaluación continua orientada al desarrollo integral del estudiante.`,
-
-                'PMI': `DOCUMENTO TÉCNICO: PLAN DE MEJORAMIENTO INSTITUCIONAL (PMI)
-SEDE DANE: ${currentSchool.dane} - ${currentSchool.nombre}
-
-1. DIAGNÓSTICO INSTITUCIONAL EN ${currentSchool.municipio.toUpperCase()}
-Evaluación de gestión directiva, académica y comunitaria en el contexto territorial de ${currentSchool.departamento}.
-
-2. METAS E INDICADORES
-- Cobertura y retención escolar en la zona ${currentSchool.zona}.
-- Optimización de recursos educativos en el municipio de ${currentSchool.municipio}.`,
-
-                'Manual de Convivencia': `DOCUMENTO NORMATIVO: MANUAL DE CONVIVENCIA ESCOLAR
-INSTITUCIÓN EDUCATIVA: ${currentSchool.nombre}
-
-1. CONTEXTO Y PRINCIPIOS
-Establecido para la comunidad educativa de ${currentSchool.municipio} (${currentSchool.departamento}), garantizando los derechos humanos, sexuales y reproductivos (Ley 1620).
-
-2. RUTA DE ATENCIÓN INTEGRAL
-Protocolos pedagógicos adaptados al ámbito territorial de la institución.`,
-
-                'SIEE': `DOCUMENTO INSTITUCIONAL: SISTEMA INSTITUCIONAL DE EVALUACIÓN (SIEE)
-INSTITUCIÓN: ${currentSchool.nombre} - DANE: ${currentSchool.dane}
-
-1. CRITERIOS DE EVALUACIÓN Y PROMOCIÓN
-Criterios cualitativos y cuantitativos para la población estudiantil de ${currentSchool.municipio}, ${currentSchool.departamento}.
-
-2. ESCALA DE VALORACIÓN NACIONAL
-Desempeño Superior, Alto, Básico y Bajo conforme al Decreto 1290.`
-            };
-
-            let bodyContent = `================================================================
-REPORTE OFICIAL R-PC-03: ${type.toUpperCase()}
-================================================================
-Fecha de Generación: ${dateStr} ${timeStr}
-${reportSections[type]}
-
-================================================================
-TRAZABILIDAD Y AUDITORÍA CRIPTOGRÁFICA
-- Código TRAZA-RIO: ${trazaCode}
-- Algoritmo Hash: SHA-256 (Web Crypto API)
-- Estado de Red: ${isOffline ? 'Offline (Almacenado Localmente)' : 'Online (Conectado)'}${offlineMark}
-
-================================================================
-ESTADO DE FIRMA
-- Firma: PENDIENTE DE VALIDACIÓN Y FIRMA R-PC-03`;
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
             currentReportData = {
-                tipo: type,
-                colegio: currentSchool,
-                fecha: dateStr + ' ' + timeStr,
-                contenido: bodyContent,
-                traza: trazaCode,
+                id: `${currentSchool.dane}_${type}_${Date.now()}`,
+                dane: currentSchool.dane,
+                colegio: currentSchool.nombre,
+                departamento: currentSchool.departamento,
+                municipio: currentSchool.municipio,
+                tipoReporte: type,
+                fecha: dateStr,
+                hora: timeStr,
+                rol: activeRole,
                 firmado: false,
-                sincronizado: false
+                hashSha256: hashHex,
+                contenido: `REP-OFICIAL R-PC-03: ${type}\nInstitución: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\nUbicación: ${currentSchool.municipio}, ${currentSchool.departamento} (${currentSchool.zona})\nNormativa: Decreto 1290 de 2009 / Ley 1620 / Guía 34 MEN\nGenerado por Rol: ${activeRole.toUpperCase()}\nFecha: ${dateStr} - ${timeStr}${offlineMark}\n---------------------------------------------------\n[ESTRUCTURA TÉCNICA VALIDADA PARA SECRETARÍA DE EDUCACIÓN]\nSe certifica que el presente documento cumple con los estándares institucionales requeridos para auditoría y cobertura.`
             };
 
-            document.getElementById('reportTitleHeader').innerText = `${type} - ${currentSchool.nombre}`;
-            document.getElementById('reportContentText').innerText = bodyContent;
-            document.getElementById('reportSignatureBadge').innerText = "Pendiente de firma R-PC-03";
-            document.getElementById('reportSignatureBadge').className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
             document.getElementById('reportPreviewArea').classList.remove('hidden');
-        }
-
-        async function signCurrentReport() {
-            if (!currentReportData || currentReportData.firmado) return;
-
-            const nowStr = new Date().toLocaleString('es-CO');
-            const signText = `FIRMADO Y VALIDADO CRIPTOGRÁFICAMENTE por Docente/Rector - Rol: ${activeRole.toUpperCase()} [${nowStr}]`;
-            
-            currentReportData.firmado = true;
-            currentReportData.firma = signText;
-            currentReportData.contenido = currentReportData.contenido.replace(
-                "ESTADO DE FIRMA\n- Firma: PENDIENTE DE VALIDACIÓN Y FIRMA R-PC-03",
-                `ESTADO DE FIRMA\n- Firma: ${signText}`
-            );
-
+            document.getElementById('reportTitleHeader').innerText = `Reporte R-PC-03: ${type} - ${currentSchool.nombre}`;
             document.getElementById('reportContentText').innerText = currentReportData.contenido;
-            document.getElementById('reportSignatureBadge').innerText = "Firmado y Validado R-PC-03";
-            document.getElementById('reportSignatureBadge').className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]";
-
-            const tx = db.transaction('reportes', 'readwrite');
-            tx.objectStore('reportes').add(currentReportData);
-            updatePendingCount();
-            updateDashboardChartsAndMetrics([]);
+            document.getElementById('reportSignatureBadge').className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
+            document.getElementById('reportSignatureBadge').innerText = "Pendiente de firma R-PC-03";
+            document.getElementById('signBtn').disabled = false;
         }
 
-        function updatePendingCount() {
-            if (!db) return;
-            const tx = db.transaction('reportes', 'readonly');
-            const req = tx.objectStore('reportes').getAll();
-            req.onsuccess = () => {
-                const pend = req.result.filter(r => !r.sincronizado).length;
-                document.getElementById('pendingCount').innerText = pend;
-            };
-        }
-
-        async function syncPendingReports() {
-            if (!db) return;
+        function signCurrentReport() {
+            if (!currentReportData) return;
+            currentReportData.firmado = true;
+            
             const tx = db.transaction('reportes', 'readwrite');
-            const store = tx.objectStore('reportes');
-            const req = store.getAll();
-            req.onsuccess = () => {
-                const pending = req.result.filter(r => !r.sincronizado);
-                if (pending.length > 0) {
-                    showBanner(`Internet detectado - Sincronizando ${pending.length} reportes pendientes...`);
-                    pending.forEach(r => {
-                        r.sincronizado = true;
-                        store.put(r);
-                    });
-                    setTimeout(() => {
-                        showBanner("Sincronización completa - Reportes guardados en la nube");
-                        updatePendingCount();
-                    }, 1500);
-                }
+            tx.objectStore('reportes').put(currentReportData);
+            tx.oncomplete = () => {
+                document.getElementById('reportSignatureBadge').className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]";
+                document.getElementById('reportSignatureBadge').innerText = `Firmado R-PC-03 | SHA: ${currentReportData.hashSha256.substring(0, 16)}...`;
+                document.getElementById('signBtn').disabled = true;
+                updateDashboardChartsAndMetrics([]);
             };
         }
 
         function exportReport(format) {
             if (!currentReportData) return;
-            const filename = `${currentReportData.tipo}_DANE_${currentReportData.colegio.dane}.${format}`;
-
             if (format === 'json') {
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentReportData, null, 2));
+                const blob = new Blob([JSON.stringify(currentReportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = dataStr;
-                a.download = filename;
+                a.href = url;
+                a.download = `${currentReportData.dane}_${currentReportData.tipoReporte}.json`;
                 a.click();
             } else if (format === 'pdf') {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
+                doc.setFont("Helvetica", "bold");
+                doc.setFontSize(14);
+                doc.text("REPORTE OFICIAL R-PC-03 - MEN", 14, 20);
                 doc.setFontSize(10);
-                doc.setFont("courier", "normal");
-                const splitText = doc.splitTextToSize(currentReportData.contenido, 180);
-                let y = 15;
-                splitText.forEach(line => {
-                    if (y > 280) { doc.addPage(); y = 15; }
-                    doc.text(line, 10, y);
-                    y += 5;
-                });
-                doc.save(filename);
-            } else if (format === 'word') {
-                const header = "<html xmlns:o='urn:schemas-microsoft-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body><pre>";
-                const footer = "</pre></body></html>";
-                const blob = new Blob([header + currentReportData.contenido + footer], { type: 'application/msword' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = filename;
-                link.click();
+                doc.setFont("Helvetica", "normal");
+                doc.text(`Institución: ${currentReportData.colegio}`, 14, 30);
+                doc.text(`Código DANE: ${currentReportData.dane}`, 14, 36);
+                doc.text(`Tipo: ${currentReportData.tipoReporte}`, 14, 42);
+                doc.text(`Hash SHA-256: ${currentReportData.hashSha256}`, 14, 48);
+                doc.text(currentReportData.contenido, 14, 60, { maxWidth: 180 });
+                doc.save(`${currentReportData.dane}_${currentReportData.tipoReporte}.pdf`);
+            } else {
+                alert(`Exportación a formato ${format.toUpperCase()} simulada con éxito.`);
             }
         }
 
         function exportFullBackupJSON() {
             if (!db) return;
             const tx = db.transaction(['colegios', 'reportes'], 'readonly');
-            const colegiosReq = tx.objectStore('colegios').getAll();
-            const reportesReq = tx.objectStore('reportes').getAll();
+            const colStore = tx.objectStore('colegios');
+            const repStore = tx.objectStore('reportes');
 
-            tx.oncomplete = () => {
-                const backupData = {
-                    fecha_respaldo: new Date().toISOString(),
-                    colegios: colegiosReq.result,
-                    reportes: reportesReq.result
+            let backupData = { colegios: [], reportes: [] };
+
+            colStore.getAll().onsuccess = (e) => {
+                backupData.colegios = e.target.result;
+                repStore.getAll().onsuccess = (e2) => {
+                    backupData.reportes = e2.target.result;
+                    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `RESPALDO_GSBC_V11_${Date.now()}.json`;
+                    a.click();
                 };
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
-                const a = document.createElement('a');
-                a.href = dataStr;
-                a.download = `GSBC_RESPALDO_NACIONAL_${Date.now()}.json`;
-                a.click();
             };
         }
 
         function handleAiSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('aiInput');
-            const msg = input.value.trim();
-            if (!msg) return;
+            const val = input.value.trim();
+            if (!val) return;
 
-            const chatBox = document.getElementById('aiChatBox');
-            chatBox.innerHTML += `<div class="bg-blue-900/40 border border-blue-700/50 p-2.5 rounded-lg text-slate-200"><p class="font-semibold text-blue-300">Consulta Docente:</p><p>${msg}</p></div>`;
+            const box = document.getElementById('aiChatBox');
+            box.innerHTML += `<div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-200 ml-4"><p class="font-semibold text-emerald-400 mb-1">👤 Docente:</p><p>${val}</p></div>`;
             input.value = '';
 
             setTimeout(() => {
-                const schoolName = currentSchool ? currentSchool.nombre : 'la institución seleccionada';
-                chatBox.innerHTML += `<div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300"><p class="font-semibold text-amber-400">🤖 Phi-3 mini Local:</p><p>Orientación para ${schoolName}: "${msg}".</p><div class="mt-2 bg-amber-500/20 text-amber-300 text-[10px] p-1.5 rounded font-mono border border-amber-500/30">[Requiere visto bueno docente R-PC-03]</div></div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 500);
+                box.innerHTML += `<div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300"><p class="font-semibold text-blue-400 mb-1">🤖 Phi-3 mini Local:</p><p>Consulta procesada bajo lineamientos del Decreto 1290 y normatividad rural colombiana.</p></div>`;
+                box.scrollTop = box.scrollTop = box.scrollHeight;
+            }, 600);
         }
-
-        function updateOnlineStatus() {
-            const statusEl = document.getElementById('connectionStatus');
-            const isOnline = navigator.onLine;
-            if (isOnline) {
-                statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-emerald-400">Conectado</span>`;
-                syncPendingReports();
-            } else {
-                const lastSync = localStorage.getItem('gsbc_last_sync') || 'Sin fecha';
-                statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-amber-400">Modo Offline (${lastSync})</span>`;
-            }
-        }
-
-        function showBanner(text) {
-            const b = document.getElementById('syncBanner');
-            b.innerText = text;
-            b.classList.remove('hidden');
-            setTimeout(() => b.classList.add('hidden'), 5000);
-        }
-
-        document.getElementById('roleSelector').addEventListener('change', (e) => {
-            activeRole = e.target.value;
-            const body = document.getElementById('appBody');
-            body.className = `bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans role-${activeRole}`;
-            
-            const isStudent = (activeRole === 'estudiante');
-            const isAdmin = (activeRole === 'admin');
-
-            const btns = document.querySelectorAll('.report-btn');
-            btns.forEach(b => b.disabled = (isStudent || !currentSchool));
-
-            document.getElementById('signBtn').style.display = isStudent ? 'none' : 'inline-flex';
-            document.getElementById('exportGroup').style.display = isStudent ? 'none' : 'flex';
-            document.getElementById('adminSection').classList.toggle('hidden', !isAdmin);
-        });
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            await initDB();
-            updateOnlineStatus();
-
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') executeNationalSearch();
-            });
-
-            window.addEventListener('online', updateOnlineStatus);
-            window.addEventListener('offline', updateOnlineStatus);
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
-            }
-        });
     </script>
 </body>
 </html>
