@@ -251,7 +251,7 @@
                     <span class="text-[10px] bg-blue-950 text-blue-300 px-2 py-0.5 rounded border border-blue-800">Privilegios Admin</span>
                 </div>
 
-                <p class="text-xs text-slate-400">Control de integridad, respaldo de datos locales IndexDB para traslado en memoria USB y bitácora de trazabilidad de firmas criptográficas R-PC-03.</p>
+                <p class="text-xs text-slate-400">Control de integridad, respaldo de datos locales IndexedDB para traslado en memoria USB y bitácora de trazabilidad de firmas criptográficas R-PC-03.</p>
 
                 <div class="flex flex-wrap gap-2">
                     <button onclick="exportFullBackupJSON()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-2 font-medium transition">
@@ -274,485 +274,570 @@
                             </tr>
                         </thead>
                         <tbody id="auditTableBody" class="divide-y divide-slate-800/60 text-slate-300">
-                            <tr><td colspan="5" class="p-2 text-center text-slate-600">No hay registros firmados en la bitácora local.</td></tr>
+                            <tr>
+                                <td colspan="5" class="p-4 text-center text-slate-500 italic">No hay registros de auditoría almacenados localmente.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
+
         </main>
 
-        <!-- BARRA LATERAL: ASISTENTE IA LOCAL -->
-        <aside class="lg:col-span-4 bg-slate-800 p-4 rounded-xl border border-slate-700 shadow flex flex-col">
-            <div class="border-b border-slate-700 pb-3 mb-3">
-                <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
-                    <i class="fa-solid fa-robot"></i>
-                    <h2>Asistente IA Local Offline</h2>
+        <!-- PANEL LATERAL: ASISTENTE IA LOCAL & ESTADO DE SISTEMA -->
+        <aside class="lg:col-span-4 flex flex-col gap-4">
+            
+            <!-- TARJETA IA LOCAL -->
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow flex flex-col h-full max-h-[600px]">
+                <div class="flex items-center justify-between border-b border-slate-700 pb-3 mb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-robot text-sky-400 text-lg"></i>
+                        <h3 class="font-bold text-sm text-slate-100">Asistente IA Pedagógico Local</h3>
+                    </div>
+                    <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded font-mono">100% Offline</span>
                 </div>
-                <p class="text-[11px] text-slate-400 mt-1">Modelo Phi-3 mini | Datos 100% en el dispositivo</p>
-                <div class="mt-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] p-2 rounded leading-tight">
-                    <i class="fa-solid fa-shield-check mr-1"></i>
-                    <strong>Filtro R-IA-03:</strong> Contenido verificado por filtro local. Requiere visto bueno R-PC-03 para validez institucional.
+
+                <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-3 p-2 bg-slate-900/90 rounded-lg border border-slate-700/80 text-xs mb-3 min-h-[220px]">
+                    <div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300">
+                        <p class="font-semibold text-sky-400 mb-1"><i class="fa-solid fa-sparkles"></i> Asistente GSBC:</p>
+                        Hola. Estoy listo para ayudarte a redactar o ajustar componentes del PEI, PMI o SIEE según los lineamientos de la Guía 34 y Ley 115.
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <textarea id="aiInput" rows="2" placeholder="Ej: Redacta una justificación de SIEE para zona rural sin conectividad..." class="w-full bg-slate-900 border border-slate-700 text-xs rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                    <button onclick="askLocalAI()" class="w-full bg-sky-600 hover:bg-sky-500 text-white text-xs py-2 rounded-lg font-semibold flex items-center justify-center gap-2 transition">
+                        <i class="fa-solid fa-paper-plane"></i> Consultar Asistente Local
+                    </button>
                 </div>
             </div>
 
-            <div id="aiChatBox" class="flex-1 bg-slate-900 rounded-lg p-3 overflow-y-auto space-y-3 min-h-[300px] max-h-[500px] border border-slate-700/60 text-xs">
-                <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300">
-                    <p class="font-semibold text-blue-400 mb-1">🤖 Phi-3 mini Local:</p>
-                    <p>Hola docente, ¿sobre qué colegio y sede rural necesitas estructurar la documentación pedagógica hoy?</p>
+            <!-- BITÁCORA DE RESUMEN INSTITUCIONAL -->
+            <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 shadow">
+                <h3 class="font-bold text-xs text-slate-300 mb-2 flex items-center gap-2 border-b border-slate-700 pb-2">
+                    <i class="fa-solid fa-circle-nodes text-amber-400"></i> Estado del Almacenamiento Local
+                </h3>
+                <div class="space-y-2 text-xs text-slate-400">
+                    <div class="flex justify-between">
+                        <span>Base de Datos:</span>
+                        <span class="font-mono text-slate-200">IndexedDB (GSBC_DB_v11)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Firma Activa:</span>
+                        <span class="font-mono text-emerald-400">R-PC-03 SHA-256</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Última Sincronización:</span>
+                        <span id="lastSyncText" class="font-mono text-slate-300">Sin conexión reciente</span>
+                    </div>
                 </div>
             </div>
 
-            <form id="aiForm" class="mt-3 flex gap-2" onsubmit="handleAiSubmit(event)">
-                <input type="text" id="aiInput" placeholder="Escribe tu consulta pedagógica..." class="flex-1 bg-slate-900 border border-slate-700 text-xs text-white rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-2 rounded-lg font-medium transition">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </form>
         </aside>
+
     </div>
 
     <!-- PIE DE PÁGINA -->
-    <footer class="bg-slate-950 border-t border-slate-800 py-3 px-4 text-center text-[11px] text-slate-500">
-        GSBC v11 RIO-CARIBE - Modo 100% Offline - Auditoría TRAZA-RIO Activa - Cobertura Nacional Colombia
+    <footer class="bg-slate-800 border-t border-slate-700 py-3 px-4 text-center text-[11px] text-slate-500 mt-auto">
+        GSBC v11 RIO-CARIBE &copy; 2026 — Plataforma de Gestión Educativa Rural Colombia | Cumplimiento Ley 115, Guía 34, Ley 1620 y D1290.
     </footer>
 
-    <!-- LÓGICA DE NEGOCIO Y OPERACIÓN -->
+    <!-- LOGICA JavaScript -->
     <script>
-        let db;
-        let activeRole = 'estudiante';
+        // CONFIGURACIÓN GLOBAL Y ESTADO
+        let db = null;
+        let currentRole = 'estudiante';
         let currentSchool = null;
-        let currentReportData = null;
+        let currentReportType = null;
+        let currentReportText = '';
+        let currentReportHash = '';
+        let isSigned = false;
         let zoneChartInstance = null;
         let deptChartInstance = null;
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initDB();
-            setupNetworkListeners();
-            loadInitialDemoData();
+        // BBDD LOCAL SIMULADA DE RESPALDO (OFFLINE FIRST)
+        const MOCK_DUE_DATA = [
+            { dane: "113001000123", nombre: "I.E. TECNICA AGROPECUARIA EL SALADO", depto: "BOLIVAR", municipio: "CARMEN DE BOLIVAR", zona: "RURAL" },
+            { dane: "120001000456", nombre: "INSTITUCION EDUCATIVA RIO SECO", depto: "CESAR", municipio: "VALLEDUPAR", zona: "RURAL" },
+            { dane: "144001000789", nombre: "I.E. SIERRA NEVADA DE SANTA MARTA", depto: "MAGDALENA", municipio: "CIENAGA", zona: "RURAL" },
+            { dane: "108001000111", nombre: "I.E. DISTRITAL DE BARRANQUILLA", depto: "ATLANTICO", municipio: "BARRANQUILLA", zona: "URBANA" },
+            { dane: "113001002233", nombre: "CENTRO EDUCATIVO RURAL LA PALMA", depto: "BOLIVAR", municipio: "SAN JACINTO", zona: "RURAL" },
+            { dane: "144001005544", nombre: "I.E. TECNICA CARIBE URBANO", depto: "MAGDALENA", municipio: "SANTA MARTA", zona: "URBANA" }
+        ];
+
+        // INICIALIZACIÓN
+        window.addEventListener('DOMContentLoaded', () => {
+            initIndexedDB();
+            initCharts();
+            checkNetworkStatus();
+            window.addEventListener('online', checkNetworkStatus);
+            window.addEventListener('offline', checkNetworkStatus);
         });
 
-        function toggleAboutModal(show) {
-            const modal = document.getElementById('aboutModal');
-            if (show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
-        }
-
-        function changeRole(role) {
-            activeRole = role;
-            const body = document.getElementById('appBody');
-            const adminSec = document.getElementById('adminSection');
-            const helpBadge = document.getElementById('roleBadgeHelp');
-            
-            body.className = `bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans role-${role}`;
-            adminSec.classList.toggle('hidden', role !== 'admin');
-
-            const isStudent = (role === 'estudiante');
-            helpBadge.innerText = isStudent ? "Modo Consulta (Estudiante)" : (role === 'docente' ? "Modo Generación (Docente/Rector)" : "Modo Administrador Total");
-            helpBadge.className = isStudent ? "text-[10px] bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800" : "text-[10px] bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800";
-
-            const btns = document.querySelectorAll('.report-btn');
-            btns.forEach(b => b.disabled = (isStudent || !currentSchool));
-
-            if (role === 'admin') loadAuditLogs();
-        }
-
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open('GSBC_DB_V11', 1);
-                request.onupgradeneeded = (e) => {
-                    const database = e.target.result;
-                    if (!database.objectStoreNames.contains('colegios')) {
-                        database.createObjectStore('colegios', { keyPath: 'codigo_dane' });
-                    }
-                    if (!database.objectStoreNames.contains('reportes')) {
-                        database.createObjectStore('reportes', { keyPath: 'id' });
-                    }
-                };
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    updateLocalCount();
-                    resolve(db);
-                };
-                request.onerror = (e) => reject(e);
-            });
-        }
-
-        function updateLocalCount() {
-            if (!db) return;
-            const tx = db.transaction('colegios', 'readonly');
-            const req = tx.objectStore('colegios').count();
-            req.onsuccess = () => {
-                document.getElementById('localCount').innerText = req.result;
-            };
-        }
-
-        function setupNetworkListeners() {
-            const statusEl = document.getElementById('connectionStatus');
-            const banner = document.getElementById('syncBanner');
-
-            function updateNet() {
-                if (navigator.onLine) {
-                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span><span>Online</span>`;
-                    banner.classList.add('hidden');
-                } else {
-                    statusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span>Offline</span>`;
-                    banner.innerText = "Modo Offline Activo: Los reportes se almacenan en IndexedDB local hasta restaurar la red.";
-                    banner.classList.remove('hidden');
+        // 1. INICIALIZACIÓN INDEXEDDB
+        function initIndexedDB() {
+            const request = indexedDB.open("GSBC_DB_v11", 1);
+            request.onupgradeneeded = (e) => {
+                const database = e.target.result;
+                if (!database.objectStoreNames.contains("reports")) {
+                    database.createObjectStore("reports", { keyPath: "id", autoIncrement: true });
                 }
-            }
-            window.addEventListener('online', updateNet);
-            window.addEventListener('offline', updateNet);
-            updateNet();
+                if (!database.objectStoreNames.contains("audit")) {
+                    database.createObjectStore("audit", { keyPath: "id", autoIncrement: true });
+                }
+            };
+            request.onsuccess = (e) => {
+                db = e.target.result;
+                updateCounts();
+                loadAuditLogs();
+            };
+            request.onerror = (e) => console.error("Error al abrir IndexedDB:", e);
         }
 
-        function loadInitialDemoData() {
-            const seedSchools = [
-                { codigo_dane: '247189000123', nombre: 'I.E. RURAL EL SALADO', departamento: 'BOLÍVAR', municipio: 'CARMEN DE BOLÍVAR', zona: 'RURAL' },
-                { codigo_dane: '254001000456', nombre: 'I.E.D. DEPARTAMENTAL GUASIMAL', departamento: 'MAGDALENA', municipio: 'PIVIJAY', zona: 'RURAL' },
-                { codigo_dane: '105001000789', nombre: 'INSTITUCIÓN EDUCATIVA FEDERICO LLERAS', departamento: 'ANTIOQUIA', municipio: 'MEDELLÍN', zona: 'URBANA' }
-            ];
-            saveSchoolsToLocalDB(seedSchools);
-            renderTable(seedSchools);
-            updateDashboardChartsAndMetrics(seedSchools);
-        }
-
-        async function executeNationalSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            const tbody = document.getElementById('schoolTableBody');
-            const badge = document.getElementById('searchSourceBadge');
-
-            if (!query) {
-                searchInLocalDB('');
-                return;
-            }
-
-            tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><p>Consultando base de datos nacional en datos.gov.co...</p></td></tr>`;
+        // 2. MONITOREO DE RED
+        function checkNetworkStatus() {
+            const statusDiv = document.getElementById('connectionStatus');
+            const syncBanner = document.getElementById('syncBanner');
 
             if (navigator.onLine) {
-                badge.innerText = "Origen: datos.gov.co (En vivo)";
-                badge.className = "bg-emerald-900/50 text-emerald-300 border border-emerald-700 text-[11px] px-2.5 py-1 rounded font-mono";
+                statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span>En línea (DUE Activo)</span>`;
+                syncBanner.classList.add('hidden');
+            } else {
+                statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span>Modo Offline (Base Local)</span>`;
+                syncBanner.textContent = "⚡ Operando en Modo 100% Offline. Todos los datos se guardarán localmente en el dispositivo.";
+                syncBanner.classList.remove('hidden');
+            }
+        }
 
-                try {
-                    const cleanQ = query.toUpperCase();
-                    const soqlWhere = `upper(nombre_establecimiento) like '%25${cleanQ}%25' OR codigo_dane like '%25${cleanQ}%25' OR upper(nombre_departamento) like '%25${cleanQ}%25' OR upper(nombre_municipio) like '%25${cleanQ}%25'`;
-                    const url = `https://www.datos.gov.co/resource/6k5y-ir6r.json?$where=${encodeURIComponent(soqlWhere)}&$limit=50`;
+        // 3. CAMBIO DE ROL
+        function changeRole(role) {
+            currentRole = role;
+            const body = document.getElementById('appBody');
+            const adminSec = document.getElementById('adminSection');
+            const badgeHelp = document.getElementById('roleBadgeHelp');
+            const reportBtns = document.querySelectorAll('.report-btn');
 
-                    const response = await fetch(url);
-                    if (!response.ok) throw new Error("Error Socrata");
-                    const data = await response.json();
+            body.classList.remove('role-estudiante', 'role-docente', 'role-admin');
+            body.classList.add(`role-${role}`);
 
-                    const results = data.map(item => ({
-                        codigo_dane: String(item.codigo_dane || item.codigodane || item.cod_dane || '').trim(),
-                        nombre: item.nombre_establecimiento || item.nombreestablecimiento || item.nombre || 'I.E. SIN NOMBRE',
-                        departamento: item.departamento || item.nombre_departamento || item.nombredepartamento || 'COLOMBIA',
-                        municipio: item.municipio || item.nombre_municipio || item.nombremunicipio || 'S/D',
-                        zona: (item.zona || item.nombre_zona || 'RURAL').toUpperCase()
-                    })).filter(s => s.codigo_dane);
-
-                    if (results.length > 0) {
-                        saveSchoolsToLocalDB(results);
-                        renderTable(results);
-                        updateDashboardChartsAndMetrics(results);
-                        return;
-                    }
-                } catch (err) {
-                    console.warn("Cambio automático a local por desconexión o fallo API:", err);
-                }
+            if (role === 'admin') {
+                adminSec.classList.remove('hidden');
+                badgeHelp.textContent = "Modo Administrador (Edición y Firma)";
+                badgeHelp.className = "text-[10px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800";
+            } else if (role === 'docente') {
+                adminSec.classList.add('hidden');
+                badgeHelp.textContent = "Modo Docente / Rector (Generación de Reportes)";
+                badgeHelp.className = "text-[10px] bg-blue-950 text-blue-300 px-2 py-0.5 rounded border border-blue-800";
+            } else {
+                adminSec.classList.add('hidden');
+                badgeHelp.textContent = "Modo Consulta (Estudiante)";
+                badgeHelp.className = "text-[10px] bg-sky-950 text-sky-300 px-2 py-0.5 rounded border border-sky-800";
             }
 
-            badge.innerText = "Origen: Base Local Offline";
-            badge.className = "bg-amber-900/50 text-amber-300 border border-amber-700 text-[11px] px-2.5 py-1 rounded font-mono";
-            searchInLocalDB(query);
+            // Habilitar/Deshabilitar botones de reporte según el rol
+            const canGenerate = (role === 'docente' || role === 'admin') && currentSchool !== null;
+            reportBtns.forEach(btn => btn.disabled = !canGenerate);
         }
 
-        function saveSchoolsToLocalDB(schools) {
-            if (!db || schools.length === 0) return;
-            const tx = db.transaction('colegios', 'readwrite');
-            const store = tx.objectStore('colegios');
-            schools.forEach(s => store.put(s));
-            tx.oncomplete = () => updateLocalCount();
-        }
+        // 4. BÚSQUEDA NACIONAL DE ESTABLECIMIENTOS
+        async function executeNationalSearch() {
+            const query = document.getElementById('searchInput').value.trim().toUpperCase();
+            const tableBody = document.getElementById('schoolTableBody');
+            const sourceBadge = document.getElementById('searchSourceBadge');
 
-        function searchInLocalDB(query) {
-            if (!db) return;
-            const tx = db.transaction('colegios', 'readonly');
-            const store = tx.objectStore('colegios');
-            const req = store.getAll();
-
-            req.onsuccess = () => {
-                const schools = req.result || [];
-                const cleanQ = query.toLowerCase().trim();
-                const filtered = schools.filter(s => 
-                    s.nombre.toLowerCase().includes(cleanQ) ||
-                    String(s.codigo_dane).includes(cleanQ) ||
-                    s.departamento.toLowerCase().includes(cleanQ) ||
-                    s.municipio.toLowerCase().includes(cleanQ)
-                );
-
-                renderTable(filtered);
-                updateDashboardChartsAndMetrics(filtered);
-            };
-        }
-
-        function renderTable(schools) {
-            const tbody = document.getElementById('schoolTableBody');
-            if (schools.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron instituciones en la búsqueda.</td></tr>`;
+            if (!query) {
+                alert("Por favor ingrese un término de búsqueda (DANE, Colegio, Municipio o Departamento).");
                 return;
             }
 
-            tbody.innerHTML = schools.map(s => `
-                <tr class="hover:bg-slate-700/50 transition border-b border-slate-800">
-                    <td class="p-3 font-mono text-blue-300 font-semibold">${s.codigo_dane}</td>
-                    <td class="p-3 font-semibold text-slate-100">${s.nombre}</td>
-                    <td class="p-3">${s.departamento}</td>
-                    <td class="p-3">${s.municipio}</td>
-                    <td class="p-3">
-                        <span class="${s.zona.includes('RURAL') ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'} border px-2 py-0.5 rounded text-[10px] font-semibold">
-                            ${s.zona}
-                        </span>
-                    </td>
+            tableBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i><p>Consultando base de datos...</p></td></tr>`;
+
+            let results = [];
+
+            if (navigator.onLine) {
+                try {
+                    // Consulta simulada / endpoint de datos.gov.co API DUE
+                    const response = await fetch(`https://www.datos.gov.co/resource/23ew-ty2e.json?$where=lower(nombreinstitucion) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25')&$limit=10`);
+                    if (response.ok) {
+                        const apiData = await response.json();
+                        if (apiData.length > 0) {
+                            results = apiData.map(item => ({
+                                dane: item.codigodane || item.codigo_dane || "N/A",
+                                nombre: item.nombreinstitucion || item.nombre_establecimiento || "I.E. SIN NOMBRE",
+                                depto: item.departamento || "N/A",
+                                municipio: item.municipio || "N/A",
+                                zona: item.zona || "RURAL"
+                            }));
+                            sourceBadge.textContent = "Origen: API Datos Abiertos";
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Fallo conexión con datos.gov.co, recurriendo a base local.", e);
+                }
+            }
+
+            // Fallback a datos locales offline si no hay respuesta de API o se está sin red
+            if (results.length === 0) {
+                results = MOCK_DUE_DATA.filter(item =>
+                    item.dane.includes(query) ||
+                    item.nombre.toUpperCase().includes(query) ||
+                    item.depto.toUpperCase().includes(query) ||
+                    item.municipio.toUpperCase().includes(query)
+                );
+                sourceBadge.textContent = "Origen: Base Local Offline";
+            }
+
+            renderSchoolResults(results);
+        }
+
+        function renderSchoolResults(schools) {
+            const tableBody = document.getElementById('schoolTableBody');
+            tableBody.innerHTML = '';
+
+            if (schools.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron instituciones educativas con el criterio ingresado.</td></tr>`;
+                updateMetrics([], 0);
+                return;
+            }
+
+            let ruralCount = 0;
+            const deptosSet = new Set();
+
+            schools.forEach((s) => {
+                if (s.zona.toUpperCase().includes('RURAL')) ruralCount++;
+                deptosSet.add(s.depto);
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-700/50 transition";
+                tr.innerHTML = `
+                    <td class="p-3 font-mono text-slate-300">${s.dane}</td>
+                    <td class="p-3 font-semibold text-white">${s.nombre}</td>
+                    <td class="p-3 text-slate-300">${s.depto}</td>
+                    <td class="p-3 text-slate-300">${s.municipio}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 text-[10px] rounded font-bold ${s.zona.toUpperCase().includes('RURAL') ? 'bg-emerald-900/80 text-emerald-300 border border-emerald-700' : 'bg-blue-900/80 text-blue-300 border border-blue-700'}">${s.zona}</span></td>
                     <td class="p-3 text-center">
-                        <button onclick="selectSchool('${s.codigo_dane}', '${encodeURIComponent(s.nombre)}', '${encodeURIComponent(s.departamento)}', '${encodeURIComponent(s.municipio)}', '${s.zona}')" class="bg-blue-600/80 hover:bg-blue-500 text-white px-2.5 py-1 rounded text-[11px] font-medium transition">
+                        <button onclick='selectSchool(${JSON.stringify(s)})' class="bg-blue-600 hover:bg-blue-500 text-white text-[11px] px-2.5 py-1 rounded font-medium transition">
                             Seleccionar
                         </button>
                     </td>
-                </tr>
-            `).join('');
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            updateMetrics(schools, ruralCount, deptosSet.size);
+            updateCharts(schools);
         }
 
-        function updateDashboardChartsAndMetrics(schools) {
-            document.getElementById('metricTotal').innerText = schools.length;
-            const ruralCount = schools.filter(s => s.zona.toUpperCase().includes('RURAL')).length;
-            const urbanCount = schools.length - ruralCount;
-            document.getElementById('metricRural').innerText = ruralCount;
+        // 5. SELECCIÓN DE INSTITUCIÓN Y PREPARACIÓN DE REPORTES
+        function selectSchool(school) {
+            currentSchool = school;
+            document.getElementById('selectedSchoolInfo').innerHTML = `
+                <div class="flex items-center justify-between text-slate-200 font-medium">
+                    <span><i class="fa-solid fa-school text-blue-400"></i> ${school.nombre} (DANE: ${school.dane})</span>
+                    <span class="text-slate-400">${school.municipio}, ${school.depto} [${school.zona}]</span>
+                </div>
+            `;
 
-            const deptosSet = new Set(schools.map(s => s.departamento.toUpperCase()));
-            document.getElementById('metricDeptos').innerText = deptosSet.size;
+            const canGenerate = (currentRole === 'docente' || currentRole === 'admin');
+            document.querySelectorAll('.report-btn').forEach(btn => btn.disabled = !canGenerate);
 
-            if (db) {
-                const tx = db.transaction('reportes', 'readonly');
-                const req = tx.objectStore('reportes').getAll();
-                req.onsuccess = () => {
-                    const signed = req.result.filter(r => r.firmado).length;
-                    document.getElementById('metricSigned').innerText = signed;
-                    document.getElementById('pendingCount').innerText = req.result.filter(r => !r.firmado).length;
-                };
+            if (!canGenerate) {
+                alert("Institución seleccionada. Para generar reportes normativos, cambie al rol de Docente o Administrador.");
+            }
+        }
+
+        function prepareReport(type) {
+            if (!currentSchool) return;
+
+            currentReportType = type;
+            isSigned = false;
+            document.getElementById('reportPreviewArea').classList.remove('hidden');
+            document.getElementById('reportTitleHeader').textContent = `Documento Oficial: ${type} - ${currentSchool.nombre}`;
+            
+            const sigBadge = document.getElementById('reportSignatureBadge');
+            sigBadge.textContent = "Pendiente de firma R-PC-03";
+            sigBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
+
+            // Plantillas según normativa MEN
+            const templates = {
+                'PEI': `DOCUMENTO INSTITUCIONAL PEI (Ley 115 de 1994, Art. 73)\n\nINSTITUCIÓN: ${currentSchool.nombre}\nCÓDIGO DANE: ${currentSchool.dane}\nUBICACIÓN: ${currentSchool.municipio}, ${currentSchool.depto} (${currentSchool.zona})\n\n1. COMPONENTE DIRECTIVO Y HORIZONTE INSTITUCIONAL\nGarantizar el acceso, la permanencia y el desarrollo de competencias en el contexto territorial rural.\n\n2. COMPONENTE PEDAGÓGICO\nEstrategias adaptadas al entorno agroecológico y social de la región Caribe-Río.\n\n3. COMPONENTE DE COMUNIDAD\nIntegración activa de familias y sectores productivos locales.`,
+                
+                'Plan de Estudio': `PLAN DE ESTUDIOS INSTITUCIONAL (Ley 115, Art. 79)\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\n\nEstructura curricular articulada por áreas fundamentales, transversales y proyectos pedagógicos productivos adaptados a la zona ${currentSchool.zona}.`,
+
+                'PMI': `PLAN DE MEJORAMIENTO INSTITUCIONAL - PMI (Guía 34 MEN)\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDEPARTAMENTO: ${currentSchool.depto}\n\nObjetivo: Elevar la cobertura y la calidad de los aprendizajes mediante la implementación de recursos tecnológicos offline y fortalecimiento docente.`,
+
+                'Manual de Convivencia': `MANUAL DE CONVIVENCIA Y RUTA DE ATENCIÓN INTEGRAL (Ley 1620 de 2013)\n\nESTABLECIMIENTO: ${currentSchool.nombre}\n\nRuta de atención integral para la convivencia escolar, mediación pacífica de conflictos y respeto por la diversidad territorial en ${currentSchool.municipio}.`,
+
+                'SIEE': `SISTEMA INSTITUCIONAL DE EVALUACIÓN DE ESTUDIANTES - SIEE (Decreto 1290 de 2009)\n\nINSTITUCIÓN: ${currentSchool.nombre}\n\nCriterios de evaluación cualitativa y cuantitativa adaptados a contextos rurales con metodologías flexibles y enfoque formativo.`
+            };
+
+            currentReportText = templates[type] || "Contenido no disponible.";
+            document.getElementById('reportContentText').textContent = currentReportText;
+        }
+
+        // 6. FIRMA CRIPTOGRÁFICA SHA-256 (R-PC-03)
+        async function signCurrentReport() {
+            if (!currentReportText) return;
+
+            const encoder = new TextEncoder();
+            const data = encoder.encode(currentReportText + new Date().toISOString());
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            currentReportHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            isSigned = true;
+
+            const sigBadge = document.getElementById('reportSignatureBadge');
+            sigBadge.textContent = `Firmado R-PC-03 | HASH: ${currentReportHash.substring(0, 12)}...`;
+            sigBadge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-mono";
+
+            // Guardar registro en IndexedDB
+            saveReportToDB();
+        }
+
+        function saveReportToDB() {
+            if (!db) return;
+
+            const tx = db.transaction(["reports", "audit"], "readwrite");
+            const reportStore = tx.objectStore("reports");
+            const auditStore = tx.objectStore("audit");
+
+            const record = {
+                dane: currentSchool.dane,
+                colegio: currentSchool.nombre,
+                tipo: currentReportType,
+                fecha: new Date().toLocaleString(),
+                hash: currentReportHash,
+                contenido: currentReportText,
+                firmado: true
+            };
+
+            reportStore.add(record);
+            auditStore.add({
+                dane: currentSchool.dane,
+                tipo: currentReportType,
+                fecha: new Date().toLocaleDateString(),
+                hash: currentReportHash,
+                estado: "Firmado y Validado"
+            });
+
+            tx.oncomplete = () => {
+                updateCounts();
+                loadAuditLogs();
+                alert("Documento firmado criptográficamente y respaldado localmente con éxito.");
+            };
+        }
+
+        // 7. EXPORTACIÓN DE REPORTES (PDF, WORD, JSON)
+        function exportReport(format) {
+            if (!isSigned) {
+                alert("Debe firmar y validar el reporte criptográficamente (R-PC-03) antes de exportarlo.");
+                return;
             }
 
+            const filename = `GSBC_${currentReportType}_${currentSchool.dane}`;
+
+            if (format === 'json') {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+                    escuela: currentSchool,
+                    tipo: currentReportType,
+                    hashSignature: currentReportHash,
+                    contenido: currentReportText,
+                    fecha: new Date().toISOString()
+                }, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `${filename}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            } else if (format === 'word') {
+                const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><title>Reporte GSBC</title></head><body>";
+                const footer = "</body></html>";
+                const sourceHTML = header + `<h2 style='color:#2563eb;'>GSBC v11 RIO-CARIBE</h2><p><b>Firma R-PC-03:</b> ${currentReportHash}</p><hr/><pre>${currentReportText}</pre>` + footer;
+                
+                const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${filename}.doc`;
+                a.click();
+                URL.revokeObjectURL(url);
+            } else if (format === 'pdf') {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFont("Helvetica", "bold");
+                doc.setFontSize(14);
+                doc.text("GSBC v11 RIO-CARIBE - REPORTE OFICIAL", 10, 15);
+                doc.setFontSize(9);
+                doc.setFont("Helvetica", "normal");
+                doc.text(`Firma Digital SHA-256: ${currentReportHash}`, 10, 22);
+                doc.line(10, 25, 200, 25);
+                
+                const splitText = doc.splitTextToSize(currentReportText, 180);
+                doc.text(splitText, 10, 32);
+                doc.save(`${filename}.pdf`);
+            }
+        }
+
+        // 8. ASISTENTE IA LOCAL SIMULADO
+        function askLocalAI() {
+            const input = document.getElementById('aiInput');
+            const chatBox = document.getElementById('aiChatBox');
+            const query = input.value.trim();
+
+            if (!query) return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = "bg-blue-900/50 p-2 rounded-lg border border-blue-700 text-slate-200 text-right";
+            userMsg.textContent = query;
+            chatBox.appendChild(userMsg);
+
+            input.value = '';
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = "bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300";
+                aiMsg.innerHTML = `<p class="font-semibold text-sky-400 mb-1"><i class="fa-solid fa-sparkles"></i> Asistente GSBC:</p>Sugerencia pedagógica para "${query.substring(0, 30)}...": Se recomienda contextualizar la evaluación según la flexibilidad del Decreto 1290 e incluir guías autoformativas para trabajo en casa.`;
+                chatBox.appendChild(aiMsg);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 600);
+        }
+
+        // 9. METRICAS Y GRÁFICOS
+        function updateMetrics(schools, ruralCount, deptosCount = 0) {
+            document.getElementById('metricTotal').textContent = schools.length;
+            document.getElementById('metricRural').textContent = ruralCount;
+            document.getElementById('metricDeptos').textContent = deptosCount;
+        }
+
+        function updateCounts() {
+            if (!db) return;
+            const tx = db.transaction(["reports"], "readonly");
+            const store = tx.objectStore("reports");
+            const countReq = store.count();
+            countReq.onsuccess = () => {
+                document.getElementById('localCount').textContent = countReq.result;
+                document.getElementById('metricSigned').textContent = countReq.result;
+            };
+        }
+
+        function initCharts() {
             const ctxZone = document.getElementById('zoneChart').getContext('2d');
-            if (zoneChartInstance) zoneChartInstance.destroy();
             zoneChartInstance = new Chart(ctxZone, {
                 type: 'doughnut',
                 data: {
                     labels: ['Rural', 'Urbana'],
-                    datasets: [{ data: [ruralCount, urbanCount], backgroundColor: ['#10b981', '#3b82f6'], borderWidth: 0 }]
+                    datasets: [{
+                        data: [0, 0],
+                        backgroundColor: ['#10b981', '#3b82f6']
+                    }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
             });
 
-            const deptoCounts = {};
-            schools.forEach(s => {
-                const d = s.departamento.toUpperCase();
-                deptoCounts[d] = (deptoCounts[d] || 0) + 1;
-            });
-            const sortedDeptos = Object.entries(deptoCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
-
             const ctxDept = document.getElementById('deptChart').getContext('2d');
-            if (deptChartInstance) deptChartInstance.destroy();
             deptChartInstance = new Chart(ctxDept, {
                 type: 'bar',
                 data: {
-                    labels: sortedDeptos.map(d => d[0]),
-                    datasets: [{ label: 'Colegios', data: sortedDeptos.map(d => d[1]), backgroundColor: '#10b981', borderRadius: 4 }]
+                    labels: [],
+                    datasets: [{
+                        label: 'Sedes',
+                        data: [],
+                        backgroundColor: '#8b5cf6'
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } } } },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8', font: { size: 9 } } },
+                        y: { ticks: { color: '#94a3b8', font: { size: 9 } } }
+                    },
                     plugins: { legend: { display: false } }
                 }
             });
         }
 
-        function selectSchool(dane, nombre, depto, mun, zona = 'RURAL') {
-            currentSchool = {
-                dane,
-                nombre: decodeURIComponent(nombre),
-                departamento: decodeURIComponent(depto),
-                municipio: decodeURIComponent(mun),
-                zona
-            };
-            document.getElementById('selectedSchoolInfo').innerHTML = `
-                <div class="text-slate-200 font-bold text-sm">🏫 ${currentSchool.nombre}</div>
-                <div class="mt-1">DANE: <span class="font-mono text-blue-300">${currentSchool.dane}</span> | Depto: ${currentSchool.departamento} | Municipio: ${currentSchool.municipio} | Zona: ${currentSchool.zona}</div>
-            `;
-            saveSchoolsToLocalDB([currentSchool]);
+        function updateCharts(schools) {
+            let rural = 0, urbana = 0;
+            const deptCounts = {};
 
-            const btns = document.querySelectorAll('.report-btn');
-            btns.forEach(b => b.disabled = (activeRole === 'estudiante'));
+            schools.forEach(s => {
+                if (s.zona.toUpperCase().includes('RURAL')) rural++;
+                else urbana++;
+
+                deptCounts[s.depto] = (deptCounts[s.depto] || 0) + 1;
+            });
+
+            zoneChartInstance.data.datasets[0].data = [rural, urbana];
+            zoneChartInstance.update();
+
+            deptChartInstance.data.labels = Object.keys(deptCounts);
+            deptChartInstance.data.datasets[0].data = Object.values(deptCounts);
+            deptChartInstance.update();
         }
 
-        async function prepareReport(type) {
-            if (!currentSchool) return;
-            const now = new Date();
-            const dateStr = now.toLocaleDateString('es-CO');
-            const timeStr = now.toLocaleTimeString('es-CO');
-            const isOffline = !navigator.onLine;
-            const offlineMark = isOffline ? `\n[MARCA OFFLINE: Documento generado sin conexión - Sincronizará al restaurar red]` : '';
+        // 10. AUDITORÍA Y BACKUP ADMINISTRATIVO
+        function loadAuditLogs() {
+            if (!db) return;
+            const tx = db.transaction(["audit"], "readonly");
+            const store = tx.objectStore("audit");
+            const req = store.getAll();
 
-            const rawSeed = `${currentSchool.dane}-${type}-${dateStr}-${timeStr}-${activeRole}`;
-            const msgBuf = new TextEncoder().encode(rawSeed);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuf);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            req.onsuccess = () => {
+                const logs = req.result;
+                const tbody = document.getElementById('auditTableBody');
+                tbody.innerHTML = '';
 
-            currentReportData = {
-                id: `${currentSchool.dane}_${type.replace(/\s+/g, '')}_${Date.now()}`,
-                dane: currentSchool.dane,
-                colegio: currentSchool.nombre,
-                departamento: currentSchool.departamento,
-                municipio: currentSchool.municipio,
-                tipoReporte: type,
-                fecha: dateStr,
-                hora: timeStr,
-                rol: activeRole,
-                firmado: false,
-                hashSha256: hashHex,
-                contenido: `DOCUMENTO OFICIAL DE GESTIÓN EDUCATIVA R-PC-03: ${type.toUpperCase()}
-================================================================================
-INSTITUCIÓN EDUCATIVA: ${currentSchool.nombre}
-CÓDIGO DANE: ${currentSchool.dane}
-UBICACIÓN: ${currentSchool.municipio}, ${currentSchool.departamento} (Zona ${currentSchool.zona})
-MARCO NORMATIVO: Ley 115 / Decreto 1290 de 2009 / Guía 34 MEN / Ley 1620
-ROL EMISOR: ${activeRole.toUpperCase()}
-FECHA Y HORA DE EMISIÓN: ${dateStr} - ${timeStr}${offlineMark}
---------------------------------------------------------------------------------
-ESTRUCTURA TÉCNICA INSTITUCIONAL:
-1. Componente Teleológico: Alineación de visión, misión y contexto territorial rural.
-2. Directiva Pedagógica: Estrategia de evaluación y planes de aula adaptados.
-3. Convivencia Escola: Protocolos de la Ruta de Atención Integral (Ley 1620).
-4. Trazabilidad de Auditoría: Certificado para presentación ante la Secretaría de Educación.
+                if (logs.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">No hay registros de auditoría almacenados localmente.</td></tr>`;
+                    return;
+                }
 
-================================================================================
-CÓDIGO DE VERIFICACIÓN CRIPTOGRÁFICA (HASH SHA-256):
-${hashHex}`
+                logs.slice(-5).reverse().forEach(log => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="p-1">${log.dane}</td>
+                        <td class="p-1 text-sky-400">${log.tipo}</td>
+                        <td class="p-1 text-slate-400">${log.fecha}</td>
+                        <td class="p-1 font-mono text-amber-400 text-[10px]">${log.hash.substring(0, 10)}...</td>
+                        <td class="p-1 text-center"><span class="text-emerald-400 font-semibold">${log.estado}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             };
-
-            document.getElementById('reportPreviewArea').classList.remove('hidden');
-            document.getElementById('reportTitleHeader').innerText = `Reporte R-PC-03: ${type} - ${currentSchool.nombre}`;
-            document.getElementById('reportContentText').innerText = currentReportData.contenido;
-            document.getElementById('reportSignatureBadge').className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
-            document.getElementById('reportSignatureBadge').innerText = "Pendiente de firma R-PC-03";
-            document.getElementById('signBtn').disabled = false;
-        }
-
-        function signCurrentReport() {
-            if (!currentReportData) return;
-            currentReportData.firmado = true;
-            
-            const tx = db.transaction('reportes', 'readwrite');
-            tx.objectStore('reportes').put(currentReportData);
-            tx.oncomplete = () => {
-                document.getElementById('reportSignatureBadge').className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px]";
-                document.getElementById('reportSignatureBadge').innerText = `Firmado R-PC-03 | Hash: ${currentReportData.hashSha256.substring(0, 16)}...`;
-                document.getElementById('signBtn').disabled = true;
-                updateDashboardChartsAndMetrics([]);
-                if (activeRole === 'admin') loadAuditLogs();
-            };
-        }
-
-        function exportReport(format) {
-            if (!currentReportData) return;
-
-            if (format === 'json') {
-                const blob = new Blob([JSON.stringify(currentReportData, null, 2)], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `REPORTE_${currentReportData.dane}_${currentReportData.tipoReporte.replace(/\s+/g, '_')}.json`;
-                a.click();
-            } else if (format === 'pdf') {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFont("Helvetica", "bold");
-                doc.setFontSize(13);
-                doc.text("REPORTE OFICIAL R-PC-03 - MEN COLOMBIA", 14, 18);
-                doc.setFontSize(9);
-                doc.setFont("Helvetica", "normal");
-                doc.text(`Institución: ${currentReportData.colegio}`, 14, 26);
-                doc.text(`Código DANE: ${currentReportData.dane} | Depto: ${currentReportData.departamento}`, 14, 32);
-                doc.text(`Tipo de Documento: ${currentReportData.tipoReporte}`, 14, 38);
-                doc.text(`Hash SHA-256: ${currentReportData.hashSha256}`, 14, 44);
-                
-                const splitText = doc.splitTextToSize(currentReportData.contenido, 180);
-                doc.text(splitText, 14, 54);
-                doc.save(`REPORTE_${currentReportData.dane}_${currentReportData.tipoReporte.replace(/\s+/g, '_')}.pdf`);
-            } else {
-                alert(`Documento generado para exportación en ${format.toUpperCase()}. Listo para su integración.`);
-            }
         }
 
         function exportFullBackupJSON() {
             if (!db) return;
-            const tx = db.transaction(['colegios', 'reportes'], 'readonly');
-            const colStore = tx.objectStore('colegios');
-            const repStore = tx.objectStore('reportes');
+            const tx = db.transaction(["reports", "audit"], "readonly");
+            
+            const reportsReq = tx.objectStore("reports").getAll();
+            const auditReq = tx.objectStore("audit").getAll();
 
-            let backupData = { version: "v11", fecha: new Date().toISOString(), colegios: [], reportes: [] };
-
-            colStore.getAll().onsuccess = (e) => {
-                backupData.colegios = e.target.result;
-                repStore.getAll().onsuccess = (e2) => {
-                    backupData.reportes = e2.target.result;
-                    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `RESPALDO_NACIONAL_GSBC_V11_${Date.now()}.json`;
-                    a.click();
+            tx.oncomplete = () => {
+                const backupData = {
+                    version: "GSBC_v11_RIO_CARIBE",
+                    timestamp: new Date().toISOString(),
+                    reports: reportsReq.result,
+                    audit: auditReq.result
                 };
+
+                const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `GSBC_BACKUP_USB_${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
             };
         }
 
-        function loadAuditLogs() {
-            if (!db) return;
-            const tx = db.transaction('reportes', 'readonly');
-            const req = tx.objectStore('reportes').getAll();
-            req.onsuccess = () => {
-                const logs = req.result || [];
-                const tbody = document.getElementById('auditTableBody');
-                if (logs.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="p-2 text-center text-slate-600">No hay registros firmados en la bitácora local.</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = logs.map(l => `
-                    <tr class="hover:bg-slate-800">
-                        <td class="p-1 text-blue-300">${l.dane}</td>
-                        <td class="p-1">${l.tipoReporte}</td>
-                        <td class="p-1 text-slate-400">${l.fecha}</td>
-                        <td class="p-1 text-[10px] text-amber-300 font-mono">${l.hashSha256.substring(0, 12)}...</td>
-                        <td class="p-1 text-center"><span class="${l.firmado ? 'text-emerald-400' : 'text-amber-400'}">${l.firmado ? 'Firmado ✓' : 'Pendiente'}</span></td>
-                    </tr>
-                `).join('');
-            };
-        }
-
-        function handleAiSubmit(e) {
-            e.preventDefault();
-            const input = document.getElementById('aiInput');
-            const val = input.value.trim();
-            if (!val) return;
-
-            const box = document.getElementById('aiChatBox');
-            box.innerHTML += `<div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-200 ml-4"><p class="font-semibold text-emerald-400 mb-1">👤 Docente:</p><p>${val}</p></div>`;
-            input.value = '';
-
-            setTimeout(() => {
-                const colegioNom = currentSchool ? currentSchool.nombre : 'la Sede Educativa Rural';
-                box.innerHTML += `<div class="bg-slate-800 border border-slate-700 p-2.5 rounded-lg text-slate-300"><p class="font-semibold text-blue-400 mb-1">🤖 Phi-3 mini Local:</p><p>Orientación pedagógica procesada para ${colegioNom} bajo estándares del Decreto 1290 y Guía 34 del MEN.</p></div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 500);
+        function toggleAboutModal(show) {
+            const modal = document.getElementById('aboutModal');
+            if (show) modal.classList.remove('hidden');
+            else modal.classList.add('hidden');
         }
     </script>
 </body>
