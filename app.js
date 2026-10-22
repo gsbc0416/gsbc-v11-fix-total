@@ -10,10 +10,14 @@ let isSigned = false;
 let zoneChartInstance = null;
 let deptChartInstance = null;
 
-// ⚠️ IMPORTANTE: PEGA AQUÍ TU TOKEN DE DATOS.GOV.CO PARA EVITAR EL ERROR 403
+// ⚠️ IMPORTANTE: PEGA AQUÍ TU TOKEN DE DATOS.GOV.CO SI LO TIENES (Opcional, para búsquedas nacionales)
 const APP_TOKEN = 'TU_TOKEN_AQUI'; 
 
+// DATOS OFICIALES DE VALLEDUPAR (Fuente: CNSC / ICFES)
+// Estos datos están grabados en el código para que funcionen sin internet y sin API.
 const SEED_DATA = [
+    { dane: "120001000115", nombre: "IE NACIONAL LOPERENA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
+    { dane: "320001004560", nombre: "IE LOPERENA GARUPAL", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
     { dane: "113001000123", nombre: "I.E. TECNICA AGROPECUARIA EL SALADO", depto: "BOLIVAR", municipio: "CARMEN DE BOLIVAR", zona: "RURAL" },
     { dane: "120001000456", nombre: "INSTITUCION EDUCATIVA RIO SECO", depto: "CESAR", municipio: "VALLEDUPAR", zona: "RURAL" }
 ];
@@ -27,7 +31,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('offline', checkNetworkStatus);
 });
 
-// 1. INDEXEDDB (Versión 2 para actualizar estructura)
+// 1. INDEXEDDB
 function initIndexedDB() {
     return new Promise((resolve) => {
         try {
@@ -110,27 +114,37 @@ function changeRole(role) {
     }
 }
 
-// 4. BÚSQUEDA (API real, Token, DANE Valledupar/Nacional y texto)
+// 4. BÚSQUEDA (Primero Local, luego API)
 async function executeNationalSearch() {
     const query = (document.getElementById('searchInput').value || "").trim();
     const sourceBadge = document.getElementById('searchSourceBadge');
     let results = [];
 
-    if (navigator.onLine && query.length >= 3) {
+    // 1. BÚSQUEDA LOCAL PRIORITARIA (Valledupar y Semilla)
+    if (query.length >= 3) {
+        const upperQuery = query.toUpperCase();
+        const localResults = SEED_DATA.filter(item =>
+            item.dane.includes(query) ||
+            item.nombre.toUpperCase().includes(upperQuery) ||
+            item.depto.toUpperCase().includes(upperQuery) ||
+            item.municipio.toUpperCase().includes(upperQuery)
+        );
+
+        if (localResults.length > 0) {
+            results = localResults;
+            sourceBadge.textContent = "Origen: Directorio Local (CNSC/Valledupar)";
+        }
+    }
+
+    // 2. BÚSQUEDA EN API (Solo si no se encontró localmente y hay internet)
+    if (results.length === 0 && navigator.onLine && query.length >= 3) {
         try {
             let url = "";
             const isDane = /^\d+$/.test(query);
 
-            // Si es un DANE de Valledupar (empieza por 12000 o 32000), buscar en el dataset local de Valledupar
-            if (isDane && (query.startsWith('12000') || query.startsWith('32000'))) {
-                url = `https://www.datos.gov.co/resource/53pq-6few.json?$where=codigo_dane='${query}'`;
-            } 
-            // Si es un DANE de otra región, buscar en el dataset nacional
-            else if (isDane) {
+            if (isDane) {
                 url = `https://www.datos.gov.co/resource/x5ay-984n.json?$where=codigo_dane='${query}'`;
-            } 
-            // Si es texto, buscar en el nacional
-            else {
+            } else {
                 const upperQuery = query.toUpperCase();
                 url = `https://www.datos.gov.co/resource/x5ay-984n.json?$where=lower(nombre_establecimiento) like lower('%25${upperQuery}%25') OR lower(departamento) like lower('%25${upperQuery}%25')&$limit=1000`;
             }
@@ -143,12 +157,11 @@ async function executeNationalSearch() {
                 const apiData = await response.json();
                 if (apiData && apiData.length > 0) {
                     results = apiData.map(item => ({
-                        // Mapeo flexible por si los nombres de columnas cambian entre datasets
-                        dane: item.codigo_dane || item.cod_dane || item.codigo || "N/A",
-                        nombre: item.nombre_establecimiento || item.nombre_ie || item.institucion || "I.E. SIN NOMBRE",
-                        depto: item.departamento || "CESAR",
-                        municipio: item.municipio || "VALLEDUPAR",
-                        zona: item.zona || "URBANA"
+                        dane: item.codigo_dane || "N/A",
+                        nombre: item.nombre_establecimiento || "I.E. SIN NOMBRE",
+                        depto: item.departamento || "N/A",
+                        municipio: item.municipio || "N/A",
+                        zona: item.zona || "RURAL"
                     }));
                     sourceBadge.textContent = "Origen: API Datos Abiertos";
                     saveSchoolsToDB(results);
@@ -159,6 +172,7 @@ async function executeNationalSearch() {
         }
     }
 
+    // 3. FALLBACK A INDEXEDDB (Si todo lo anterior falló)
     if (results.length === 0) {
         if (!query) {
             results = await getSchoolsFromDB();
@@ -197,7 +211,6 @@ function renderSchoolResults(schools) {
         return;
     }
 
-    // Eliminar duplicados por código DANE (deja solo la primera aparición)
     const uniqueSchools = [...new Map(schools.map(item => [item.dane, item])).values()];
 
     let ruralCount = 0;
