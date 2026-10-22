@@ -10,6 +10,9 @@ let isSigned = false;
 let zoneChartInstance = null;
 let deptChartInstance = null;
 
+// ⚠️ IMPORTANTE: PEGA AQUÍ TU TOKEN DE DATOS.GOV.CO PARA EVITAR EL ERROR 403
+const APP_TOKEN = 'TU_TOKEN_AQUI'; 
+
 const SEED_DATA = [
     { dane: "113001000123", nombre: "I.E. TECNICA AGROPECUARIA EL SALADO", depto: "BOLIVAR", municipio: "CARMEN DE BOLIVAR", zona: "RURAL" },
     { dane: "120001000456", nombre: "INSTITUCION EDUCATIVA RIO SECO", depto: "CESAR", municipio: "VALLEDUPAR", zona: "RURAL" }
@@ -24,11 +27,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('offline', checkNetworkStatus);
 });
 
-// 1. INDEXEDDB (Versión 2 para forzar actualización de estructura)
+// 1. INDEXEDDB (Versión 2 para actualizar estructura)
 function initIndexedDB() {
     return new Promise((resolve) => {
         try {
-            // CAMBIO AQUÍ: Versión 2
             const request = indexedDB.open("GSBC_DB_v11", 2);
             request.onupgradeneeded = (e) => {
                 const database = e.target.result;
@@ -108,24 +110,34 @@ function changeRole(role) {
     }
 }
 
-// 4. BÚSQUEDA (API real corregida)
+// 4. BÚSQUEDA (API real con Token y búsqueda por DANE)
 async function executeNationalSearch() {
-    const query = (document.getElementById('searchInput').value || "").trim().toUpperCase();
+    const query = (document.getElementById('searchInput').value || "").trim();
     const sourceBadge = document.getElementById('searchSourceBadge');
     let results = [];
 
     if (navigator.onLine && query.length >= 3) {
         try {
-            // CAMBIO AQUÍ: ID del recurso corregido a 6k5y-ir6r
-           // Usamos el dataset del DUE 2022 (ID: 28t6-6wvz) y consultamos por nombre de establecimiento o departamento
-            const url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=lower(nombre_establecimiento) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25')&$limit=1000`;
-            const response = await fetch(url);
+            let url = "";
+            // Si el usuario escribe solo números, buscamos por código DANE exacto
+            if (/^\d+$/.test(query)) {
+                url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=codigo_dane='${query}'`;
+            } else {
+                // Si es texto, buscamos por nombre o departamento (límite 1000)
+                const upperQuery = query.toUpperCase();
+                url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=lower(nombre_establecimiento) like lower('%25${upperQuery}%25') OR lower(departamento) like lower('%25${upperQuery}%25')&$limit=1000`;
+            }
+
+            const response = await fetch(url, {
+                headers: { 'X-App-Token': APP_TOKEN } // El token evita el error 403
+            });
+
             if (response.ok) {
                 const apiData = await response.json();
                 if (apiData && apiData.length > 0) {
                     results = apiData.map(item => ({
-                        dane: item.codigodane || item.codigo_dane || "N/A",
-                        nombre: item.nombreinstitucion || item.nombre_establecimiento || "I.E. SIN NOMBRE",
+                        dane: item.codigo_dane || item.cod_dane || "N/A",
+                        nombre: item.nombre_establecimiento || item.nombreinstitucion || "I.E. SIN NOMBRE",
                         depto: item.departamento || "N/A",
                         municipio: item.municipio || "N/A",
                         zona: item.zona || "RURAL"
@@ -146,11 +158,12 @@ async function executeNationalSearch() {
         } else {
             const allLocal = await getSchoolsFromDB();
             const dataToFilter = allLocal.length > 0 ? allLocal : SEED_DATA;
+            const upperQuery = query.toUpperCase();
             results = dataToFilter.filter(item =>
                 item.dane.includes(query) ||
-                item.nombre.toUpperCase().includes(query) ||
-                item.depto.toUpperCase().includes(query) ||
-                item.municipio.toUpperCase().includes(query)
+                item.nombre.toUpperCase().includes(upperQuery) ||
+                item.depto.toUpperCase().includes(upperQuery) ||
+                item.municipio.toUpperCase().includes(upperQuery)
             );
         }
         sourceBadge.textContent = "Origen: Base Local Offline (IndexedDB)";
@@ -165,7 +178,7 @@ function resetSearch() {
     executeNationalSearch();
 }
 
-// 5. RENDERIZADO
+// 5. RENDERIZADO (Con filtro de duplicados)
 function renderSchoolResults(schools) {
     const tableBody = document.getElementById('schoolTableBody');
     tableBody.innerHTML = '';
@@ -176,10 +189,13 @@ function renderSchoolResults(schools) {
         return;
     }
 
+    // Eliminar duplicados por código DANE (deja solo la primera aparición)
+    const uniqueSchools = [...new Map(schools.map(item => [item.dane, item])).values()];
+
     let ruralCount = 0;
     const deptosSet = new Set();
 
-    schools.forEach((s, idx) => {
+    uniqueSchools.forEach((s, idx) => {
         if (s.zona.toUpperCase().includes('RURAL')) ruralCount++;
         deptosSet.add(s.depto);
 
@@ -200,8 +216,9 @@ function renderSchoolResults(schools) {
         tableBody.appendChild(tr);
     });
 
-    updateMetrics(schools, ruralCount, deptosSet.size);
-    updateChartsSafely(schools);
+    // Actualizamos las métricas con el total real (sin duplicados)
+    updateMetrics(uniqueSchools, ruralCount, deptosSet.size);
+    updateChartsSafely(uniqueSchools);
 }
 
 function selectSchoolByIndex(index) {
@@ -218,7 +235,7 @@ function selectSchoolByIndex(index) {
     infoBox.className = "bg-slate-900 p-3 rounded-lg border border-blue-500/50 text-xs mb-3 shadow-inner";
 }
 
-// 6. REPORTES
+// 6. REPORTES (Lógica original)
 function prepareReport(type) {
     if (!currentSchool) {
         alert("Por favor selecciona primero una institución educativa.");
@@ -250,7 +267,6 @@ function prepareReport(type) {
     previewArea.scrollIntoView({ behavior: 'smooth' });
 }
 
-// 7. FIRMA SHA-256
 async function signCurrentReport() {
     if (!currentReportText) return;
     if (currentRole === 'estudiante') {
@@ -289,7 +305,6 @@ async function generateSHA256(str) {
     return `fallback_${Math.abs(hash).toString(16)}`;
 }
 
-// 8. INDEXEDDB HELPERS (AQUÍ ESTÁ LA FUNCIÓN QUE FALTABA)
 function saveReportToDB() {
     if (!db) return;
     try {
@@ -340,7 +355,7 @@ function getSchoolsFromDB() {
     });
 }
 
-// --- FUNCIONES RESTAURADAS QUE FALTABAN ---
+// --- FUNCIONES AUXILIARES ---
 function updateCounts() {
     if (!db) return;
     try {
