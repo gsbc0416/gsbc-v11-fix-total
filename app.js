@@ -118,7 +118,7 @@ async function executeNationalSearch() {
         try {
             // CAMBIO AQUÍ: ID del recurso corregido a 6k5y-ir6r
            // Usamos el dataset del DUE 2022 (ID: 28t6-6wvz) y consultamos por nombre de establecimiento o departamento
-const url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=lower(nombre_establecimiento) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25')&$limit=20`;
+const url = `https://www.datos.gov.co/resource/28t6-6wvz.json?$where=lower(nombre_establecimiento) like lower('%25${query}%25') OR lower(departamento) like lower('%25${query}%25') AND a_o=2022&$limit=1000`;
             const response = await fetch(url);
             if (response.ok) {
                 const apiData = await response.json();
