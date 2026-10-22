@@ -1,0 +1,18 @@
+/* Estilos personalizados y correcciones de accesibilidad */
+.role-estudiante { border-top: 6px solid #38bdf8; }
+.role-docente { border-top: 6px solid #2563eb; }
+.role-admin { border-top: 6px solid #1e3a8a; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0f172a; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Foco visible para accesibilidad (WCAG 2.4.7) */
+:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+}
+
+/* Corrección de contraste para textos pequeños */
+.text-slate-400 { color: #cbd5e1 !important; } /* Mejora el contraste de #94a3b8 a #cbd5e1 */
