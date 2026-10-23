@@ -10,26 +10,43 @@ let isSigned = false;
 let zoneChartInstance = null;
 let deptChartInstance = null;
 
-// DATOS OFICIALES DE VALLEDUPAR (Grabados desde el Directorio de la Secretaría de Educación)
+// Variable para guardar los colegios del archivo JSON local
+let todosLosColegios = [];
+
+// DATOS OFICIALES SEMILLA (Respaldo si el JSON no carga o está offline)
 const SEED_DATA = [
     { dane: "120001000115", nombre: "IE NACIONAL LOPERENA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
     { dane: "320001004560", nombre: "IE LOPERENA GARUPAL", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001000921", nombre: "IE PRUDENCIA DAZA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001000018", nombre: "IE JOSE EUGENIO MARTINEZ", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001003751", nombre: "IE CASIMIRO RAUL MAESTRE", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001003602", nombre: "IE VILLA CORELCA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001069341", nombre: "IE CONSUELO ARAUJO NOGUERA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" },
-    { dane: "120001791775", nombre: "I.E MAYOR DE VALLEDUPAR CESAR PONPEYO MENDOZA HINOJOSA", depto: "CESAR", municipio: "VALLEDUPAR", zona: "URBANA" }
+    { dane: "113001000123", nombre: "I.E. TECNICA AGROPECUARIA EL SALADO", depto: "BOLIVAR", municipio: "CARMEN DE BOLIVAR", zona: "RURAL" }
 ];
 
 document.addEventListener('DOMContentLoaded', async () => {
     await initIndexedDB();
     initChartsSafely();
     checkNetworkStatus();
+    
+    // Cargar el archivo JSON con los colegios de Colombia
+    await cargarColegiosJSON();
+    
     await executeNationalSearch();
     window.addEventListener('online', checkNetworkStatus);
     window.addEventListener('offline', checkNetworkStatus);
 });
+
+// FUNCIÓN PARA CARGAR EL JSON
+async function cargarColegiosJSON() {
+    try {
+        const response = await fetch('dane.json');
+        if (response.ok) {
+            todosLosColegios = await response.json();
+            console.log(`✅ Cargados ${todosLosColegios.length} colegios desde dane.json`);
+        } else {
+            console.warn("⚠️ No se encontró dane.json. Usando datos semilla.");
+        }
+    } catch (e) {
+        console.warn("⚠️ Error al cargar dane.json. Usando datos semilla.", e);
+    }
+}
 
 // 1. INDEXEDDB
 function initIndexedDB() {
@@ -65,7 +82,7 @@ function checkNetworkStatus() {
         if (offlineStatusText) { offlineStatusText.textContent = "Sincronizado"; offlineStatusText.className = "font-mono text-emerald-400"; }
     } else {
         statusDiv.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span><span class="text-amber-400">Modo Offline</span>`;
-        syncBanner.textContent = "⚡ Operando en Modo 100% Offline.";
+        syncBanner.textContent = "⚡ Operando en Modo 100% Offline. Todos los reportes se guardarán en la memoria local.";
         syncBanner.classList.remove('hidden');
         if (offlineStatusText) { offlineStatusText.textContent = "Totalmente Funcional (Local)"; offlineStatusText.className = "font-mono text-blue-400"; }
     }
@@ -83,11 +100,11 @@ function changeRole(role) {
 
     if (role === 'admin') {
         adminSec.classList.remove('hidden');
-        badgeHelp.textContent = "Modo Administrador";
+        badgeHelp.textContent = "Modo Administrador (Control Total & Respaldo)";
         badgeHelp.className = "text-[10px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800 font-medium";
     } else if (role === 'docente') {
         adminSec.classList.add('hidden');
-        badgeHelp.textContent = "Modo Docente / Rector";
+        badgeHelp.textContent = "Modo Docente / Rector (Generación & Firma)";
         badgeHelp.className = "text-[10px] bg-blue-950 text-blue-300 px-2 py-0.5 rounded border border-blue-800 font-medium";
     } else {
         adminSec.classList.add('hidden');
@@ -96,7 +113,7 @@ function changeRole(role) {
     }
 }
 
-// 4. BÚSQUEDA (Local -> API Valledupar -> API Nacional)
+// 4. BÚSQUEDA (Local JSON -> SEED_DATA -> IndexedDB)
 async function executeNationalSearch() {
     const query = (document.getElementById('searchInput').value || "").trim();
     const sourceBadge = document.getElementById('searchSourceBadge');
@@ -104,60 +121,49 @@ async function executeNationalSearch() {
 
     if (query.length >= 3) {
         const upperQuery = query.toUpperCase();
-        
-        // 1. Buscar en datos semilla locales (Valledupar grabado)
-        const localResults = SEED_DATA.filter(item => item.dane.includes(query) || item.nombre.toUpperCase().includes(upperQuery));
-        if (localResults.length > 0) {
-            results = localResults;
-            sourceBadge.textContent = "Origen: Directorio Local Valledupar";
+        const isDane = /^\d+$/.test(query);
+
+        // 1. Buscar en el JSON cargado (DUE Nacional)
+        if (todosLosColegios.length > 0) {
+            results = todosLosColegios.filter(item => {
+                // Ajustamos a los nombres de columna del DUE (pueden variar)
+                const dane = (item.codigo_dane || item.cod_dane || item.CODIGO_DANE || '').toString();
+                const nombre = (item.nombre_establecimiento || item.nombre || item.NOMBRE || '').toString();
+                const municipio = (item.municipio || item.MUNICIPIO || '').toString();
+                
+                if (isDane) {
+                    return dane.includes(query);
+                } else {
+                    return (nombre + municipio).toUpperCase().includes(upperQuery);
+                }
+            }).slice(0, 100); // Límite de 100 para no colgar la tabla
+
+            if (results.length > 0) {
+                results = results.map(item => ({
+                    dane: item.codigo_dane || item.cod_dane || item.CODIGO_DANE || "N/A",
+                    nombre: item.nombre_establecimiento || item.nombre || item.NOMBRE || "I.E. SIN NOMBRE",
+                    depto: item.departamento || item.DEPARTAMENTO || "N/A",
+                    municipio: item.municipio || item.MUNICIPIO || "N/A",
+                    zona: item.zona || item.ZONA || "RURAL"
+                }));
+                sourceBadge.textContent = "Origen: Base de Datos Local (DUE)";
+            }
         }
 
-        // 2. Si no está en local y hay internet, buscar en el dataset de Valledupar (53pq-6few)
-        if (results.length === 0 && navigator.onLine) {
-            try {
-                const url = `https://www.datos.gov.co/resource/53pq-6few.json?$where=codigo_dane='${query}'`;
-                const response = await fetch(url);
-                if (response.ok) {
-                    const apiData = await response.json();
-                    if (apiData && apiData.length > 0) {
-                        results = apiData.map(item => ({
-                            dane: item.codigo_dane || "N/A",
-                            nombre: item.nombre_establecimiento || "I.E. SIN NOMBRE",
-                            depto: item.departamento || "CESAR",
-                            municipio: item.municipio || "VALLEDUPAR",
-                            zona: item.zona || "URBANA"
-                        }));
-                        sourceBadge.textContent = "Origen: API Valledupar";
-                        saveSchoolsToDB(results);
-                    }
-                }
-            } catch (e) { console.warn("Error API Valledupar:", e); }
-        }
-
-        // 3. Si aún no hay resultados, buscar en la API Nacional (x5ay-984n)
-        if (results.length === 0 && navigator.onLine) {
-            try {
-                const url = `https://www.datos.gov.co/resource/x5ay-984n.json?$where=codigo_dane='${query}'`;
-                const response = await fetch(url);
-                if (response.ok) {
-                    const apiData = await response.json();
-                    if (apiData && apiData.length > 0) {
-                        results = apiData.map(item => ({
-                            dane: item.codigo_dane || "N/A",
-                            nombre: item.nombre_establecimiento || "I.E. SIN NOMBRE",
-                            depto: item.departamento || "N/A",
-                            municipio: item.municipio || "N/A",
-                            zona: item.zona || "RURAL"
-                        }));
-                        sourceBadge.textContent = "Origen: API Nacional";
-                        saveSchoolsToDB(results);
-                    }
-                }
-            } catch (e) { console.warn("Error API Nacional:", e); }
+        // 2. Si no está en el JSON, buscar en los datos semilla (Valledupar)
+        if (results.length === 0) {
+            const localResults = SEED_DATA.filter(item => 
+                item.dane.includes(query) || 
+                item.nombre.toUpperCase().includes(upperQuery)
+            );
+            if (localResults.length > 0) {
+                results = localResults;
+                sourceBadge.textContent = "Origen: Directorio Local Valledupar";
+            }
         }
     }
 
-    // 4. Fallback final a IndexedDB o Semilla
+    // 3. Fallback final a IndexedDB (si no hay query o no se encontró nada)
     if (results.length === 0) {
         if (!query) {
             results = await getSchoolsFromDB();
@@ -180,13 +186,13 @@ function resetSearch() {
     executeNationalSearch();
 }
 
-// 5. RENDERIZADO
+// 5. RENDERIZADO (Con filtro de duplicados)
 function renderSchoolResults(schools) {
     const tableBody = document.getElementById('schoolTableBody');
     tableBody.innerHTML = '';
 
     if (schools.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron instituciones educativas. Si el código DANE no aparece, es posible que no esté en las bases de datos públicas consultadas.</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No se encontraron instituciones educativas.</td></tr>`;
         updateMetrics([], 0, 0);
         return;
     }
@@ -220,26 +226,35 @@ function renderSchoolResults(schools) {
     updateChartsSafely(uniqueSchools);
 }
 
-// 6. FUNCIONES RESTANTES (Reportes, Gráficos, Auditoría, IA)
 function selectSchoolByIndex(index) {
     if (!currentSearchResults[index]) return;
     currentSchool = currentSearchResults[index];
+
     const infoBox = document.getElementById('selectedSchoolInfo');
     infoBox.innerHTML = `
         <div class="flex flex-wrap items-center justify-between text-slate-200 font-medium w-full gap-2">
-            <span class="text-blue-400 font-bold"><i class="fa-solid fa-school mr-1.5"></i> ${currentSchool.nombre}</span>
-            <span class="text-slate-400 text-[11px]">DANE: <code class="text-amber-300 font-mono">${currentSchool.dane}</code> | ${currentSchool.municipio}, ${currentSchool.depto}</span>
+            <span class="text-blue-400 font-bold"><i class="fa-solid fa-school text-blue-400 mr-1.5" aria-hidden="true"></i> ${currentSchool.nombre}</span>
+            <span class="text-slate-400 text-[11px]">DANE: <code class="text-amber-300 font-mono">${currentSchool.dane}</code> | ${currentSchool.municipio}, ${currentSchool.depto} (${currentSchool.zona})</span>
         </div>
     `;
     infoBox.className = "bg-slate-900 p-3 rounded-lg border border-blue-500/50 text-xs mb-3 shadow-inner";
 }
 
+// 6. REPORTES
 function prepareReport(type) {
-    if (!currentSchool) { alert("Selecciona una institución primero."); return; }
-    currentReportType = type; isSigned = false;
+    if (!currentSchool) {
+        alert("Por favor selecciona primero una institución educativa.");
+        return;
+    }
+
+    currentReportType = type;
+    isSigned = false;
+
     const previewArea = document.getElementById('reportPreviewArea');
     previewArea.classList.remove('hidden');
+    
     document.getElementById('reportTitleHeader').textContent = `Documento Oficial: ${type} — ${currentSchool.nombre}`;
+    
     const sigBadge = document.getElementById('reportSignatureBadge');
     sigBadge.textContent = "Pendiente de Firma R-PC-03";
     sigBadge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px]";
@@ -251,6 +266,7 @@ function prepareReport(type) {
         'Manual de Convivencia': `MANUAL DE CONVIVENCIA\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\n\nDefine los derechos...`,
         'SIEE': `SISTEMA INSTITUCIONAL DE EVALUACIÓN (SIEE)\n\nINSTITUCIÓN: ${currentSchool.nombre}\nDANE: ${currentSchool.dane}\n\nEstablece los criterios...`
     };
+
     currentReportText = templates[type] || "Contenido no disponible.";
     document.getElementById('reportContentText').textContent = currentReportText;
     previewArea.scrollIntoView({ behavior: 'smooth' });
@@ -258,13 +274,19 @@ function prepareReport(type) {
 
 async function signCurrentReport() {
     if (!currentReportText) return;
-    if (currentRole === 'estudiante') { alert("El rol 'Estudiante' es de consulta."); return; }
+    if (currentRole === 'estudiante') {
+        alert("El rol 'Estudiante' es de consulta. Cambia a 'Docente / Rector' para firmar.");
+        return;
+    }
+
     const rawString = currentReportText + " | FECHA: " + new Date().toISOString();
     currentReportHash = await generateSHA256(rawString);
     isSigned = true;
+
     const sigBadge = document.getElementById('reportSignatureBadge');
     sigBadge.textContent = `Firmado R-PC-03 | HASH: ${currentReportHash.substring(0, 14)}...`;
     sigBadge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-mono";
+
     saveReportToDB();
 }
 
@@ -277,9 +299,14 @@ async function generateSHA256(str) {
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
-    } catch (e) { console.warn("Fallback JS Hash"); }
+    } catch (e) {
+        console.warn("Fallback JS Hash");
+    }
     let hash = 0;
-    for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
+    for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+    }
     return `fallback_${Math.abs(hash).toString(16)}`;
 }
 
@@ -287,9 +314,26 @@ function saveReportToDB() {
     if (!db) return;
     try {
         const tx = db.transaction(["reports", "audit"], "readwrite");
-        tx.objectStore("reports").add({ dane: currentSchool.dane, colegio: currentSchool.nombre, tipo: currentReportType, fecha: new Date().toLocaleString(), hash: currentReportHash, contenido: currentReportText });
-        tx.objectStore("audit").add({ dane: currentSchool.dane, tipo: currentReportType, fecha: new Date().toLocaleDateString(), hash: currentReportHash, estado: "Firmado y Validado" });
-        tx.oncomplete = () => { updateCounts(); loadAuditLogs(); alert("¡Documento firmado y guardado localmente!"); };
+        tx.objectStore("reports").add({
+            dane: currentSchool.dane,
+            colegio: currentSchool.nombre,
+            tipo: currentReportType,
+            fecha: new Date().toLocaleString(),
+            hash: currentReportHash,
+            contenido: currentReportText
+        });
+        tx.objectStore("audit").add({
+            dane: currentSchool.dane,
+            tipo: currentReportType,
+            fecha: new Date().toLocaleDateString(),
+            hash: currentReportHash,
+            estado: "Firmado y Validado"
+        });
+        tx.oncomplete = () => {
+            updateCounts();
+            loadAuditLogs();
+            alert("¡Documento firmado y guardado localmente!");
+        };
     } catch(e) { console.error(e); }
 }
 
@@ -310,22 +354,26 @@ function getSchoolsFromDB() {
             const req = tx.objectStore("schools").getAll();
             req.onsuccess = () => resolve(req.result);
             req.onerror = () => resolve([]);
-        } catch(e) { resolve([]); }
+        } catch(e) {
+            resolve([]);
+        }
     });
 }
 
+// --- FUNCIONES AUXILIARES ---
 function updateCounts() {
     if (!db) return;
     try {
         const tx = db.transaction(["reports"], "readonly");
-        const countReq = tx.objectStore("reports").count();
+        const store = tx.objectStore("reports");
+        const countReq = store.count();
         countReq.onsuccess = () => {
             const localCount = document.getElementById('localCount');
             const metricSigned = document.getElementById('metricSigned');
             if (localCount) localCount.textContent = countReq.result;
             if (metricSigned) metricSigned.textContent = countReq.result;
         };
-    } catch (e) {}
+    } catch (e) { console.warn("Error en updateCounts", e); }
 }
 
 function updateMetrics(schools, ruralCount, deptosCount) {
@@ -341,40 +389,77 @@ function loadAuditLogs() {
     if (!db) return;
     try {
         const tx = db.transaction(["audit"], "readonly");
-        const req = tx.objectStore("audit").getAll();
+        const store = tx.objectStore("audit");
+        const req = store.getAll();
+
         req.onsuccess = () => {
             const logs = req.result;
             const tbody = document.getElementById('auditTableBody');
             if (!tbody) return;
             tbody.innerHTML = '';
-            if (logs.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-slate-500 italic">No hay firmas guardadas.</td></tr>`; return; }
+
+            if (logs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-slate-500 italic">No hay firmas guardadas en la base local.</td></tr>`;
+                return;
+            }
+
             logs.slice(-5).reverse().forEach(log => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-1.5">${log.dane}</td><td class="p-1.5 text-sky-400">${log.tipo}</td><td class="p-1.5 text-slate-400">${log.fecha}</td><td class="p-1.5 font-mono text-amber-400 text-[10px]">${log.hash.substring(0, 10)}...</td><td class="p-1.5 text-center"><span class="text-emerald-400 font-semibold">${log.estado}</span></td>`;
+                tr.innerHTML = `
+                    <td class="p-1.5">${log.dane}</td>
+                    <td class="p-1.5 text-sky-400">${log.tipo}</td>
+                    <td class="p-1.5 text-slate-400">${log.fecha}</td>
+                    <td class="p-1.5 font-mono text-amber-400 text-[10px]">${log.hash.substring(0, 10)}...</td>
+                    <td class="p-1.5 text-center"><span class="text-emerald-400 font-semibold">${log.estado}</span></td>
+                `;
                 tbody.appendChild(tr);
             });
         };
-    } catch(e) {}
+    } catch(e) { console.warn(e); }
 }
 
 function initChartsSafely() {
     if (typeof Chart === 'undefined') return;
     try {
         const ctxZone = document.getElementById('zoneChart');
-        if (ctxZone) { zoneChartInstance = new Chart(ctxZone.getContext('2d'), { type: 'doughnut', data: { labels: ['Rural', 'Urbana'], datasets: [{ data: [0, 0], backgroundColor: ['#10b981', '#3b82f6'] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } } }); }
+        if (ctxZone) {
+            zoneChartInstance = new Chart(ctxZone.getContext('2d'), {
+                type: 'doughnut',
+                data: { labels: ['Rural', 'Urbana'], datasets: [{ data: [0, 0], backgroundColor: ['#10b981', '#3b82f6'] }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } } }
+            });
+        }
+
         const ctxDept = document.getElementById('deptChart');
-        if (ctxDept) { deptChartInstance = new Chart(ctxDept.getContext('2d'), { type: 'bar', data: { labels: [], datasets: [{ label: 'Sedes', data: [], backgroundColor: '#8b5cf6' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } } } }, plugins: { legend: { display: false } } } }); }
-    } catch(e) {}
+        if (ctxDept) {
+            deptChartInstance = new Chart(ctxDept.getContext('2d'), {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Sedes', data: [], backgroundColor: '#8b5cf6' }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
+            });
+        }
+    } catch(e) { console.warn("Chart.js error:", e); }
 }
 
 function updateChartsSafely(schools) {
     if (!zoneChartInstance || !deptChartInstance) return;
     try {
-        let rural = 0, urbana = 0; const deptCounts = {};
-        schools.forEach(s => { if (s.zona.toUpperCase().includes('RURAL')) rural++; else urbana++; deptCounts[s.depto] = (deptCounts[s.depto] || 0) + 1; });
-        zoneChartInstance.data.datasets[0].data = [rural, urbana]; zoneChartInstance.update();
-        deptChartInstance.data.labels = Object.keys(deptCounts); deptChartInstance.data.datasets[0].data = Object.values(deptCounts); deptChartInstance.update();
-    } catch(e) {}
+        let rural = 0, urbana = 0;
+        const deptCounts = {};
+
+        schools.forEach(s => {
+            if (s.zona.toUpperCase().includes('RURAL')) rural++;
+            else urbana++;
+            deptCounts[s.depto] = (deptCounts[s.depto] || 0) + 1;
+        });
+
+        zoneChartInstance.data.datasets[0].data = [rural, urbana];
+        zoneChartInstance.update();
+
+        deptChartInstance.data.labels = Object.keys(deptCounts);
+        deptChartInstance.data.datasets[0].data = Object.values(deptCounts);
+        deptChartInstance.update();
+    } catch(e) { console.warn(e); }
 }
 
 function exportFullBackupJSON() {
@@ -383,24 +468,46 @@ function exportFullBackupJSON() {
         const tx = db.transaction(["reports", "audit"], "readonly");
         const reportsReq = tx.objectStore("reports").getAll();
         const auditReq = tx.objectStore("audit").getAll();
+
         tx.oncomplete = () => {
-            const backupData = { version: "GSBC_v11", fecha: new Date().toISOString(), reportes: reportsReq.result, auditoria: auditReq.result };
+            const backupData = {
+                version: "GSBC_v11_RIO_CARIBE",
+                fechaRespaldo: new Date().toISOString(),
+                reportesFirmados: reportsReq.result,
+                bitacoraAuditoria: auditReq.result
+            };
             const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `GSBC_${new Date().toISOString().slice(0, 10)}.json`; a.click();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `GSBC_RESPALDO_USB_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
         };
-    } catch(e) {}
+    } catch(e) { alert("Error al exportar."); }
 }
 
-function toggleAboutModal(show) { document.getElementById('aboutModal').classList.toggle('hidden', !show); }
+function toggleAboutModal(show) {
+    document.getElementById('aboutModal').classList.toggle('hidden', !show);
+}
 
 function askLocalAI() {
     const input = document.getElementById('aiInput');
     const chatBox = document.getElementById('aiChatBox');
-    const query = input.value.trim(); if (!query) return;
-    chatBox.innerHTML += `<div class="bg-blue-900/60 p-2.5 rounded-lg text-slate-100 text-right font-medium mb-2">${query}</div>`;
+    const query = input.value.trim();
+    if (!query) return;
+
+    const userMsg = document.createElement('div');
+    userMsg.className = "bg-blue-900/60 p-2.5 rounded-lg border border-blue-700/80 text-slate-100 text-right font-medium";
+    userMsg.textContent = query;
+    chatBox.appendChild(userMsg);
     input.value = '';
+
     setTimeout(() => {
-        chatBox.innerHTML += `<div class="bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300 mb-2"><p class="font-semibold text-sky-400 mb-1"><i class="fa-solid fa-sparkles"></i> Asistente:</p>He guardado tu consulta. Recuerda que la CNSC no tiene una API pública. Los datos que ves aquí vienen del directorio local y del dataset oficial de Valledupar en datos.gov.co.</div>`;
+        const aiMsg = document.createElement('div');
+        aiMsg.className = "bg-slate-800 p-2.5 rounded-lg border border-slate-700 text-slate-300";
+        aiMsg.innerHTML = `<p class="font-semibold text-sky-400 mb-1"><i class="fa-solid fa-sparkles"></i> Asistente Pedagógico:</p>Sugerencia respecto a "${query.substring(0, 35)}...": Recuerda adaptar la escala de evaluación al Decreto 1290 e incorporar proyectos pedagógicos productivos en el PEI institucional.`;
+        chatBox.appendChild(aiMsg);
         chatBox.scrollTop = chatBox.scrollHeight;
     }, 500);
 }
